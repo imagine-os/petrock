@@ -16,6 +16,19 @@ Its not crazy important for some of the calendar features like kanban and timeli
 The design system page has 6223 items. ites at 0 of 6223 . so ill upload it as soon as its ready
 [attachment: Petrock Main.zip]
 
+**Follow-up note (19:33 UTC)** — Justin's second message (recorded as D-018): "of note, there aer some things like the messaging system and auth, which you might actually make even better since you know best practices, and the figma system was designed by hand"
+
 ## Response
 
-Screen catalog written (changelog 0006): `docs/figma/screen-catalog.md` covers all 238 files as 109 distinct screens, with derived entity, component, rules and open-question documents. Reply to Justin pending (to be posted from the Slack thread, not this worker). Follow-up 19:33 UTC recorded as D-018 (messaging and auth flows may be improved beyond the Figma screens).
+Every screen in the export is now catalogued: 109 distinct screens from 238 files, in docs/figma/screen-catalog.md, with companion lists of entities (docs/data/entities-from-designs.md), components (docs/design/components-from-designs.md), 158 business rules (docs/rules/business-rules-from-designs.md) and open questions (docs/figma/open-questions.md). The responsiveness rule (D-016) and the messaging/auth note (D-018) are recorded as decisions.
+
+What changed my understanding:
+- The numbered PDFs are the owner Control Panel draft: locations with hours, boarding charge rules, tax rates, email/SMS providers, permissions, and service setup. That's where the real pricing rules live.
+- Prices conflict between screens and several mock totals don't add up. Decision: treat the settings tables as the source of truth and compute everything from them.
+- Booking status names differ on every surface, so one booking lifecycle will be defined before building the hotel journey.
+- Vaccine lists differ per surface, and reservations stay pending until vaccines are verified.
+- No dark-mode screen exists; the side-by-side pairs are two light variants, so dark mode will come from the tokens.
+- Manager PIN gates booking status changes, matching the PIN approval system.
+- Add Pet and Daycare are unresolved in the designs, so both will need light redesign.
+
+The open-questions doc has 118 items. They will be resolved with best judgment, each logged as a decision, and only the ones affecting pricing or scope brought to Justin.
