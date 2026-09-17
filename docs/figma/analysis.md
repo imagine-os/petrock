@@ -23,16 +23,29 @@ The page holds **253 frames across 25 sections** (9 top-level + 16 nested). It c
 
 ## Decisions needed from Justin
 
+**Status 2026-09-17:** Justin answered these in prompt `docs/prompts/0002-scope-decisions.md`. Each item below keeps its original wording and carries the decision ID from `docs/decisions.md`. Items 9 and 10 were not put to Justin in that round and remain open.
+
+
 1. Are **Section 22 + Section 14** the complete, approved scope? Are the Region A rows and Sections 1-5 superseded and safe to ignore?
+   **Answered, D-001:** yes; mine the older sections for anything useful that is missing from 22/14.
 2. Region B is labelled "Finish the UX Plan / Re-Build with New Design System / Clickable Prototype Approval": is the new design system done, or will existing screens be restyled? Which page holds the new design system (page "Design System" `58:118`?)
+   **Answered, D-007:** no dedicated design-system page; rebuild the design system fresh from this page's icons, fonts and colors, with light/dark mode and easy new themes.
 3. **Control Panel (Draft) screens 1-15**: which are in scope, and are they for front-desk staff or owner/admin only? Roles/permissions (Pin Code Authentication) exist only in the sitemap.
+   **Answered, D-002:** owner / super-admin surfaces; role management can adjust access later.
 4. Flows missing from Section 22: **In Home Flow**, **Hotel Reservation / Hotel Flow** (Region B), **Choose Vaccine** / **Pet Edit 3** (old row): dropped or pending?
+   **Answered, D-003:** In Home not built (out of initial scope); day care not designed yet (verify); vaccines are a first-class flow throughout; hotel reservations must be clear across the board.
 5. **Spa vs Grooming**: Section 19 "Spa Flow" reuses `grooming package` frames with "Conditions" stubs, and there is rule text about daycare duration vs spa. One service with conditions, or two flows?
+   **Answered, D-004:** spa and grooming are the same thing; one flow, one name (proposal "Grooming & Spa").
 6. Business rules ("If Dog is 55lb or greater Must be Suite", "Pricing Rules", daycare duration vs spa): documented anywhere else?
+   **Answered, D-006:** not documented elsewhere yet; a business rules registry is required (page spec builder + Settings > Rules with per-rule status); Justin will supply more rules later.
 7. Old single-screen rows (**Management, report, education, reviews, employees, walking, day care**) exist only in the old Region A column: in scope?
+   **Answered, D-005:** grouped as "Extras"; reports/analytics in scope; employees required (user management); walking and management extendable later.
 8. **Timeline view** (Section 11) frames are named `all reservation grooming`: is the timeline for boarding, grooming, or both?
+   **Answered, D-008:** inspect the timeline frames; likely hotel only, check whether spa needs a timeline. Analysis pending.
 9. Two mobile widths (**390 and 428**): target device?
+   **Open:** not asked in prompt 0002.
 10. Stray dashboard widgets (Group 2914xx, "Income Analysis"): part of a **reports** screen that should exist?
+   **Partly answered, D-005:** reports/analytics are in scope, so a reports screen should exist; whether these widgets are its design is still open.
 
 ---
 

@@ -1,0 +1,17 @@
+# Decision log
+
+One row per decision Justin (or the team) has made. Append-only: never renumber; if a decision is reversed, add a new row that supersedes it and set the old row's status to `superseded by D-0xx`. The `source` column points at the prompt file that carries the verbatim words.
+
+Statuses: `decided` (final unless reversed), `pending` (decided in principle, details still to confirm), `superseded`.
+
+| # | Date | Decision | Source | Status |
+|---|---|---|---|---|
+| D-001 | 2026-09-17 | **Sections 22 and 14** of the Figma page are the approved design scope (customer mobile app and front-desk web). Older sections and rows are reference only, but must be mined for useful screens that are missing from 22/14 (gap check pending). | prompt 0002, answer 1 | decided |
+| D-002 | 2026-09-17 | **Control Panel screens 1-15** are owner / super-admin surfaces, not front desk. Role management will allow adjusting who sees them later, so access must be role-driven rather than hard-coded. | prompt 0002, answer 2 | decided |
+| D-003 | 2026-09-17 | **Day care**: not designed yet (verify against the Figma inventory). **In Home**: not built, out of the initial scope. **Vaccines** are a first-class flow throughout the system (customer app and front desk), so a full vaccine flow is expected. **Hotel reservations** must be clear and consistent across all surfaces. | prompt 0002, answer 3 | decided |
+| D-004 | 2026-09-17 | **Spa and Grooming are one service.** Build one flow and use one name (naming TBD; proposal: "Grooming & Spa"). The Figma "Spa Flow" and "Grooming" sections are treated as variants of the same flow. | prompt 0002, answer 4 | decided (name pending) |
+| D-005 | 2026-09-17 | The old single-screen rows **report, education, reviews, employees, walking, management** go into an **"Extras" category** for now. **Reports / analytics are in scope.** **Employees is required** (it is the user-management surface). Dog walking and management can be extended later if needed. | prompt 0002, answer 5 | decided |
+| D-006 | 2026-09-17 | A **business rules registry** is required. Every rule appears (a) on the spec builder / page inspector of the page that uses it and (b) in a central **Settings > Rules** area, with the ability to add new rules and a **status per rule** (requested / in dev / implemented / etc.). Justin will supply more rules later. Seed rules from Figma: "Dog 55lb or greater must be a Suite"; "Daycare shorter than X leaves no time for spa"; pricing rules (TBD). | prompt 0002, answer 6 | decided (rule list pending) |
+| D-007 | 2026-09-17 | There is **no dedicated design-system page** in Figma to rely on. **Rebuild the design system fresh** from the main page's icons, fonts and colors, clean and complete. It must support **light / dark mode** and make **new themes easy** to add later. | prompt 0002, answer 7 | decided |
+| D-008 | 2026-09-17 | **Timeline view**: inspect the Figma timeline frames to determine what they relate to. Justin's expectation: likely hotel (boarding) only, but check whether anything on the spa side requires a timeline. Analysis pending. | prompt 0002, answer 8 | pending |
+| D-009 | 2026-09-17 | **Santa-Maria-Tenis-Club/os** GitHub access was granted 2026-09-17 ("Github connected to Santa Maria"). Digest of its spec builder and dev/doc tooling is pending and runs in a separate session (one-owner-per-session rule). | prompt 0002, closing line | pending |

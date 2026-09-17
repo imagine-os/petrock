@@ -5,6 +5,7 @@ How the Petrock documentation is organized. Conventions follow imagine-os/hoy (`
 | Path | What goes there |
 |---|---|
 | `project-brief.md` | The brief: client, locations, scope, features, data layer, reference repos, org rules. Updated as Justin decides things. |
+| `decisions.md` | Decision log: one row per decision (`D-001`, ...), with date, source prompt and status. Append-only; reversals add a new row and mark the old one superseded. |
 | `kanban.md` | `## Backlog` / `## Doing` / `## Done` lanes, one `- ` card per line. |
 | `prompts/NNNN-slug.md` | Prompt log. Header (source, date, requester), `## Prompt (verbatim)`, then the exact heading `## Response` with the reply. One file per prompt. |
 | `changelog/NNNN-slug.md` | Changelog. Header lines `version:`, `date:`, `prompt:`, `intent:`, `decision:`, `rejected:`, `files:`, `codes:`, then a markdown body. One file per change set. |

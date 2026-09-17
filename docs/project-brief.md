@@ -1,6 +1,6 @@
 # Petrock project brief
 
-Source: Justin Massion, Slack #petrock-hotel, 2026-09-17 (prompt `docs/prompts/0001-figma-analysis-and-project-brief.md`). This file organizes everything Justin said; it is updated as decisions land.
+Source: Justin Massion, Slack #petrock-hotel, 2026-09-17 (prompts `docs/prompts/0001-figma-analysis-and-project-brief.md` and `docs/prompts/0002-scope-decisions.md`). This file organizes everything Justin said; it is updated as decisions land. Individual decisions are logged with IDs in **`docs/decisions.md`** (D-001...).
 
 ## Client
 
@@ -18,9 +18,10 @@ Source: Justin Massion, Slack #petrock-hotel, 2026-09-17 (prompt `docs/prompts/0
 
 | Surface | Notes |
 |---|---|
-| Customer app, iOS + Android | Mobile design system is locked in Figma (Section 22). Booking boarding, daycare, grooming, spa; pets, profile, payments, chat/notifications. |
+| Customer app, iOS + Android | Mobile design system is locked in Figma (Section 22). Booking boarding (hotel), daycare, grooming & spa (one service, D-004); pets, vaccines (first-class flow, D-003), profile, payments, chat/notifications. |
 | Front-desk web | Desktop. Can look better than Figma where it helps; the calendar **timeline and kanban views** in particular should be built properly. |
-| Admin / owner web | Desktop. Management dashboards, control panel, people & pets, staff, settings. |
+| Admin / owner web | Desktop. Management dashboards, Control Panel (owner / super-admin only, D-002), people & pets, staff, settings (including Settings > Rules, see below). |
+| Extras (D-005) | report, education, reviews, employees, walking, management. Reports/analytics are in scope; Employees is required (user management); walking and management can be extended later. |
 | Stripe | Included from the start. |
 | Push notifications, automated emails | Possible later integrations. |
 | App-store requirements | All the standard things the app stores require (legal, privacy, account deletion, etc.) built into settings. |
@@ -42,6 +43,18 @@ Every page carries a builder tool that super admins can see and toggle open. It 
 
 ### Standardized component library + design system
 Components must be standardized so upgrading a component upgrades it on every page that uses it. Deliverables: a component library and a design system.
+
+**Theming (D-007):** the design system is rebuilt fresh from the Figma main page's icons, fonts and colors (there is no dedicated design-system page to rely on). It must support **light and dark mode** from the start and make **new themes easy** to add later, so colors, type and spacing live as tokens, not hard-coded values.
+
+### Business rules registry (D-006)
+A single place that tracks every business rule the system enforces. Each rule is shown in two places:
+- on the **spec builder / page inspector** of every page that uses it (see "Super-admin builder tool" above), and
+- in a central **Settings > Rules** area, where owners can add new rules and see each rule's **status** (requested, in dev, implemented, etc.).
+
+Seed rules from Figma: "Dog 55lb or greater must be a Suite"; "Daycare shorter than X leaves no time for spa"; pricing rules (details TBD). Justin will supply more rules later.
+
+### Services
+**Spa and grooming are the same service** (D-004): one flow, one name (proposal: "Grooming & Spa"). Vaccines are a first-class flow across customer app and front desk (D-003). Hotel reservations must be clear and consistent across every surface (D-003). In Home is out of the initial scope; day care is not designed yet (D-003).
 
 ### Table library
 A library for organizing **all the tables**, so it is very clear the table system is perfect and everything looks good. (hoy: `schema.ts` + `tableRegistry` + generated SQL and data-model docs.)
@@ -65,7 +78,7 @@ Changelogs and revision history for everything, plus a **business operations man
 
 - Figma file **Petrock Main** (`3UXEOzU9ORGm5mInQqhiUW`), page **new(justin + Mark)** (`404:14656`). Very deep design work; as long as all those features and pages exist, the rest is bonus features and polish.
 - Mobile (customer) design: locked. Desktop (front desk, admin): may be improved.
-- Justin offered to help identify flows group by group and mark which board items are not needed. Open questions are listed in `docs/figma/analysis.md`.
+- **Scope confirmed 2026-09-17 (D-001):** Sections 22 and 14 are the approved scope; older sections are reference only but are mined for useful screens missing from 22/14. Remaining open items are marked in `docs/figma/analysis.md` and tracked in `docs/decisions.md`.
 
 ## Data layer
 
@@ -83,7 +96,7 @@ Changelogs and revision history for everything, plus a **business operations man
 |---|---|---|
 | [imagine-os/hoy](https://github.com/imagine-os/hoy) | Strong hub, user manual, website, customer/staff experiences, role login testing, dev-dashboard tricks, docs conventions | Cloned and digested: `docs/reference/hoy-patterns.md` |
 | [Playset-LLC/Company-OS](https://github.com/Playset-LLC/Company-OS) | Database system, future Supabase connection | Digested in a separate read-only session (not attachable alongside imagine-os repos): `docs/reference/company-os.md` |
-| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Not visible to the workspace's GitHub connection; org owner must grant: `docs/reference/santa-maria-os.md` |
+| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Access granted 2026-09-17 (D-009); digest pending in a separate session: `docs/reference/santa-maria-os.md` |
 
 Justin's note: don't worry about the content of hoy or Santa Maria; notice the things done to make development and documentation better, smarter, stronger.
 
