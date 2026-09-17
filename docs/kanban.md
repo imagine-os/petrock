@@ -3,12 +3,13 @@
 ## Backlog
 - Decide stack (default: hoy reference architecture, Vite + React + TS, GitHub Pages)
 - Decide Company-OS integration (REST API direct vs thin Petrock BFF); define new entities (customer auth, service catalog, invoices/payments, spa add-ons, vaccination records, audit log, availability)
-- Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag; owner must enable it in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
-- Design tokens from Figma (D-007): extract icons, fonts, colors from the main page; rebuild design system fresh with light/dark mode and multi-theme support; 45 local components -> component library
+- Rebuild design system from the token draft (D-007, `docs/design/tokens-draft.md`): one font family, light/dark token set, theme switching; 45 local components -> component library
 - Business rules registry (D-006): rules on each page's spec builder + Settings > Rules with per-rule status (requested / in dev / implemented); seed with the 55lb Suite rule, daycare-vs-spa duration, pricing rules
-- Timeline view analysis (D-008): inspect Section 11/14 timeline frames; decide hotel-only vs spa too
-- Vaccine flow design (D-003): customer app + front desk; vaccination records entity
-- Figma gap check (D-001): mine older sections/rows for useful screens missing from Sections 22/14; confirm day care is not designed
+- Vaccine flow design (customer + front desk) (D-003): expiry, proof storage, front-desk verification, booking gating; vaccination records entity
+- Reports/analytics design (D-005): Figma reports frame is an empty shell; design fresh
+- Second Figma pass after quota reset (~Sep 22) (D-012): text-level read of Sections 22/14, items marked (verify) in `docs/figma/deep-dive.md`, fresh renders
+- Capacitor vs native decision (D-013): customer app as Capacitor wrapper of the web codebase, or separate native apps
+- Port older-section screens into the build (D-010, awaiting Justin): Choose Vaccine, Invoice detail, employees + add-employee, home stats strip, owner KPI dashboard, OTP modal, collapsible nav + location switcher, form redlines
 - Extras category (D-005): report/analytics (in scope), employees (required, user management), education, reviews, walking, management
 - Builder tool (super-admin page inspector: tables, roles, components/layout, rules, integrations)
 - Role / PIN system (per-role visibility + edit, individualized side menus, staff PIN login, manager PIN approval popup)
@@ -19,9 +20,15 @@
 - App-store required settings / legal pages
 
 ## Doing
-- Follow-up analysis on Justin's answers (gap check, timeline views, vaccines, design tokens)
+- Awaiting Justin: go-ahead on the build plan (D-013), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012)
+
+## Blocked
+- Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag; owner must enable it in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
+- Figma gap check (D-001 -> D-010 proposal; `docs/figma/deep-dive.md` section 1)
+- Timeline view analysis (D-008 decided from sitemap: Hotel & Daycare Table + Timeline, Spa Table + Board)
+- Design tokens draft (`docs/design/tokens-draft.md`, derived)
 - Confirm Figma scope with Justin (answered 2026-09-17, prompt 0002; D-001..D-008 in `docs/decisions.md`)
 - Repo bootstrap (README, docs structure, brief, prompt/changelog 0001)
 - Figma inventory (page new(justin + Mark): 253 frames, 25 sections)

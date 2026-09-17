@@ -4,7 +4,7 @@
 - Date: 2026-09-17
 - Requester: Justin Massion (owner)
 - Answers: the eight questions in `docs/prompts/0001-figma-analysis-and-project-brief.md` (Response section)
-- Changelog: `docs/changelog/0002-scope-decisions.md`
+- Changelogs: `docs/changelog/0002-scope-decisions.md` (decisions), `docs/changelog/0003-figma-deep-dive.md` (deep-dive, tokens, build plan)
 
 ## Prompt (verbatim)
 
@@ -31,4 +31,17 @@ Github connected to Santa Maria
 
 ## Response
 
-Decisions recorded in docs/decisions.md; follow-up analysis (gap check, timeline views, vaccines, design tokens, Santa Maria digest) in progress and will be appended to docs/figma/analysis.md and docs/reference/.
+Your answers are recorded as decisions D-001 to D-009 in petrock/docs/decisions.md, and the deeper Figma pass turned up eight screens worth keeping from the older sections. One blocker first: the Figma key hit its plan quota (Starter tier) after about 40 reads, and Figma won't accept more until around Sep 22. I got enough for the plan below, but not full text of every screen.
+
+Findings from the deeper pass:
+- Keep from older sections: Choose Vaccine (the only vaccine upload screen, marked "getting replaced" but nothing replaces it), the read-only Invoice/booking detail page, the employees list and add-employee popup, the front-desk home with its stats strip, the owner KPI dashboard, the OTP verify modal, the collapsible nav with location switcher, and the form-field redlines.
+- Vaccines exist today only as that one screen plus a checkbox on the old pet form. No expiry, proof storage, front-desk verification, or booking gating anywhere, so that flow needs design work on both surfaces.
+- Timeline view: your sitemap resolves it. Hotel & Daycare get Table + Timeline views, Spa gets Table + Board (kanban). The Section 14 timeline frames are still the old grooming skeleton relabelled, so I'd design the timeline properly around rooms and stays.
+- Hotel is the most complete journey (room types Penthouse and Suite, pets, estimate with deposit, checkout with tips). Missing: room inventory admin, reservation detail/edit, explicit check-in/out actions.
+- Grooming & Spa: one flow named Grooming with Spa as a package category, and the daycare-duration and second-pet rules as configurable conditions.
+- Reports is an empty shell in Figma, so analytics will be designed fresh.
+- Design system: purple primary (#552583), three different fonts across generations. I'll standardize on one family with a light/dark token set and theme switching. The Design System page only holds an icon set and a button set, so rebuilding fresh is right.
+
+Proposed build plan, in order: foundation (tokens and themes, component library with per-component docs, table library, roles and location context, PIN login and approvals, spec builder with the rules registry, testing hub with demo users, docs viewer), then the hotel journey end to end on customer and front desk, then grooming, daycare, vaccines, reports, and extras. Same architecture as hoy: React and TypeScript, mock data first with an adapter for the Company-OS API later, deployed on GitHub Pages. The customer app would be the same codebase wrapped with Capacitor for iOS and Android unless you'd rather have a separate native app.
+
+Questions: Can I start the foundation now, or do you want to review the plan first? Does the Figma key have a paid seat you can point me at, or should I wait until Sep 22 for the rest of the screen text?
