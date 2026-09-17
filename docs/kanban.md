@@ -1,6 +1,7 @@
 # Kanban
 
 ## Backlog
+- Side menu: collapsible categories + expand/collapse all (D-014)
 - Decide stack (default: hoy reference architecture, Vite + React + TS, GitHub Pages)
 - Decide Company-OS integration (REST API direct vs thin Petrock BFF); define new entities (customer auth, service catalog, invoices/payments, spa add-ons, vaccination records, audit log, availability)
 - Rebuild design system from the token draft (D-007, `docs/design/tokens-draft.md`): one font family, light/dark token set, theme switching; 45 local components -> component library
@@ -23,7 +24,7 @@
 - Awaiting Justin: go-ahead on the build plan (D-013), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012)
 
 ## Blocked
-- Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag; owner must enable it in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
+- Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
 - Figma gap check (D-001 -> D-010 proposal; `docs/figma/deep-dive.md` section 1)

@@ -46,6 +46,8 @@ Components must be standardized so upgrading a component upgrades it on every pa
 
 **Theming (D-007):** the design system is rebuilt fresh from the Figma main page's icons, fonts and colors (there is no dedicated design-system page to rely on). It must support **light and dark mode** from the start and make **new themes easy** to add later, so colors, type and spacing live as tokens, not hard-coded values.
 
+**Reference (D-015):** the Figma file's Design System page (node `58:118`, https://www.figma.com/design/3UXEOzU9ORGm5mInQqhiUW/Petrock-Main?node-id=58-118) is a reference input only, not the source of truth; the code design system is still built fresh.
+
 ### Business rules registry (D-006)
 A single place that tracks every business rule the system enforces. Each rule is shown in two places:
 - on the **spec builder / page inspector** of every page that uses it (see "Super-admin builder tool" above), and
@@ -61,6 +63,8 @@ A library for organizing **all the tables**, so it is very clear the table syste
 
 ### Role management
 Assign what each role can **see** and whether it can **edit**, tied to each role's **individualized side menu**.
+
+**Side menu (D-014):** navigation items are grouped into **collapsible categories**, each with its own toggle, plus an **expand-all / collapse-all** control, styled to match the design system.
 
 ### PIN system
 Staff log in fast with a PIN. Managers approve things by typing their PIN into a popup, so approvals happen in place without a full re-login.
@@ -96,7 +100,7 @@ Changelogs and revision history for everything, plus a **business operations man
 |---|---|---|
 | [imagine-os/hoy](https://github.com/imagine-os/hoy) | Strong hub, user manual, website, customer/staff experiences, role login testing, dev-dashboard tricks, docs conventions | Cloned and digested: `docs/reference/hoy-patterns.md` |
 | [Playset-LLC/Company-OS](https://github.com/Playset-LLC/Company-OS) | Database system, future Supabase connection | Digested in a separate read-only session (not attachable alongside imagine-os repos): `docs/reference/company-os.md` |
-| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Justin connected GitHub to Santa-Maria-Tenis-Club 2026-09-17, but the repo is still not visible to Claude Tag; an org owner must enable it in Claude Tag settings (D-009, blocked). Digest pending: `docs/reference/santa-maria-os.md` |
+| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Justin connected GitHub to Santa-Maria-Tenis-Club 2026-09-17 (reported again 19:17 UTC), but the repo is still not visible to Claude Tag; the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings (D-009, blocked). Digest pending: `docs/reference/santa-maria-os.md` |
 
 Justin's note: don't worry about the content of hoy or Santa Maria; notice the things done to make development and documentation better, smarter, stronger.
 
