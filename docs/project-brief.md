@@ -48,6 +48,8 @@ Components must be standardized so upgrading a component upgrades it on every pa
 
 **Reference (D-015):** the Figma file's Design System page (node `58:118`, https://www.figma.com/design/3UXEOzU9ORGm5mInQqhiUW/Petrock-Main?node-id=58-118) is a reference input only, not the source of truth; the code design system is still built fresh.
 
+**Responsiveness (D-016):** everything must be responsive and must not be limited to the sizes designed in Figma (390-wide mobile, 1440-wide front desk). Every page is checked for correct responsiveness before it counts as done. Calendar-heavy views (kanban board, timeline) may degrade gracefully on phones, since the front desk works on an iMac, but the goal is full responsiveness there too.
+
 ### Business rules registry (D-006)
 A single place that tracks every business rule the system enforces. Each rule is shown in two places:
 - on the **spec builder / page inspector** of every page that uses it (see "Super-admin builder tool" above), and

@@ -1,6 +1,8 @@
 # Kanban
 
 ## Backlog
+- Screen catalog from exports (`docs/figma/exports/petrock-main/`, D-017): map each file to a Figma node / flow, fill the unlabeled PDFs, answer prompt 0004
+- Responsive QA checklist per page (D-016): breakpoints, no fixed 390/1440 assumptions, kanban/timeline phone fallback
 - Side menu: collapsible categories + expand/collapse all (D-014)
 - Decide stack (default: hoy reference architecture, Vite + React + TS, GitHub Pages)
 - Decide Company-OS integration (REST API direct vs thin Petrock BFF); define new entities (customer auth, service catalog, invoices/payments, spa add-ons, vaccination records, audit log, availability)
@@ -27,6 +29,7 @@
 - Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
+- Figma export drop 1 received (`Petrock Main.zip`, 238 files, inventoried in `docs/figma/exports/petrock-main/INVENTORY.md`; D-017)
 - Figma gap check (D-001 -> D-010 proposal; `docs/figma/deep-dive.md` section 1)
 - Timeline view analysis (D-008 decided from sitemap: Hotel & Daycare Table + Timeline, Spa Table + Board)
 - Design tokens draft (`docs/design/tokens-draft.md`, derived)
