@@ -5,7 +5,7 @@
 - Design page for the app: **new(justin + Mark)**, page id `404:14656`
   https://www.figma.com/design/3UXEOzU9ORGm5mInQqhiUW/Petrock-Main?node-id=404-14656
   (Justin wrote "new(justin = Mark)"; the page name uses "+". The linked node is the page itself, not a frame.)
-- API access confirmed 2026-09-17 (HTTP 200 on files, nodes and images endpoints; role returned: editor). **Quota:** the key is on Figma's Starter tier; the plan quota was exhausted 2026-09-17 after ~40 reads (429, `Retry-After` ~4.6 days, so ~2026-09-22). See D-012. Nothing is published to a team library; all components and styles are local to the page.
+- API access confirmed 2026-09-17 (HTTP 200 on files, nodes and images endpoints; role returned: editor). **Quota:** the key is on Figma's Starter tier; the plan quota was exhausted 2026-09-17 after ~40 reads (429, `Retry-After` ~4.6 days, so ~2026-09-22). See D-012: decision is to export manually instead of a paid upgrade (`exports/`). Nothing is published to a team library; all components and styles are local to the page.
 
 ## Pages in the file
 
@@ -32,4 +32,5 @@
 - `analysis.md` - full inventory, spatial regions, journey grouping, confident vs ambiguous, decisions needed from Justin (annotated with D-00x), appendices of every node
 - `deep-dive.md` - second pass (2026-09-17, derived, partial): gap check against older sections, timeline/table views, vaccines and hotel coverage, spa vs grooming, Design System page, draft tokens, open verifications. Figma API quota (Starter tier) ran out mid-pass; retry ~2026-09-22.
 - `../design/tokens-draft.md` - draft color/typography/spacing/icon tokens extracted from the page (derived; input to the rebuilt design system, D-007)
+- `exports/` - manual exports from Justin (D-012): PNG 2x of Sections 22 and 14 and the Design System page, plus the `.fig` local copy. See `exports/README.md`.
 - `renders/` - PNG exports: `overview-onboarding-flow-section16.png`, `overview-boarding-flow-section20.png` (mobile), `overview-boarding-table-view-section1.png` (desktop); zoom crops `render-zoom-addpetdetails.png`, `render-zoom-choose-room-pets.png`, `render-zoom-estimate-checkout.png`, `render-zoom-table.png`
