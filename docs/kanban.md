@@ -1,7 +1,9 @@
 # Kanban
 
 ## Backlog
-- Screen catalog from exports (`docs/figma/exports/petrock-main/`, D-017): map each file to a Figma node / flow, fill the unlabeled PDFs, answer prompt 0004
+- Second Figma pass: illegible screens + node-id mapping (`docs/figma/screen-catalog.md` section 5: `Frame 1171276424.png`, `Form fields.pdf`, `front desk-3.jpg`, 16 unviewed svg icons; map all 238 files to Figma node ids; confirm which side of each two-up is approved) after the quota resets ~Sep 22 or from the `.fig` (D-012, D-017)
+- Answer the open questions with Justin (`docs/figma/open-questions.md`, 118 questions, build-blocking ones first: two-up approved sides, dark mode, Add Pet wizard, vaccine list, hotel step order and estimate maths, daycare scope, status vocabulary, manager PIN)
+- Seed the rules registry from `docs/rules/business-rules-from-designs.md` (D-006; 158 rows, status seen-in-design)
 - Responsive QA checklist per page (D-016): breakpoints, no fixed 390/1440 assumptions, kanban/timeline phone fallback
 - Side menu: collapsible categories + expand/collapse all (D-014)
 - Decide stack (default: hoy reference architecture, Vite + React + TS, GitHub Pages)
@@ -29,6 +31,7 @@
 - Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
+- Screen catalog from exports (`docs/figma/screen-catalog.md`: 109 distinct screens from 238 files; plus `docs/data/entities-from-designs.md`, `docs/design/components-from-designs.md`, `docs/rules/business-rules-from-designs.md`, `docs/figma/open-questions.md`; D-017, D-018; changelog 0006)
 - Figma export drop 1 received (`Petrock Main.zip`, 238 files, inventoried in `docs/figma/exports/petrock-main/INVENTORY.md`; D-017)
 - Figma gap check (D-001 -> D-010 proposal; `docs/figma/deep-dive.md` section 1)
 - Timeline view analysis (D-008 decided from sitemap: Hotel & Daycare Table + Timeline, Spa Table + Board)

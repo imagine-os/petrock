@@ -18,4 +18,4 @@ The design system page has 6223 items. ites at 0 of 6223 . so ill upload it as s
 
 ## Response
 
-Reply pending (screen catalog in progress)
+Screen catalog written (changelog 0006): `docs/figma/screen-catalog.md` covers all 238 files as 109 distinct screens, with derived entity, component, rules and open-question documents. Reply to Justin pending (to be posted from the Slack thread, not this worker). Follow-up 19:33 UTC recorded as D-018 (messaging and auth flows may be improved beyond the Figma screens).

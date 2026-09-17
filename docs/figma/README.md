@@ -32,5 +32,7 @@
 - `analysis.md` - full inventory, spatial regions, journey grouping, confident vs ambiguous, decisions needed from Justin (annotated with D-00x), appendices of every node
 - `deep-dive.md` - second pass (2026-09-17, derived, partial): gap check against older sections, timeline/table views, vaccines and hotel coverage, spa vs grooming, Design System page, draft tokens, open verifications. Figma API quota (Starter tier) ran out mid-pass; retry ~2026-09-22.
 - `../design/tokens-draft.md` - draft color/typography/spacing/icon tokens extracted from the page (derived; input to the rebuilt design system, D-007)
+- `screen-catalog.md` - catalog of every file in export drop 1 (109 distinct screens from 238 files), per platform and flow, with fields, actions, components, states, rules; second-pass flags and file index. Source of truth for building.
+- `open-questions.md` - merged open questions from the catalog, grouped by flow (118).
 - `exports/` - manual exports from Justin (D-012): PNG 2x of Sections 22 and 14 and the Design System page, plus the `.fig` local copy. See `exports/README.md`.
 - `renders/` - PNG exports: `overview-onboarding-flow-section16.png`, `overview-boarding-flow-section20.png` (mobile), `overview-boarding-table-view-section1.png` (desktop); zoom crops `render-zoom-addpetdetails.png`, `render-zoom-choose-room-pets.png`, `render-zoom-estimate-checkout.png`, `render-zoom-table.png`
