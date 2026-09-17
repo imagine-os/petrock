@@ -96,7 +96,7 @@ Changelogs and revision history for everything, plus a **business operations man
 |---|---|---|
 | [imagine-os/hoy](https://github.com/imagine-os/hoy) | Strong hub, user manual, website, customer/staff experiences, role login testing, dev-dashboard tricks, docs conventions | Cloned and digested: `docs/reference/hoy-patterns.md` |
 | [Playset-LLC/Company-OS](https://github.com/Playset-LLC/Company-OS) | Database system, future Supabase connection | Digested in a separate read-only session (not attachable alongside imagine-os repos): `docs/reference/company-os.md` |
-| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Access granted 2026-09-17 (D-009); digest pending in a separate session: `docs/reference/santa-maria-os.md` |
+| [Santa-Maria-Tenis-Club/os](https://github.com/Santa-Maria-Tenis-Club/os) | Spec builder and dev/doc tricks (not the content) | Justin connected GitHub to Santa-Maria-Tenis-Club 2026-09-17, but the repo is still not visible to Claude Tag; an org owner must enable it in Claude Tag settings (D-009, blocked). Digest pending: `docs/reference/santa-maria-os.md` |
 
 Justin's note: don't worry about the content of hoy or Santa Maria; notice the things done to make development and documentation better, smarter, stronger.
 

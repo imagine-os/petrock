@@ -2,6 +2,8 @@
 
 Status 2026-09-17: **no content has been read yet.** This file records why, what was tried, and what to skim once it is readable. Nothing below describes the Santa Maria repo itself.
 
+**Status update 2026-09-17 18:54 UTC (D-009, blocked):** Justin reports "Github connected to Santa Maria", but the repo is still not visible to Claude Tag: `list_repos` (queries "santa", "Tenis", full list) returns nothing, and `create_session` with the repo as source was denied with "GitHub access to the repository is not enabled for this agent — an organization owner can grant it in the Claude GitHub settings". Remedy: an org owner enables `Santa-Maria-Tenis-Club/os` for Claude Tag at https://claude.ai/admin-settings/claude-tag; then the digest runs in its own session (one-owner rule).
+
 Role in Petrock: Justin pointed at the **spec builder** and other smart things in the Santa Maria dashboard that make development and documentation better, and that may not be in hoy (and vice versa). Content of the club itself is irrelevant; the tooling is what matters.
 
 ## Why it could not be read
