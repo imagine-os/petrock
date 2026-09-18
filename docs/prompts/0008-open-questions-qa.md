@@ -70,3 +70,12 @@ Each question resolves the decision rows (`docs/decisions.md`) and open-question
 Still-proposed rows not asked about (D-004 name, D-010, D-011, D-035, D-037, D-047, D-086, D-123, D-138, D-148, D-154, D-174 and the module "proposed" rows) stay as built by default; they are flagged to Justin only if he objects.
 
 How answers land: each answer is appended to `docs/decisions.md` as a new row (D-183 onward, never renumbering) and the old row's status is updated to point at it. Nothing in `docs/decisions.md` or `docs/open-questions.md` changes until an answer arrives.
+
+## Answers (running log)
+
+Appended as answers arrive in the same Slack thread; never edited, only extended.
+
+| Timestamp (UTC) | Q | Justin's answer (verbatim) | Claude's reply (summary) | Decision row |
+| --- | --- | --- | --- | --- |
+| 2026-09-18 13:40 | 18 | "Do not write to  company os unless I tell you to.  That project is seperate for now. The dev will connect wheb he is ready. Its only for your reference as of now." | Company-OS stays reference only: nothing wired or written to it until Justin says so; the adapter seam stays empty for the dev to connect later. | D-183 |
+| 2026-09-18 13:40 | 14 | "I assume we can define this from supabase for auth later?" | Yes: password rules and lockout come from Supabase Auth's settings when the app moves there (configurable min length / required characters, rate limits for brute-force); the listed numbers are what the mock enforces until then. 30-day deletion grace and English + Spanish are app-side and stay as built. | D-184 (D-024 / D-025 superseded, D-085 / D-088 decided) |

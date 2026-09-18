@@ -1,5 +1,7 @@
 # Playset-LLC/Company-OS - data-layer digest
 
+Status (2026-09-18, D-183): reference only. Do not write to or wire into Company-OS until Justin says so; its developer will connect it.
+
 Digested 2026-09-17 in a separate read-only session because this session cannot attach Playset-LLC repos alongside imagine-os repos.
 
 **1. Tech stack and layout**
