@@ -1,0 +1,47 @@
+/* Screen layouts for the customer settings & chat module (components own their CSS). */
+.csc-screen { display: flex; flex-direction: column; min-height: 100%; background: var(--color-bg-phone); }
+.csc-body { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-2) var(--sp-4) var(--sp-6); }
+.csc-body.is-flush { padding-left: 0; padding-right: 0; }
+.csc-group { display: flex; flex-direction: column; }
+.csc-group-title { padding: var(--sp-3) var(--sp-4) var(--sp-1); }
+.csc-list { display: flex; flex-direction: column; }
+.csc-sticky-cta { position: sticky; bottom: calc(var(--h-bottomnav) + env(safe-area-inset-bottom) + 8px); padding: var(--sp-3) var(--sp-4); background: linear-gradient(to top, var(--color-bg-phone) 70%, transparent); z-index: 5; }
+.csc-preview { display: inline-flex; align-items: center; gap: 6px; margin: 0 auto; }
+.csc-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+.csc-form-grid .span-2 { grid-column: span 2; }
+@media (max-width: 360px) { .csc-form-grid { grid-template-columns: 1fr; } .csc-form-grid .span-2 { grid-column: auto; } }
+.csc-link-row { display: flex; justify-content: flex-end; margin-top: -6px; }
+.csc-note { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.csc-version { text-align: center; font-size: var(--fs-xs); color: var(--color-text-faint); padding: var(--sp-4) 0; }
+/* notification centre */
+.csc-daylabel { padding: var(--sp-3) var(--sp-4) var(--sp-1); }
+.csc-filters { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-4); }
+/* chat */
+.csc-chat { display: flex; flex-direction: column; height: calc(100vh - var(--h-bottomnav) - env(safe-area-inset-bottom) - 8px); background: var(--color-bg-phone); }
+.csc-chat .cshead { flex: 0 0 auto; border-bottom: 1px solid var(--color-border); }
+.csc-chat-scroll { flex: 1 1 auto; overflow-y: auto; padding: var(--sp-3) 0 var(--sp-2); display: flex; flex-direction: column; gap: 4px; -webkit-overflow-scrolling: touch; }
+.csc-chat-composer { flex: 0 0 auto; }
+.csc-chat-typing { display: inline-flex; gap: 4px; align-items: center; padding: 6px 14px; margin: 0 var(--sp-4); border-radius: 18px; background: var(--color-surface-2); width: fit-content; }
+.csc-chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--color-text-faint); animation: csc-blink 1.2s infinite; }
+.csc-chat-typing span:nth-child(2) { animation-delay: .2s; } .csc-chat-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes csc-blink { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
+.csc-lightbox { display: flex; justify-content: center; } .csc-lightbox img { max-height: 70vh; border-radius: var(--r-lg); }
+/* about */
+.csc-appmark { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); padding: var(--sp-6) 0 var(--sp-2); text-align: center; }
+.csc-appmark img { width: 72px; height: 72px; }
+.csc-loc { display: flex; flex-direction: column; gap: 2px; }
+/* rate */
+.csc-rate-stars { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); padding: var(--sp-4) 0; }
+.csc-tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+/* prefs matrix */
+.csc-prefs-head { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 56px); align-items: end; padding: 0 var(--sp-4) var(--sp-2); }
+.csc-prefs-row { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 56px); align-items: center; padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--color-border); }
+.csc-prefs-row:last-child { border-bottom: 0; }
+.csc-prefs-cell { display: flex; justify-content: center; }
+.csc-prefs-cell .toggle { gap: 0; }
+@media (max-width: 360px) { .csc-prefs-head, .csc-prefs-row { grid-template-columns: minmax(0, 1fr) repeat(3, 44px); } }
+/* language */
+.csc-langflag { font-size: 22px; line-height: 1; }
+/* delete */
+.csc-danger-box { border: 1px solid var(--color-danger); background: var(--color-danger-bg); color: var(--color-danger); border-radius: var(--r-card); padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); }
+.csc-check-list { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--color-text-muted); display: flex; flex-direction: column; gap: 4px; }

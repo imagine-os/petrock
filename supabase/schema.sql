@@ -8,6 +8,26 @@ create extension if not exists pgcrypto;
 create or replace function public.touch_updated_at() returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end $$;
 
+-- system · Account deletion requests: App-store requirement: a customer can request deletion; 30-day grace period, then anonymisation (R-M21).
+create table if not exists public.account_deletion_requests (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  user_id uuid not null references public.users(id) on delete set null,
+  customer_id uuid references public.customers(id) on delete set null,
+  reason text check (reason in ('moving', 'no_longer_needed', 'privacy', 'too_many_notifications', 'other')),
+  details text,
+  status text not null check (status in ('requested', 'cancelled', 'completed')),
+  requested_at timestamptz not null,
+  -- Day the data is anonymised unless cancelled
+  scheduled_for date not null,
+  completed_at timestamptz
+);
+create index if not exists account_deletion_requests_user_id_idx on public.account_deletion_requests(user_id);
+create index if not exists account_deletion_requests_customer_id_idx on public.account_deletion_requests(customer_id);
+create trigger account_deletion_requests_touch before update on public.account_deletion_requests for each row execute function public.touch_updated_at();
+
 -- grooming · Grooming add-ons: Add-ons (Furminator, Medicated Shampoo, Nail Trim...) with price, starting-at flag, added time and employee restriction.
 create table if not exists public.addons (
   -- Primary key
@@ -243,6 +263,20 @@ create table if not exists public.capacities (
 create index if not exists capacities_location_idx on public.capacities(location_id);
 create trigger capacities_touch before update on public.capacities for each row execute function public.touch_updated_at();
 
+-- comms · Chat quick replies: Canned messages offered above the chat composer for customers and staff (C-82, F-61).
+create table if not exists public.chat_quick_replies (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  audience text not null check (audience in ('customer', 'staff')),
+  -- May contain {pet} placeholder
+  text text not null,
+  sort_order integer not null,
+  active boolean not null default false
+);
+create trigger chat_quick_replies_touch before update on public.chat_quick_replies for each row execute function public.touch_updated_at();
+
 -- comms · Conversations: One Front Desk chat thread per customer per location.
 create table if not exists public.conversations (
   -- Primary key
@@ -409,6 +443,20 @@ create index if not exists employees_location_idx on public.employees(location_i
 create index if not exists employees_user_id_idx on public.employees(user_id);
 create trigger employees_touch before update on public.employees for each row execute function public.touch_updated_at();
 
+-- comms · FAQ items: Help & support questions and answers grouped by topic (C-77).
+create table if not exists public.faq_items (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  question text not null,
+  answer text not null,
+  topic text not null check (topic in ('booking', 'payment', 'vaccines', 'app', 'other')),
+  sort_order integer not null,
+  active boolean not null default false
+);
+create trigger faq_items_touch before update on public.faq_items for each row execute function public.touch_updated_at();
+
 -- comms · Staff feedback: Feedback staff leave from any page (FeedbackButton); the owner reads it in an inbox.
 create table if not exists public.feedback (
   -- Primary key
@@ -541,6 +589,23 @@ create index if not exists invoices_location_idx on public.invoices(location_id)
 create index if not exists invoices_customer_id_idx on public.invoices(customer_id);
 create trigger invoices_touch before update on public.invoices for each row execute function public.touch_updated_at();
 
+-- system · Legal documents: Privacy policy, terms of service and open-source licences shown in the app (C-79); versioned markdown.
+create table if not exists public.legal_documents (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  slug text not null,
+  title text not null,
+  kind text not null check (kind in ('privacy', 'terms', 'licenses', 'other')),
+  version text not null,
+  effective_on date not null,
+  -- Markdown
+  body text not null,
+  published boolean not null default false
+);
+create trigger legal_documents_touch before update on public.legal_documents for each row execute function public.touch_updated_at();
+
 -- core · Locations: Petrock stores (Encino, Westwood). Adding a location inserts a row; everything else is scoped by location_id.
 -- access:
 --   · everyone read
@@ -582,6 +647,21 @@ create table if not exists public.messages (
 create index if not exists messages_conversation_id_idx on public.messages(conversation_id);
 create index if not exists messages_sender_user_id_idx on public.messages(sender_user_id);
 create trigger messages_touch before update on public.messages for each row execute function public.touch_updated_at();
+
+-- comms · Notification preferences: Per user per category: push / email / SMS on or off (C-75).
+create table if not exists public.notification_prefs (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  user_id uuid not null references public.users(id) on delete set null,
+  category text not null check (category in ('bookings', 'vaccines', 'chat', 'payments', 'promotions')),
+  push boolean not null default false,
+  email boolean not null default false,
+  sms boolean not null default false
+);
+create index if not exists notification_prefs_user_id_idx on public.notification_prefs(user_id);
+create trigger notification_prefs_touch before update on public.notification_prefs for each row execute function public.touch_updated_at();
 
 -- comms · Notifications: In-app notifications to a user (booking confirmed, payment done, vaccine expiring...).
 create table if not exists public.notifications (
@@ -641,6 +721,30 @@ create table if not exists public.page_layouts (
   hidden jsonb not null
 );
 create trigger page_layouts_touch before update on public.page_layouts for each row execute function public.touch_updated_at();
+
+-- commerce · Saved payment methods: Cards a customer saved in the app. Only brand, last4, expiry and the provider token are stored (mock now; Stripe PaymentMethod ids later).
+create table if not exists public.payment_methods (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  customer_id uuid not null references public.customers(id) on delete set null,
+  type text not null check (type in ('card', 'cash')),
+  brand text check (brand in ('visa', 'mastercard', 'amex', 'discover', 'other')),
+  last4 text,
+  exp_month integer,
+  exp_year integer,
+  holder_name text,
+  billing_zip text,
+  is_default boolean not null default false,
+  -- mock | stripe
+  provider text not null,
+  -- Tokenised reference; never a PAN
+  provider_token text,
+  status text not null check (status in ('active', 'expired', 'removed'))
+);
+create index if not exists payment_methods_customer_id_idx on public.payment_methods(customer_id);
+create trigger payment_methods_touch before update on public.payment_methods for each row execute function public.touch_updated_at();
 
 -- commerce · Payments: Payment attempts and results through the PaymentProvider (mock now, Stripe later).
 create table if not exists public.payments (
@@ -865,6 +969,28 @@ create table if not exists public.settings (
   description text
 );
 create trigger settings_touch before update on public.settings for each row execute function public.touch_updated_at();
+
+-- comms · Support requests: Help form submissions from the app; the front desk / owner answers them (C-77).
+create table if not exists public.support_requests (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  customer_id uuid references public.customers(id) on delete set null,
+  user_id uuid not null references public.users(id) on delete set null,
+  user_name text not null,
+  email text,
+  topic text not null check (topic in ('booking', 'payment', 'vaccines', 'app', 'other')),
+  message text not null,
+  status text not null check (status in ('new', 'open', 'resolved')),
+  staff_reply text
+);
+create index if not exists support_requests_location_idx on public.support_requests(location_id);
+create index if not exists support_requests_customer_id_idx on public.support_requests(customer_id);
+create index if not exists support_requests_user_id_idx on public.support_requests(user_id);
+create trigger support_requests_touch before update on public.support_requests for each row execute function public.touch_updated_at();
 
 -- commerce · Taxes: Tax settings: one named tax with service / product / boarding rates, prices exclusive by default.
 create table if not exists public.taxes (

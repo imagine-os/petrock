@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (41)
+## Tables (46)
 
 ### Core & locations
 
@@ -148,24 +148,6 @@ _Source: entities 1_
 | `note` | text, null |  |
 | `balance` | money | Outstanding balance, USD |
 
-#### `emergency_contacts` (global)
-Who to call about a pet when the parent is unreachable (customer-level, optionally pinned to one pet). Captured on the Add / Edit pet wizard step "Vet & emergency".  
-_Source: customer-home-pets (R-X22)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `customer_id` | uuid | -> `customers`  |
-| `pet_id` | uuid, null | -> `pets`  |
-| `name` | text |  |
-| `phone` | text |  |
-| `relationship` | text, null | e.g. Partner, Neighbour, Dog walker |
-| `note` | text, null |  |
-
-**Access:** customer read/write own; staff read
-
 #### `employees` (per location)
 Staff records with job, status, calendar colour, working hours and hashed PIN.  
 _Source: entities 20_
@@ -193,23 +175,6 @@ _Source: entities 20_
 | `note` | text, null |  |
 
 ### Pets & vaccines
-
-#### `pet_lookups` (global)
-Extendable option lists for pet forms: breeds and colours (entities 5: "extendable inline via +"). Customers and staff can add a value from the form.  
-_Source: entities 5, Pet Edit.png_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `kind` | enum (breed \| color) |  |
-| `value` | text |  |
-| `sort_order` | int |  |
-| `active` | bool |  |
-| `added_by` | text, null | user id when added from a form |
-
-**Access:** everyone read; signed-in add
 
 #### `pets` (global)
 Dogs (and other pets) with profile, care instructions and approval status.  
@@ -297,51 +262,6 @@ _Source: entities 4_
 | `address` | text, null |  |
 
 ### Hotel
-
-#### `booking_change_requests` (per location)
-A pet parent asks to modify dates, add / remove a pet, add grooming or cancel a stay. The front desk approves or declines; approving a cancellation of a confirmed stay is PIN-gated (R-I06).  
-_Source: C-39 / C-41 (no Figma screen; D-003 hotel consistency)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `booking_id` | uuid | -> `bookings`  |
-| `customer_id` | uuid | -> `customers`  |
-| `kind` | enum (modify_dates \| add_pet \| remove_pet \| add_grooming \| cancel \| other) |  |
-| `requested_check_in` | timestamptz, null |  |
-| `requested_check_out` | timestamptz, null |  |
-| `pet_ids` | json, null |  |
-| `message` | text, null |  |
-| `status` | enum (open \| approved \| declined \| withdrawn) |  |
-| `handled_by` | uuid, null | -> `users`  |
-| `handled_at` | timestamptz, null |  |
-| `staff_note` | text, null |  |
-
-#### `booking_pet_care` (global)
-Per pet per hotel stay: feeding, own food, belongings, flea medication brand and date, extra notes (the customer fills these in C-32; the desk reads them at check-in).  
-_Source: entities 11, Booking Details Add Pets*.png_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `booking_id` | uuid | -> `bookings`  |
-| `booking_pet_id` | uuid | -> `booking_pets`  |
-| `pet_id` | uuid | -> `pets`  |
-| `feeding_instructions` | text, null |  |
-| `meals_per_day` | text, null |  |
-| `own_food` | bool |  |
-| `belongings` | text, null | Bed, toys, leash... brought along |
-| `medication_count` | int, null |  |
-| `dosing_frequency` | text, null | e.g. '1 daily (AM only)' |
-| `flea_brand` | text, null |  |
-| `flea_last_dose_on` | date, null |  |
-| `emergency_contact` | text, null |  |
-| `notes` | text, null |  |
 
 #### `booking_pets` (global)
 Pets on a stay with the per-booking medical questionnaire.  
@@ -490,36 +410,6 @@ _Source: entities 12_
 | `payment_status` | enum (pending \| authorized \| paid \| refunded \| failed) |  |
 | `notes` | text, null |  |
 
-#### `grooming_orders` (per location)
-One customer booking of Grooming & Spa for one or more pets at one time: groups the per-pet appointments, carries the payment and the one booking lifecycle status. Past orders can be re-created (R-G16).  
-_Source: Frame 1171276434/35.png, entities 12_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `code` | text | Human reference e.g. GS-1042 |
-| `customer_id` | uuid | -> `customers`  |
-| `appointment_ids` | json | appointments.id per pet |
-| `pet_ids` | json | pets.id in order |
-| `starts_at` | timestamptz |  |
-| `duration_min` | int | Longest chair time; pets are groomed in parallel up to the grooming capacity |
-| `groomer_id` | uuid, null | -> `employees`  |
-| `status` | enum (requested \| pending_vaccines \| confirmed \| checked_in \| checked_out \| cancelled \| no_show) |  |
-| `payment_method` | enum (card \| cash), null |  |
-| `payment_status` | enum (pending \| authorized \| paid \| refunded \| failed) |  |
-| `subtotal` | money | USD |
-| `tax_total` | money | USD |
-| `fee_total` | money | USD |
-| `total` | money | USD |
-| `invoice_id` | uuid, null | -> `invoices`  |
-| `notes` | text, null |  |
-| `source` | text, null | app | desk | recreate |
-
-**Access:** customer read own; front desk read/write; owner read
-
 #### `packages` (global)
 Gold / Platinum / Diamond priced by dog size S/M/L/XL/Giant with calendar minutes per size and inclusions.  
 _Source: R-G01..G07_
@@ -563,24 +453,6 @@ _Source: entities 10, 15_
 | `description` | text, null |  |
 
 ### Daycare
-
-#### `daycare_booking_pets` (global)
-Per pet on a daycare day: the additional pet details questionnaire (vet-recommended flea medication with brand and date, medical alerts).  
-_Source: DayCare-2.png, R-A10_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `daycare_booking_id` | uuid | -> `daycare_bookings`  |
-| `pet_id` | uuid | -> `pets`  |
-| `flea_medication` | bool | On a vet-recommended flea medication |
-| `flea_brand` | text, null |  |
-| `flea_date` | date, null | Last application |
-| `medical_alert` | text, null |  |
-
-**Access:** customer write own; front desk read
 
 #### `daycare_bookings` (per location)
 A daycare day: pets, date, in/out times, computed item and price, status (same lifecycle).  
@@ -685,6 +557,28 @@ _Source: entities 15_
 | `issued_at` | timestamptz, null |  |
 | `footer` | text, null |  |
 
+#### `payment_methods` (global)
+Cards a customer saved in the app. Only brand, last4, expiry and the provider token are stored (mock now; Stripe PaymentMethod ids later).  
+_Source: entities 16, Payment-1.png, R-M22_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid | -> `customers`  |
+| `type` | enum (card \| cash) |  |
+| `brand` | enum (visa \| mastercard \| amex \| discover \| other), null |  |
+| `last4` | text, null |  |
+| `exp_month` | int, null |  |
+| `exp_year` | int, null |  |
+| `holder_name` | text, null |  |
+| `billing_zip` | text, null |  |
+| `is_default` | bool |  |
+| `provider` | text | mock | stripe |
+| `provider_token` | text, null | Tokenised reference; never a PAN |
+| `status` | enum (active \| expired \| removed) |  |
+
 #### `payments` (per location)
 Payment attempts and results through the PaymentProvider (mock now, Stripe later).  
 _Source: entities 16_
@@ -743,6 +637,20 @@ _Source: R-H04, R-H05_
 
 ### Messages, reviews & feedback
 
+#### `chat_quick_replies` (global)
+Canned messages offered above the chat composer for customers and staff (C-82, F-61).  
+_Source: D-018 (chat best practices)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `audience` | enum (customer \| staff) |  |
+| `text` | text | May contain {pet} placeholder |
+| `sort_order` | int |  |
+| `active` | bool |  |
+
 #### `conversations` (per location)
 One Front Desk chat thread per customer per location.  
 _Source: entities 22_
@@ -759,6 +667,21 @@ _Source: entities 22_
 | `unread_staff` | int |  |
 | `unread_customer` | int |  |
 | `status` | enum (open \| closed) |  |
+
+#### `faq_items` (global)
+Help & support questions and answers grouped by topic (C-77).  
+_Source: profile.jpg (Help)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `question` | text |  |
+| `answer` | text |  |
+| `topic` | enum (booking \| payment \| vaccines \| app \| other) |  |
+| `sort_order` | int |  |
+| `active` | bool |  |
 
 #### `feedback` (per location)
 Feedback staff leave from any page (FeedbackButton); the owner reads it in an inbox.  
@@ -797,6 +720,21 @@ _Source: entities 22_
 | `sent_at` | timestamptz |  |
 | `read` | bool |  |
 
+#### `notification_prefs` (global)
+Per user per category: push / email / SMS on or off (C-75).  
+_Source: setting.jpg, R-M23_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `user_id` | uuid | -> `users`  |
+| `category` | enum (bookings \| vaccines \| chat \| payments \| promotions) |  |
+| `push` | bool |  |
+| `email` | bool |  |
+| `sms` | bool |  |
+
 #### `notifications` (global)
 In-app notifications to a user (booking confirmed, payment done, vaccine expiring...).  
 _Source: entities 21_
@@ -831,7 +769,44 @@ _Source: entities 23_
 | `tags` | json, null |  |
 | `status` | enum (pending \| published \| archived) |  |
 
+#### `support_requests` (per location)
+Help form submissions from the app; the front desk / owner answers them (C-77).  
+_Source: profile.jpg (Help)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid, null | -> `customers`  |
+| `user_id` | uuid | -> `users`  |
+| `user_name` | text |  |
+| `email` | text, null |  |
+| `topic` | enum (booking \| payment \| vaccines \| app \| other) |  |
+| `message` | text |  |
+| `status` | enum (new \| open \| resolved) |  |
+| `staff_reply` | text, null |  |
+
 ### System
+
+#### `account_deletion_requests` (global)
+App-store requirement: a customer can request deletion; 30-day grace period, then anonymisation (R-M21).  
+_Source: setting.jpg, Frame 1171276432.png, R-M05_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `user_id` | uuid | -> `users`  |
+| `customer_id` | uuid, null | -> `customers`  |
+| `reason` | enum (moving \| no_longer_needed \| privacy \| too_many_notifications \| other), null |  |
+| `details` | text, null |  |
+| `status` | enum (requested \| cancelled \| completed) |  |
+| `requested_at` | timestamptz |  |
+| `scheduled_for` | date | Day the data is anonymised unless cancelled |
+| `completed_at` | timestamptz, null |  |
 
 #### `approvals` (per location)
 Every manager-PIN approval: who approved what, for whom, on which record.  
@@ -870,6 +845,23 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
+
+#### `legal_documents` (global)
+Privacy policy, terms of service and open-source licences shown in the app (C-79); versioned markdown.  
+_Source: app-store requirements (build plan phase 5)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `slug` | text |  |
+| `title` | text |  |
+| `kind` | enum (privacy \| terms \| licenses \| other) |  |
+| `version` | text |  |
+| `effective_on` | date |  |
+| `body` | text | Markdown |
+| `published` | bool |  |
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

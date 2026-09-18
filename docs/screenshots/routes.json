@@ -427,305 +427,66 @@
   }
  },
  {
-  "path": "/app/hotel",
-  "code": "C-30",
+  "path": "/app/profile",
+  "code": "C-70",
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer"
+   "customer",
+   "super_admin"
   ],
   "spec": {
-   "code": "C-30",
-   "name": "Hotel: choose pets & dates",
-   "purpose": "First step of a hotel stay: pick the location, the pets that are coming, whether they share a room, and the check-in / check-out days and times on a range calendar bounded by opening hours.",
+   "code": "C-70",
+   "name": "Profile hub",
+   "purpose": "The Settings tab of the customer app: photo, name and email, then the account menu (edit profile, pets, payment methods, notifications, chat, app settings, help, rate, about, log out).",
    "layout": [
-    "HotelBookingFrame (back, title, Stepper 1/7)",
-    "Location Select",
-    "Pet cards (BookingPetCard, multi-select, approval + vaccine chips)",
-    "Share-a-room Select (2+ pets)",
-    "StayDatesCard (check-in / check-out + inline range calendar)",
-    "Sticky footer: Next"
+    "CustomerScreenHeader",
+    "AccountProfileHero (photo picker)",
+    "Preview chip (staff viewing as customer)",
+    "Account menu (Card of AccountMenuRow)",
+    "More menu",
+    "Log out"
    ],
    "data": [
     "customers",
-    "pets",
-    "vaccine_records",
-    "vaccine_types",
-    "locations",
-    "settings"
+    "users",
+    "notifications",
+    "conversations",
+    "payment_methods"
    ],
    "roles": [
     "customer"
    ],
    "logic": [
-    "R-A01: no pets -> EmptyState with Add a pet.",
-    "Share-room question only for 2+ pets; more than settings.max_pets_per_room forces separate rooms (R-X33).",
-    "validateStay(): check-out after check-in, min nights, times inside location hours for that weekday, closed days disabled (R-X34).",
-    "Vaccine chip per pet from vaccine_records vs required vaccine_types (R-A05).",
-    "Draft persists in localStorage (petrock.hotelDraft.v1) across steps and refreshes."
+    "useCustomerAccount resolves the customer behind the user; staff previewing falls back to the demo customer.",
+    "Unread notification and chat counts as badges.",
+    "Photo picker stores a data URL in users.avatar_url (mock upload, 1.5 MB cap).",
+    "Log out = signOut() then /auth/sign-in."
    ],
-   "integrations": [],
+   "integrations": [
+    "Company-OS users / customers (later)"
+   ],
    "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "Select",
-    "BookingPetCard",
-    "StayDatesCard",
-    "DatePicker",
-    "TimePicker",
-    "EmptyState",
-    "Badge"
-   ],
-   "rules": [
-    "R-A01",
-    "R-A04",
-    "R-A05",
-    "R-A07",
-    "R-K02",
-    "R-X33",
-    "R-X34"
-   ],
-   "states": [
-    "no pets",
-    "one pet",
-    "multi-pet with share question",
-    "date error",
-    "valid"
-   ],
-   "figma": [
-    "Choose Pets-3.png",
-    "Choose Pets-2.png",
-    "Hotel Reservation.png",
-    "Frame 1171276425.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ],
-   "notes": [
-    "Chosen over the text-input variant: the room-share question is a Yes/No select (open question 39).",
-    "Grooming is its own step (C-33) instead of the Yes/No dropdown on this screen."
-   ]
-  }
- },
- {
-  "path": "/app/hotel/room",
-  "code": "C-31",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-31",
-   "name": "Hotel: choose room type",
-   "purpose": "Pick Penthouse or Suite for the chosen pets and dates. Cards show the inclusions copy, the average nightly rate per pet from the pricing engine, rooms left, and are disabled by the fit rules (55 lb Suite only, 30 lb bottom rooms) or when the location is full.",
-   "layout": [
-    "HotelBookingFrame (Stepper 2/7)",
-    "Stay summary line (pets, nights, location)",
-    "HotelRoomTypeCard per room_types row",
-    "Fit / capacity explanations",
-    "Sticky footer: Next"
-   ],
-   "data": [
-    "room_types",
-    "rates",
-    "seasons",
-    "rooms",
-    "capacities",
-    "bookings",
-    "booking_pets",
-    "pets"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "avgNightly(): quoteHotel for 1 dog over the dates / nights (R-X39, weekday / weekend / seasonal rates R-D05, R-D06).",
-    "roomFit(): any pet >= 55 lb blocks Penthouse (R-X01); pets >= 30 lb need a bottom penthouse room (R-E09, R-X37).",
-    "availability(): capacities.max_simultaneous minus overlapping active stays; rooms needed = 1 when sharing else pets count (R-X36, R-E11, R-E12)."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "HotelRoomTypeCard",
+    "CustomerScreenHeader",
+    "AccountProfileHero",
+    "AccountMenuRow",
+    "Card",
     "Badge",
-    "Card"
-   ],
-   "rules": [
-    "R-D01",
-    "R-D05",
-    "R-D06",
-    "R-E09",
-    "R-E11",
-    "R-E12",
-    "R-X01",
-    "R-X36",
-    "R-X37",
-    "R-X39"
-   ],
-   "states": [
-    "both available",
-    "Penthouse blocked (55 lb)",
-    "bottom rooms full",
-    "location full"
-   ],
-   "figma": [
-    "Choose Your Room.png",
-    "Choose Your Room-1.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ],
-   "notes": [
-    "Suite description is its own copy (the Figma card repeats the Penthouse text).",
-    "Prices are never hardcoded: $150 / $105 / $115 in the exports were conflicting placeholders (open question 48)."
-   ]
-  }
- },
- {
-  "path": "/app/hotel/pets",
-  "code": "C-32",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-32",
-   "name": "Hotel: pet stay details",
-   "purpose": "Per pet coming to stay: feeding plan, own food, medication and dosing, vet-recommended flea medication (brand, last dose), belongings, medical alert and notes. Prefilled from the pet profile.",
-   "layout": [
-    "HotelBookingFrame (Stepper 3/7)",
-    "One collapsible Section per pet (BookingPetCard compact header)",
-    "Feeding fields",
-    "Medication fields (conditional)",
-    "Flea medication fields (conditional)",
-    "Belongings, medical alert, notes",
-    "Sticky footer: Next"
-   ],
-   "data": [
-    "pets",
-    "settings"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "Defaults from pets.feeding_am / feeding_pm / own_food / medical_conditions.",
-    "Medication and flea sub-fields appear only when the answer is Yes (R-A10).",
-    "Saved into booking_pets (medical) and booking_pet_care (feeding, belongings, flea) at payment."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "Section",
-    "BookingPetCard",
-    "Select",
-    "Input",
-    "Textarea",
-    "Toggle"
-   ],
-   "rules": [
-    "R-A10",
-    "R-A13"
-   ],
-   "states": [
-    "no medication",
-    "medication + flea",
-    "multiple pets"
-   ],
-   "figma": [
-    "Booking Details Add Pets.png",
-    "Booking Details Add Pets-4.png",
-    "Frame 1171276426.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ],
-   "notes": [
-    "Resolves open question 42: the form is per pet (one section each), titled once; the unlabeled date is the last flea dose."
-   ]
-  }
- },
- {
-  "path": "/app/hotel/grooming",
-  "code": "C-33",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-33",
-   "name": "Hotel: add grooming during the stay",
-   "purpose": "Optionally add one Grooming & Spa package (Gold / Platinum / Diamond priced by the pet size) plus add-ons per pet, scheduled at the end of the stay. Skippable.",
-   "layout": [
-    "HotelBookingFrame (Stepper 4/7)",
-    "Info band (grooms at the end of stays)",
-    "Per pet: package RadioGroup cards with size price, add-on Chips",
-    "Running grooming total (HotelEstimateCard compact)",
-    "Sticky footer: Skip / Continue"
-   ],
-   "data": [
-    "packages",
-    "addons",
-    "pets",
-    "taxes",
-    "fees"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "packagePrice(pkg, pet.size) from packages.price_<size> (R-G01, R-G02); add-ons from addons with starting-at flag (R-G10, R-G11).",
-    "quoteGrooming() per pet (service tax); appointments are created at payment with booking_id and 09:00 on check-out day (R-X35, R-A09)."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "RadioGroup",
     "Chip",
-    "HotelEstimateCard",
-    "BookingPetCard",
-    "Card"
+    "Toast"
    ],
    "rules": [
-    "R-A08",
-    "R-A09",
-    "R-G01",
-    "R-G02",
-    "R-G10",
-    "R-G11",
-    "R-X35"
+    "R-M06",
+    "R-M04"
    ],
    "states": [
-    "nothing selected",
-    "package per pet",
-    "skipped"
+    "default",
+    "with unread badges",
+    "previewing as customer"
    ],
    "figma": [
-    "Frame 1171276430.png",
-    "Frame 1171276428.png",
-    "Booking Detail.jpg"
+    "profile.jpg",
+    "Frame 1171276432.png"
    ],
    "checkedAt": [
     360,
@@ -737,239 +498,252 @@
   }
  },
  {
-  "path": "/app/hotel/customer",
-  "code": "C-34",
+  "path": "/app/profile/edit",
+  "code": "C-71",
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer"
+   "customer",
+   "super_admin"
   ],
   "spec": {
-   "code": "C-34",
-   "name": "Hotel: customer details",
-   "purpose": "Confirm the contact and billing details for the stay: names, mobile and alternate phone, email, US address. Prefilled from the customer record and written back on payment.",
+   "code": "C-71",
+   "name": "Edit profile",
+   "purpose": "Edit contact details and address; email and password change through separate confirmation flows.",
    "layout": [
-    "HotelBookingFrame (Stepper 5/7)",
-    "Two-column rows: first / last name, mobile / alt phone",
-    "Email",
-    "Address, apt / suite, city",
-    "State Select / ZIP",
-    "Sticky footer: Next"
+    "CustomerScreenHeader",
+    "AccountProfileHero",
+    "Contact (first, last, mobile, alt phone)",
+    "Address (street, apt, city, state, ZIP)",
+    "Sign-in (email read-only + Change email modal; password disabled + Change password link)",
+    "Sticky Save"
    ],
    "data": [
+    "customers",
+    "users",
+    "audit_log"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Required: first, last, mobile; phone and ZIP format checks.",
+    "Save updates customers and mirrors name / phone to users.",
+    "Change email asks for the new address and the current password (mock), writes audit_log email.change."
+   ],
+   "integrations": [
+    "Company-OS auth for email / password (later)"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "AccountProfileHero",
+    "Section",
+    "Input",
+    "Select",
+    "Button",
+    "Modal",
+    "Toast"
+   ],
+   "rules": [
+    "R-M01"
+   ],
+   "states": [
+    "prefilled",
+    "validation errors",
+    "change email modal",
+    "saving"
+   ],
+   "figma": [
+    "image 175.png",
+    "Frame 1171276433.png",
+    "Frame 1171276431.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/settings",
+  "code": "C-72",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-72",
+   "name": "App settings",
+   "purpose": "Device and account settings: language, dark mode, colour theme, notification preferences, change password, payment methods, delete account.",
+   "layout": [
+    "CustomerScreenHeader",
+    "Appearance (language row, dark mode toggle, colour theme segmented)",
+    "Account (notifications, password, payment methods, delete account)",
+    "Version"
+   ],
+   "data": [
+    "users"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Dark mode and brand write through ThemeProvider (localStorage petrock.theme).",
+    "Language row shows the current language and opens C-73."
+   ],
+   "integrations": [],
+   "components": [
+    "CustomerScreenHeader",
+    "AccountMenuRow",
+    "Card",
+    "Toggle",
+    "SegmentedControl"
+   ],
+   "rules": [
+    "R-M04",
+    "R-M05",
+    "R-M03"
+   ],
+   "states": [
+    "light",
+    "dark",
+    "sunset brand"
+   ],
+   "figma": [
+    "setting.jpg"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/settings/language",
+  "code": "C-73",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-73",
+   "name": "Language",
+   "purpose": "Pick the app language (English, Español) and save it on the device and on the account.",
+   "layout": [
+    "CustomerScreenHeader (left aligned)",
+    "Instruction",
+    "RadioGroup cards with flags",
+    "Note about more languages",
+    "Sticky Save"
+   ],
+   "data": [
+    "users"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Save is disabled until the choice differs; on save setLang() + users.preferred_language.",
+    "Every module string has en / es entries; missing es falls back to en."
+   ],
+   "integrations": [],
+   "components": [
+    "CustomerScreenHeader",
+    "RadioGroup",
+    "Button",
+    "Toast"
+   ],
+   "rules": [
+    "R-M03",
+    "R-M26"
+   ],
+   "states": [
+    "English selected",
+    "Español selected",
+    "save disabled"
+   ],
+   "figma": [
+    "language.jpg"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/payment-methods",
+  "code": "C-74",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-74",
+   "name": "Payment methods",
+   "purpose": "Saved cards for faster deposits: list, add (tokenised), make default, remove; cash at the location stays available.",
+   "layout": [
+    "CustomerScreenHeader (+ add)",
+    "PaymentCardTile list or EmptyState",
+    "Cash note",
+    "Add card modal (name, number, expiry, CVC, ZIP, default)",
+    "Remove confirmation"
+   ],
+   "data": [
+    "payment_methods",
     "customers"
    ],
    "roles": [
     "customer"
    ],
    "logic": [
-    "Required: first, last, mobile, email, address, city, state, zip; email and ZIP format checks.",
-    "One address serves contact and billing (open question 44)."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "Input",
-    "Select"
-   ],
-   "rules": [
-    "R-L01"
-   ],
-   "states": [
-    "prefilled",
-    "validation errors"
-   ],
-   "figma": [
-    "Booking Details Final Customer Details.png",
-    "Booking Details Final Customer Details-2.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ]
-  }
- },
- {
-  "path": "/app/hotel/estimate",
-  "code": "C-35",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-35",
-   "name": "Hotel: estimate",
-   "purpose": "Pre-payment estimate: room line items by night kind and season, multi-dog and long-stay discounts, tax, grooming, then the two payment paths (deposit or full) with the card fee shown for the amount charged now.",
-   "layout": [
-    "HotelBookingFrame (Stepper 6/7)",
-    "Pay plan SegmentedControl (deposit / full)",
-    "Payment method RadioGroup (card / cash at location)",
-    "HotelEstimateCard per stay (lines, total)",
-    "StayDatesCard read-only",
-    "Grooming HotelEstimateCard or Add grooming band",
-    "Payment details card (hotel, grooming, total, due now, fee, balance)",
-    "Sticky footer: Pay deposit / Pay in full"
-   ],
-   "data": [
-    "rates",
-    "seasons",
-    "discounts",
-    "fees",
-    "taxes",
-    "packages",
-    "addons",
-    "room_types",
-    "settings"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "buildHotelQuote(): one room with N dogs when sharing, else one room per pet (R-X33); quoteHotel per room (R-D05, R-E01..E06).",
-    "Long-stay discount only when paid in full and no holiday nights; the engine note explains why it did not apply (R-E04..E06, R-E08, R-E15).",
-    "Tax: boarding rate on stays, service rate on grooming (R-H04, R-H05).",
-    "depositFor(): settings.hotel_booking.deposit_percent of the pre-fee total (R-X30).",
-    "chargeFor(): card fee percent from fees on the amount charged now (R-H03, R-X38)."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "SegmentedControl",
-    "RadioGroup",
-    "HotelEstimateCard",
-    "StayDatesCard",
-    "Card"
-   ],
-   "rules": [
-    "R-D05",
-    "R-D06",
-    "R-E01",
-    "R-E02",
-    "R-E03",
-    "R-E04",
-    "R-E05",
-    "R-E06",
-    "R-E08",
-    "R-E15",
-    "R-H02",
-    "R-H03",
-    "R-H04",
-    "R-A08",
-    "R-A09",
-    "R-X30",
-    "R-X33",
-    "R-X38"
-   ],
-   "states": [
-    "deposit by card",
-    "full by cash",
-    "with grooming",
-    "discount not applied note"
-   ],
-   "figma": [
-    "Booking Detail.jpg",
-    "Booking Detail-3.jpg",
-    "Frame 1171276427.png",
-    "Frame 1171276430.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ],
-   "notes": [
-    "Merges the two Estimate variants: Payment Details card AND the card-fee footnote (open question 46)."
-   ]
-  }
- },
- {
-  "path": "/app/hotel/pay",
-  "code": "C-36",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-36",
-   "name": "Hotel: payment",
-   "purpose": "Charge the deposit or the full amount with a Stripe-shaped card form through the PaymentProvider (mock today), or record cash at location; then create the booking, its pets, care notes, grooming appointments, invoice, payment and notification.",
-   "layout": [
-    "HotelBookingFrame (Stepper 7/7)",
-    "Amount due card (due now, fee, balance)",
-    "Payment method RadioGroup",
-    "HotelCardPaymentForm (card) or cash notice",
-    "Terms line",
-    "Sticky footer: Pay $X / Confirm booking"
-   ],
-   "data": [
-    "bookings",
-    "booking_pets",
-    "booking_pet_care",
-    "appointments",
-    "invoices",
-    "payments",
-    "notifications",
-    "customers",
-    "fees",
-    "settings",
-    "vaccine_records",
-    "vaccine_types"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "validateCard(): Luhn, expiry, CVC, name, ZIP; last4 0002 declines in the mock.",
-    "createPaymentIntent(amountCents, method) then confirm; failure shows the provider error and keeps the draft.",
-    "initialStatusFor(): requested, or pending_vaccines when any pet is not verified (R-X31, R-A05).",
-    "Booking code PR-<next>, invoice INV-<next> from existing rows / settings.invoice.next_number (R-H09); invoice balance = total - charged.",
-    "Grooming appointments: one per pet with booking_id, 09:00 on check-out day, requested (R-X35).",
-    "Customer row updated with the details from C-34; draft cleared on success."
+    "Brand detected from the number prefix, Luhn check, expiry MM/YY not in the past, 3-4 digit CVC, 5-digit ZIP.",
+    "Only brand, last4, expiry, holder and a provider token are stored (R-M22).",
+    "One default per customer; removing the default promotes the next card; removed cards keep status removed for invoices."
    ],
    "integrations": [
-    "PaymentProvider (MockPaymentProvider now; StripePaymentProvider + PaymentElement later, no keys)"
+    "PaymentProvider (mock) -> Stripe Elements / SetupIntent later"
    ],
    "components": [
-    "HotelBookingFrame",
-    "Stepper",
+    "CustomerScreenHeader",
+    "PaymentCardTile",
+    "EmptyState",
     "Button",
-    "RadioGroup",
-    "HotelCardPaymentForm",
-    "HotelEstimateCard",
-    "Card",
+    "IconButton",
+    "Input",
+    "Checkbox",
+    "Modal",
     "Toast"
    ],
    "rules": [
-    "R-H01",
-    "R-H02",
-    "R-H03",
-    "R-H09",
-    "R-X30",
-    "R-X31",
-    "R-X35",
-    "R-X38"
+    "R-M22",
+    "R-H03"
    ],
    "states": [
-    "card",
-    "cash",
-    "declined",
-    "processing"
+    "empty",
+    "cards",
+    "adding",
+    "removing",
+    "expired card"
    ],
    "figma": [
     "Payment-1.png",
-    "Frame 1171276435.png",
-    "Frame 1171276427.png"
+    "Frame 1171276435.png"
    ],
    "checkedAt": [
     360,
@@ -981,57 +755,254 @@
   }
  },
  {
-  "path": "/app/hotel/done/:id",
-  "code": "C-37",
+  "path": "/app/settings/notifications",
+  "code": "C-75",
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer"
+   "customer",
+   "super_admin"
   ],
   "spec": {
-   "code": "C-37",
-   "name": "Hotel: confirmation",
-   "purpose": "After payment: the booking code, the current status on the lifecycle timeline, what happens next (vaccine proofs, desk confirmation, balance at check-in) and links to the reservation and home.",
+   "code": "C-75",
+   "name": "Notification preferences",
+   "purpose": "Choose per category (bookings, vaccines, chat, payments, offers) which channels (push, email, SMS) reach you.",
    "layout": [
-    "Success header (icon, code)",
-    "BookingStatusTimeline",
-    "Next steps Card",
-    "Actions: View reservation, Back to home"
+    "CustomerScreenHeader",
+    "Matrix card (category rows x channel toggles)",
+    "Always-sent note"
    ],
    "data": [
+    "notification_prefs"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Missing rows are created with defaults on first open (offers off, bookings on everywhere).",
+    "Each toggle saves immediately."
+   ],
+   "integrations": [
+    "Push provider (Capacitor) later"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "Card",
+    "Toggle",
+    "Icon"
+   ],
+   "rules": [
+    "R-M23"
+   ],
+   "states": [
+    "defaults",
+    "edited"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/settings/delete-account",
+  "code": "C-76",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-76",
+   "name": "Delete account",
+   "purpose": "App-store required flow: explain the 30-day grace period, block on active bookings, collect a reason, require typing DELETE, then schedule the deletion and sign out.",
+   "layout": [
+    "CustomerScreenHeader",
+    "Pending request card (cancel)",
+    "What happens card",
+    "Active bookings warning",
+    "Reason select + details",
+    "Acknowledgement checkbox",
+    "Type DELETE",
+    "Sticky danger CTA",
+    "Confirm modal"
+   ],
+   "data": [
+    "account_deletion_requests",
     "bookings",
-    "booking_pets",
-    "pets",
-    "room_types",
+    "customers",
+    "audit_log"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Blocked while any booking is requested / pending_vaccines / confirmed / checked_in.",
+    "Insert account_deletion_requests (requested, scheduled_for = today + 30) and audit_log account.delete_requested; signOut(); go to sign-in.",
+    "A pending request can be cancelled from the same screen."
+   ],
+   "integrations": [
+    "Company-OS anonymisation job (later)"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "Card",
+    "Select",
+    "Textarea",
+    "Checkbox",
+    "Input",
+    "Button",
+    "Modal",
+    "Badge",
+    "Toast"
+   ],
+   "rules": [
+    "R-M05",
+    "R-M21"
+   ],
+   "states": [
+    "default",
+    "blocked by bookings",
+    "ready",
+    "pending request"
+   ],
+   "figma": [
+    "setting.jpg",
+    "Frame 1171276432.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/help",
+  "code": "C-77",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-77",
+   "name": "Help & support",
+   "purpose": "Get help: chat with the Front Desk, call a location, browse the FAQ by topic, send a support request and see past requests with staff replies.",
+   "layout": [
+    "CustomerScreenHeader",
+    "Contact us (chat, call per location, website)",
+    "FAQ (topic pills, collapsible questions)",
+    "Send us a message form",
+    "Your requests"
+   ],
+   "data": [
+    "faq_items",
+    "support_requests",
+    "locations",
+    "customers"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Support request needs a topic and 10+ characters; stored with the home location for the desk.",
+    "Phone rows use tel: links (R-M11 replaces voice / video calls)."
+   ],
+   "integrations": [
+    "tel: / mailto:",
+    "Company-OS support queue (later)"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "AccountMenuRow",
+    "Card",
+    "Section",
+    "Tabs",
+    "Select",
+    "Textarea",
+    "Button",
+    "Badge",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-M11",
+    "R-A02"
+   ],
+   "states": [
+    "default",
+    "filtered FAQ",
+    "request sent",
+    "with history"
+   ],
+   "figma": [
+    "profile.jpg"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/about",
+  "code": "C-78",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-78",
+   "name": "About & legal",
+   "purpose": "App version, legal documents, our locations with today's hours, rate and delete links, company footer.",
+   "layout": [
+    "Header",
+    "App mark + version",
+    "Legal list (privacy, terms, licences)",
+    "Our locations",
+    "Rate / delete",
+    "Footer"
+   ],
+   "data": [
+    "legal_documents",
     "locations"
    ],
    "roles": [
     "customer"
    ],
    "logic": [
-    "pending_vaccines -> call-out to upload proofs (R-A05); requested -> desk confirms (R-I04 Pending verification / Upcoming)."
+    "Version from package.json (__APP_VERSION__).",
+    "Hours for today from locations.hours; address opens Maps."
    ],
-   "integrations": [],
+   "integrations": [
+    "Google Maps link"
+   ],
    "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "BookingStatusTimeline",
+    "CustomerScreenHeader",
+    "AccountMenuRow",
     "Card",
-    "Icon"
+    "Badge"
    ],
-   "rules": [
-    "R-A05",
-    "R-I04",
-    "R-X31"
-   ],
+   "rules": [],
    "states": [
-    "requested",
-    "pending vaccines",
-    "not found"
+    "default"
    ],
    "figma": [
-    "notification.png (Your Hotel Booking is confirmed)"
+    "profile.jpg"
    ],
    "checkedAt": [
     360,
@@ -1043,161 +1014,324 @@
   }
  },
  {
-  "path": "/app/bookings",
-  "code": "C-38",
+  "path": "/app/legal/:slug",
+  "code": "C-79",
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer"
+   "customer",
+   "super_admin"
   ],
   "spec": {
-   "code": "C-38",
-   "name": "My reservations",
-   "purpose": "Every reservation of the pet parent in one list: hotel stays, Grooming & Spa appointments and daycare days, split into Upcoming and Previous, filterable by kind; tapping a stay opens its detail.",
+   "code": "C-79",
+   "name": "Legal document",
+   "purpose": "Reads a published legal document (privacy policy, terms of service, licences) with version and effective date.",
    "layout": [
-    "HotelBookingFrame (title, + New stay)",
-    "Tabs Upcoming / Previous with counts",
-    "Kind filter Chips (All / Hotel / Grooming / Daycare)",
-    "CustomerReservationCard list",
-    "EmptyState with Book a stay"
+    "CustomerScreenHeader (version badge)",
+    "Effective date",
+    "MarkdownViewer body",
+    "Save / print"
    ],
    "data": [
-    "bookings",
-    "booking_pets",
-    "appointments",
-    "daycare_bookings",
-    "pets",
-    "room_types",
-    "packages",
-    "locations",
-    "invoices"
+    "legal_documents"
    ],
    "roles": [
     "customer"
    ],
    "logic": [
-    "Upcoming = end (check-out / appointment / day) in the future and status not checked_out / cancelled / no_show; else Previous.",
-    "Sorted by start ascending (upcoming) / descending (previous).",
-    "Balance due chip from the invoice when > 0."
+    "Looked up by slug; unpublished or unknown slug shows an EmptyState."
    ],
    "integrations": [],
    "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
+    "CustomerScreenHeader",
+    "MarkdownViewer",
+    "EmptyState",
+    "Badge",
+    "Button"
+   ],
+   "rules": [],
+   "states": [
+    "document",
+    "not found"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/notifications",
+  "code": "C-80",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-80",
+   "name": "Notification centre",
+   "purpose": "All in-app notifications grouped by day with an unread filter and mark-all-read; the Inbox tab shows the Front Desk threads.",
+   "layout": [
+    "CustomerScreenHeader (preferences)",
+    "Tabs Notifications | Inbox (counts)",
+    "Filters (All / Unread, Mark all read)",
+    "Day groups of NotificationRow",
+    "EmptyState"
+   ],
+   "data": [
+    "notifications",
+    "conversations"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Tap marks read and follows notifications.link; dismiss removes the row.",
+    "Relative times per R-M08; groups Today / Yesterday / weekday / date."
+   ],
+   "integrations": [
+    "Push (Capacitor) later"
+   ],
+   "components": [
+    "CustomerScreenHeader",
     "Tabs",
     "Chip",
-    "CustomerReservationCard",
+    "Button",
+    "Card",
+    "NotificationRow",
+    "ChatConversationRow",
+    "EmptyState",
+    "IconButton"
+   ],
+   "rules": [
+    "R-M07",
+    "R-M08"
+   ],
+   "states": [
+    "all",
+    "unread only",
+    "empty",
+    "inbox tab"
+   ],
+   "figma": [
+    "notification.png",
+    "notification-1.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/inbox",
+  "code": "C-81",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-81",
+   "name": "Inbox",
+   "purpose": "The Chat tab: one Front Desk conversation per location with preview, time and unread count; locations without a thread offer to start one.",
+   "layout": [
+    "CustomerScreenHeader (bell)",
+    "Preview chip",
+    "ChatConversationRow per location"
+   ],
+   "data": [
+    "conversations",
+    "messages",
+    "locations",
+    "customers"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Starting a thread inserts conversations + a system \"Session start\" message.",
+    "Preview shows \"You:\" when the last message is the customer's."
+   ],
+   "integrations": [],
+   "components": [
+    "CustomerScreenHeader",
+    "IconButton",
+    "Chip",
+    "ChatConversationRow",
+    "Card",
     "EmptyState"
    ],
    "rules": [
-    "R-I04",
-    "R-A06"
+    "R-M09",
+    "R-M20",
+    "R-M08"
+   ],
+   "states": [
+    "threads",
+    "no thread yet",
+    "not a customer"
+   ],
+   "figma": [
+    "notification-1.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/inbox/:conversationId",
+  "code": "C-82",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-82",
+   "name": "Front Desk chat",
+   "purpose": "Message the Front Desk of one location: day markers, bubbles with read receipts, photo attachments, quick replies, typing indicator and a demo staff reply.",
+   "layout": [
+    "CustomerScreenHeader (hours, call)",
+    "Scrolling timeline (ChatTimelineMarker, ChatMessageBubble)",
+    "Typing indicator",
+    "ChatComposer (quick replies, attach, send)",
+    "Photo lightbox"
+   ],
+   "data": [
+    "conversations",
+    "messages",
+    "locations",
+    "pets",
+    "chat_quick_replies"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Opening marks staff messages read and zeroes unread_customer (R-M24).",
+    "Send inserts the message, updates the conversation preview and unread_staff; a mock staff reply follows in ~3 s and marks the customer's messages Seen.",
+    "Bubbles within 5 minutes from the same sender are grouped; own messages right in primary (R-M25).",
+    "Images: jpg / png / webp up to 2 MB as data URLs (R-M28)."
+   ],
+   "integrations": [
+    "Company-OS realtime messages (later)",
+    "Storage for attachments (later)"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "ChatMessageBubble",
+    "ChatTimelineMarker",
+    "ChatComposer",
+    "Modal",
+    "IconButton",
+    "EmptyState",
+    "Button",
+    "Toast"
+   ],
+   "rules": [
+    "R-M09",
+    "R-M20",
+    "R-M24",
+    "R-M25",
+    "R-M28",
+    "R-M10"
+   ],
+   "states": [
+    "thread",
+    "typing",
+    "attachment preview",
+    "not found",
+    "read-only (staff preview)"
+   ],
+   "figma": [
+    "Message Support.png",
+    "Message Support-1.png",
+    "Message Support-2.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/app/rate",
+  "code": "C-83",
+  "surface": "customer",
+  "status": "built",
+  "roles": [
+   "customer",
+   "super_admin"
+  ],
+  "spec": {
+   "code": "C-83",
+   "name": "Rate the app",
+   "purpose": "Leave a star rating, tags and a comment; the owner moderates it before it appears on the website.",
+   "layout": [
+    "CustomerScreenHeader",
+    "Stars card",
+    "Tags",
+    "Title + comment",
+    "Sticky submit",
+    "Thank-you state"
+   ],
+   "data": [
+    "reviews",
+    "customers"
+   ],
+   "roles": [
+    "customer"
+   ],
+   "logic": [
+    "Insert reviews (status pending, rating 1-5, tags).",
+    "Store review prompt is a placeholder until Capacitor."
+   ],
+   "integrations": [
+    "App Store / Play review sheet (Capacitor) later"
+   ],
+   "components": [
+    "CustomerScreenHeader",
+    "StarRatingInput",
+    "Chip",
+    "Input",
+    "Textarea",
+    "Button",
+    "Card",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-M27",
+    "R-M12"
    ],
    "states": [
     "empty",
-    "upcoming",
-    "previous",
-    "filtered"
+    "rated",
+    "submitted"
    ],
    "figma": [
-    "Home Page-1.png",
-    "Home Page.png",
-    "Frame 1171276434.png"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ],
-   "notes": [
-    "Grooming and daycare cards have no detail link until their modules register /app/grooming/:id and /app/daycare/:id."
-   ]
-  }
- },
- {
-  "path": "/app/bookings/:id",
-  "code": "C-39",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-39",
-   "name": "Reservation detail",
-   "purpose": "One stay in full: status timeline, dates, pets with vaccine state and care notes, linked grooming, payment summary with balance, open change requests, and the actions to request a change or cancel.",
-   "layout": [
-    "HotelBookingFrame (code, status chip, invoice button)",
-    "StayDatesCard read-only + location",
-    "BookingStatusTimeline",
-    "Pets Section (BookingPetCard compact, vaccine chip, care notes)",
-    "Grooming Section",
-    "Payment HotelEstimateCard (paid, balance)",
-    "Change requests Section",
-    "Sticky footer: Request change / Cancel stay",
-    "Cancel Modal"
-   ],
-   "data": [
-    "bookings",
-    "booking_pets",
-    "booking_pet_care",
-    "pets",
-    "vaccine_records",
-    "vaccine_types",
-    "room_types",
-    "locations",
-    "appointments",
-    "packages",
-    "invoices",
-    "payments",
-    "booking_change_requests"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "Customer may cancel requested / pending_vaccines stays directly (status -> cancelled, approved change request logged); confirmed stays file an open cancel request for the desk (manager PIN there, R-I06); checked_in and later cannot be cancelled here (R-X32).",
-    "Free-cancellation window from settings.hotel_booking.free_cancellation_hours shown in the modal.",
-    "Balance = invoice.balance; without an invoice, total - deposit."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "StayDatesCard",
-    "BookingStatusTimeline",
-    "BookingPetCard",
-    "HotelEstimateCard",
-    "Section",
-    "Badge",
-    "StatusBadge",
-    "Modal",
-    "IconButton",
-    "EmptyState"
-   ],
-   "rules": [
-    "R-A05",
-    "R-I04",
-    "R-I06",
-    "R-X30",
-    "R-X31",
-    "R-X32"
-   ],
-   "states": [
-    "upcoming",
-    "pending vaccines",
-    "staying now",
-    "completed",
-    "cancelled",
-    "not found"
-   ],
-   "figma": [
-    "Booking Detail.jpg",
-    "front desk-5.jpg (booking detail, ported per D-010)"
+    "profile.jpg",
+    "reviews.jpg"
    ],
    "checkedAt": [
     360,
@@ -1209,130 +1343,57 @@
   }
  },
  {
-  "path": "/app/bookings/:id/invoice",
-  "code": "C-40",
+  "path": "/app/settings/password",
+  "code": "C-84",
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer"
+   "customer",
+   "super_admin"
   ],
   "spec": {
-   "code": "C-40",
-   "name": "Reservation invoice",
-   "purpose": "Printable invoice for a stay: line items, discounts, tax, card fee, total, deposit paid and balance due, payments made, footer. Print button.",
+   "code": "C-84",
+   "name": "Change password",
+   "purpose": "Change the account password with a strength meter and rule checklist; other devices are signed out.",
    "layout": [
-    "HotelBookingFrame (back, print)",
-    "HotelInvoiceView"
+    "CustomerScreenHeader",
+    "Card (current, forgot link, new + strength, repeat)",
+    "Note",
+    "Sticky submit"
    ],
    "data": [
-    "invoices",
-    "payments",
-    "bookings",
-    "booking_pets",
-    "pets",
-    "customers",
-    "room_types",
-    "locations",
-    "taxes",
-    "settings"
+    "audit_log",
+    "users"
    ],
    "roles": [
     "customer"
    ],
    "logic": [
-    "Falls back to the booking quote when no invoice row exists yet (cash bookings before the desk issues one).",
-    "Footer and title from settings.invoice (R-H10); tax number from taxes (R-H05)."
+    "New password needs score >= 2 (8+ chars, letter + number), must differ from current and match the repeat.",
+    "Mock check; writes audit_log password.change."
    ],
-   "integrations": [],
+   "integrations": [
+    "Company-OS auth (later)"
+   ],
    "components": [
-    "HotelBookingFrame",
-    "Stepper",
+    "CustomerScreenHeader",
+    "Input",
+    "PasswordStrengthBar",
     "Button",
-    "HotelInvoiceView",
-    "IconButton",
-    "EmptyState"
-   ],
-   "rules": [
-    "R-H05",
-    "R-H09",
-    "R-H10"
-   ],
-   "states": [
-    "issued with balance",
-    "paid",
-    "no invoice yet"
-   ],
-   "figma": [
-    "9.pdf",
-    "front desk-5.jpg"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
-   ]
-  }
- },
- {
-  "path": "/app/bookings/:id/change",
-  "code": "C-41",
-  "surface": "customer",
-  "status": "built",
-  "roles": [
-   "customer"
-  ],
-  "spec": {
-   "code": "C-41",
-   "name": "Request a change",
-   "purpose": "Ask the front desk to modify a stay: new dates, add or remove a pet, add grooming, or something else, with a message. Creates a booking_change_requests row and notifies the desk at that location.",
-   "layout": [
-    "HotelBookingFrame (back)",
-    "Kind RadioGroup",
-    "Conditional: StayDatesCard (dates) / pet Checkboxes",
-    "Message Textarea",
-    "Sticky footer: Send request"
-   ],
-   "data": [
-    "bookings",
-    "booking_pets",
-    "pets",
-    "booking_change_requests",
-    "notifications",
-    "users",
-    "locations",
-    "settings"
-   ],
-   "roles": [
-    "customer"
-   ],
-   "logic": [
-    "Only for stays that are requested, pending_vaccines or confirmed (R-X32).",
-    "Modify dates validates like C-30 (R-X34).",
-    "Staff notification to front_desk users of the booking location."
-   ],
-   "integrations": [],
-   "components": [
-    "HotelBookingFrame",
-    "Stepper",
-    "Button",
-    "RadioGroup",
-    "StayDatesCard",
-    "Checkbox",
-    "Textarea",
     "Card",
     "Toast"
    ],
    "rules": [
-    "R-X32",
-    "R-X34"
+    "R-M01"
    ],
    "states": [
-    "modify dates",
-    "add pet",
-    "other",
-    "not allowed"
+    "empty",
+    "weak",
+    "strong",
+    "errors"
+   ],
+   "figma": [
+    "image 177.png"
    ],
    "checkedAt": [
     360,
