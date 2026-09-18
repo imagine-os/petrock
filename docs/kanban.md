@@ -17,6 +17,7 @@
 - App-store required settings / legal pages
 
 ## Doing
+- Figma fidelity fix at the design-system level (Justin 2026-09-18): follow `docs/design/fidelity-audit.md` - (a) fonts Open Sans / Be Vietnam Pro, tokens, icons, core components; (b) customer screens C-10 first; (c) front desk shell; D-187..D-188 proposed
 - Phase 3 integration: QA pass over every page (D-016 widths, console errors, functional flows), spec completeness to 100 %, StatTile dark-mode hint contrast, PhonePageHeader / CustomerScreenHeader dedupe, core seed chat times relative to now, SessionProvider remember-me expiry (R-X35), DesktopShell reads roles.menu (R-X40) and permissions table (R-X49)
 - Awaiting Justin: **enable GitHub Pages** (Settings > Pages > Source = GitHub Actions, then re-run "Deploy to GitHub Pages"; runs #7 / #8 stopped at configure-pages: "Resource not accessible by integration"); D-179 (PIN at check-in?), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012); answers to the pricing conflicts chosen in the build (daycare 6 h, card fee 3.89 %, Diamond prices)
 
