@@ -16,7 +16,7 @@ export function InboxPage() {
   const { rows: unread } = useTable<NotificationRowType>('notifications', { where: { user_id: acc.accountUserId, read: false } });
   return (
     <div className="csc-screen">
-      <CustomerScreenHeader title={t(k('inbox.title'))} subtitle={t(k('inbox.subtitle'))} backTo={null} actions={<IconButton icon="bell" label={t(k('notif.title'))} badge={unread.length || undefined} onClick={() => nav('/app/notifications')} />} />
+      <CustomerScreenHeader title={t(k('inbox.title'))} subtitle={t(k('inbox.subtitle'))} backTo="/app" actions={<IconButton icon="bell" label={t(k('notif.title'))} badge={unread.length || undefined} onClick={() => nav('/app/notifications')} />} />
       {acc.previewing && <div className="csc-preview"><Chip size="sm" icon="eye" tone="primary">{t(k('profile.previewing'), { name: acc.displayName })}</Chip></div>}
       <div className="csc-body"><ConversationList /></div>
     </div>

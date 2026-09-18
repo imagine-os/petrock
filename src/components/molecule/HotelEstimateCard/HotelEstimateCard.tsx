@@ -23,7 +23,7 @@ export interface HotelEstimateCardProps {
 export function HotelEstimateCard({ title, icon = 'bed', headline, lines, total, totalLabel = 'Total', extras = [], notes = [], footnote, compact = false }: HotelEstimateCardProps) {
   return (
     <section className={`estcard ${compact ? 'is-compact' : ''}`}>
-      {(title || headline) && <header className="estcard-head"><span className="estcard-icon" aria-hidden><Icon name={icon} size={18} /></span><h3 className="estcard-title">{title}</h3>{headline && <span className="estcard-headline">{headline}</span>}</header>}
+      {(title || headline) && <header className="estcard-head"><span className="estcard-icon" aria-hidden><Icon name={icon === 'bed' ? 'svc-hotel' : icon === 'scissors' ? 'svc-spa' : icon} size={36} strokeWidth={1.2} /></span><h3 className="estcard-title">{title}</h3>{headline && <span className="estcard-headline">{headline}</span>}</header>}
       <dl className="estcard-lines">
         {lines.map((l, i) => (
           <div key={`${l.label}-${i}`} className={`estcard-line is-${l.kind}`}>

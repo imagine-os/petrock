@@ -1,7 +1,8 @@
 .photopick { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .photopick-btn { position: relative; border: 0; padding: 0; background: none; border-radius: 50%; cursor: pointer; }
 .photopick-btn:disabled { cursor: default; }
-.photopick-btn .avatar { border: 3px solid var(--color-surface); box-shadow: 0 0 0 2px var(--color-border-primary); }
-.photopick-badge { position: absolute; right: 0; bottom: 4px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--color-success); color: #fff; border: 2px solid var(--color-surface); box-shadow: var(--shadow-sm); }
+.photopick-btn .avatar { border: 0; box-shadow: none; }
+/* Figma Pet Edit.png: 70 px photo, 18 px #27B14E camera dot with a white ring at the bottom-right */
+.photopick-badge { position: absolute; right: -2px; bottom: 2px; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--color-success); color: #fff; border: 2px solid var(--color-surface); }
 .photopick-remove { border: 0; background: none; padding: 0; color: var(--color-text-muted); font-size: var(--fs-xs); cursor: pointer; }
 .photopick-remove:hover { color: var(--color-danger); }

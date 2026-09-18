@@ -1,0 +1,9 @@
+/* Figma Home Page.png: photo 390x142 bleeding to the screen edges; logo (mark + wordmark) centred on a translucent white plate. */
+.homehero { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; overflow: hidden; background: linear-gradient(180deg, var(--primary-100) 0%, var(--color-surface-tint-band) 100%) center / cover no-repeat; }
+.homehero.has-photo { background-size: cover; background-position: center; }
+.homehero::before { content: ''; position: absolute; inset: auto -10% -55% -10%; height: 90%; border-radius: 50%; background: var(--primary-200); opacity: .55; }
+.homehero-logo { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: var(--r-md); background: rgba(255, 255, 255, .88); }
+.homehero-logo img { display: block; width: 145px; height: 44px; object-fit: contain; }
+.homehero.has-photo .homehero-logo { background: rgba(255, 255, 255, .8); }
+:root[data-theme="dark"] .homehero { background: linear-gradient(180deg, var(--primary-800) 0%, var(--primary-700) 100%); }
+:root[data-theme="dark"] .homehero::before { background: var(--primary-600); opacity: .35; }

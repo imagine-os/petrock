@@ -1,10 +1,12 @@
 /* customer-grooming-daycare pages: phone-first layout inside PhoneShell, tokens only */
 .cgd { display: flex; flex-direction: column; min-height: 100%; }
 .cgd-body { display: flex; flex-direction: column; gap: var(--sp-4); padding: 0 var(--sp-4) var(--sp-4); }
-.cgd .pagehead { padding: var(--sp-3) var(--sp-4) 0; }
-.cgd-hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--color-primary) 0%, var(--primary-400) 100%); color: var(--color-text-on-primary); border-radius: var(--r-xl); padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-2); }
-.cgd-hero h2 { color: inherit; font-size: var(--fs-lg); } .cgd-hero p { color: rgba(255,255,255,.85); font-size: var(--fs-sm); }
-.cgd-hero .icon { position: absolute; right: -8px; top: -8px; opacity: .18; }
+.cgd-steps { padding: var(--sp-3) var(--sp-5) 0; }
+.cgd-body { padding-top: var(--sp-4); }
+/* Figma has no gradient hero: white r8 card, navy title, muted copy, primary CTA, faint line-art glyph */
+.cgd-hero { position: relative; overflow: hidden; background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border-card-skin, var(--color-border-card)); border-radius: var(--r-md); padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-2); }
+.cgd-hero h2 { color: var(--color-heading); font-size: var(--fs-lg); font-weight: var(--fw-semibold); } .cgd-hero p { color: var(--color-text-muted); font-size: var(--fs-sm); }
+.cgd-hero .icon { position: absolute; right: -8px; top: -8px; opacity: .12; color: var(--color-primary); }
 .cgd-hero .btn { align-self: flex-start; margin-top: var(--sp-2); }
 .cgd-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
 .cgd-section-title h2 { font-size: var(--fs-md); }

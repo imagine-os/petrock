@@ -35,7 +35,7 @@ export const routes: RouteDef[] = [
   page('/app/about', AboutLegalPage, S.aboutLegalSpec),
   page('/app/legal/:slug', LegalDocumentPage, S.legalDocumentSpec),
   page('/app/notifications', NotificationCenterPage, S.notificationCenterSpec),
-  page('/app/inbox', InboxPage, S.inboxSpec, { label: 'Chat', icon: 'message', order: 30, group: 'customer' }),
+  page('/app/inbox', InboxPage, S.inboxSpec), // Figma bottom nav has four tabs; chat is the second Notification tab (C-80) and a Settings row
   page('/app/inbox/:conversationId', ChatThreadPage, S.chatThreadSpec),
   page('/app/rate', RateAppPage, S.rateAppSpec),
   page('/app/settings/password', ChangePasswordPage, S.changePasswordSpec),

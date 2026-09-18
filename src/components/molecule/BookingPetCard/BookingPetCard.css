@@ -1,15 +1,16 @@
-.bpetcard { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: var(--sp-4) var(--sp-3) var(--sp-3); min-width: 132px; flex: 1 1 132px; max-width: 200px; background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--r-card); color: var(--color-text); text-align: center; cursor: pointer; transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+/* Figma Pets Card 1807:27155/27156: 100x138 white r10 with the 0 0 5 #441D67 glow, selected = #552583 fill + white text + white status pill; no check disc. */
+.bpetcard { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--sp-3) var(--sp-2) var(--sp-3); min-width: 100px; flex: 1 1 100px; max-width: 200px; min-height: 138px; background: var(--color-surface); border: 2px solid transparent; border-radius: var(--r-card); box-shadow: var(--shadow-pet); color: var(--color-text); text-align: center; cursor: pointer; transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
 .bpetcard:hover:not(:disabled) { border-color: var(--color-border-primary); }
 .bpetcard:active:not(:disabled) { transform: scale(.98); }
-.bpetcard.is-selected { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); }
+.bpetcard.is-selected { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); box-shadow: none; }
 .bpetcard.is-selected .bpetcard-sub { color: var(--color-text-on-primary); opacity: .8; }
 .bpetcard:disabled { opacity: .55; cursor: not-allowed; }
-.bpetcard-check { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; border-radius: var(--r-round); border: 1.5px solid var(--color-border-strong); background: var(--color-surface); display: inline-flex; align-items: center; justify-content: center; color: var(--color-primary); }
-.bpetcard.is-selected .bpetcard-check { border-color: var(--color-surface); }
-.bpetcard-name { font-weight: var(--fw-semibold); font-size: var(--fs-md); line-height: var(--lh-tight); }
-.bpetcard-sub { font-size: var(--fs-2xs); color: var(--color-text-muted); }
+.bpetcard-check { display: none; }
+.bpetcard-name { font-weight: var(--fw-semibold); font-size: var(--fs-md); line-height: var(--lh-tight); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bpetcard-sub { font-size: var(--fs-xs); color: var(--color-text-muted); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bpetcard-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
 .bpetcard.is-selected .badge { background: var(--color-surface); }
+.bpetcard .badge { border-radius: var(--r-pill); }
 .bpetcard-reason { font-size: var(--fs-2xs); color: var(--color-danger); }
 .bpetcard.is-compact { flex-direction: row; min-width: 0; max-width: none; padding: var(--sp-2) var(--sp-3); gap: 10px; text-align: left; }
 .bpetcard.is-compact .bpetcard-check { position: static; margin-left: auto; }

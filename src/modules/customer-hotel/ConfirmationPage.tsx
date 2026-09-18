@@ -25,7 +25,7 @@ export function ConfirmationPage() {
   const names = bps.map((bp) => pets.find((p) => p.id === bp.pet_id)?.name ?? 'Pet');
   const pending = booking.status === 'pending_vaccines';
   return (
-    <HotelBookingFrame title={t('customer-hotel.confirmed')} footer={<><Link to={`/app/bookings/${booking.id}`}><Button size="lg" block>View reservation</Button></Link><Link to="/app"><Button size="lg" block variant="secondary">Home</Button></Link></>}>
+    <HotelBookingFrame title={t('customer-hotel.confirmed')} footer={<><Link to={`/app/bookings/${booking.id}`}><Button block>View reservation</Button></Link><Link to="/app"><Button block variant="secondary">Home</Button></Link></>}>
       <div className="ch-success"><span className="ch-success-icon"><Icon name="check" size={32} strokeWidth={2.5} /></span><h2>{pending ? 'Almost there!' : 'Thanks! Your stay is requested'}</h2><span className="ch-code">{booking.code}</span><p className="small muted">{names.join(', ')} · {roomType?.name} · {location?.name}<br />{fmtDateTime(booking.check_in)} → {fmtDateTime(booking.check_out)}</p></div>
       <Card><BookingStatusTimeline status={booking.status} reachedAt={{ requested: booking.created_at, ...(pending ? { pending_vaccines: booking.created_at } : {}) }} hint={pending ? 'Upload vaccine proofs so the desk can verify them' : 'The front desk confirms within a day'} /></Card>
       <Card tint>

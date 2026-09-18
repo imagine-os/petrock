@@ -10,18 +10,16 @@
   ],
   "spec": {
    "code": "C-10",
+   "tone": "home",
    "name": "Customer home",
-   "purpose": "Pet parent landing screen: greeting with the preferred location, the three bookable services (Hotel, Grooming & Spa, Daycare), the pets strip with approval / vaccine status, upcoming bookings across all services and a link to past bookings. Gates booking on having at least one pet.",
+   "purpose": "Pet parent landing screen per Figma Home Page.png (D-189): hero with the logo, the Services band (Hotel, Spa, Daycare, In Home), the Pets band with the selected-pet border and vaccine attention as a coral status line, Upcoming Bookings cards and the underlined past-reservations link. No greeting, location chip, bell or counts. Gates booking on having at least one pet.",
    "layout": [
-    "HomeHeader (greeting, location chip, notifications bell)",
-    "HeroBanner",
-    "ServicesRow (Hotel / Grooming & Spa / Daycare)",
-    "VaccineBanner (only when a pet has missing or expired required vaccines)",
-    "PetsStrip (PetAvatarCard x n + Add a pet)",
-    "UpcomingBookings (CustomerBookingCard x n)",
-    "PastBookingsLink",
-    "AddPetFirstModal",
-    "LocationPickerModal"
+    "HomeHero (photo placeholder + logo, 142 px)",
+    "ServicesBand (Section band: Hotel / Spa / Daycare / In Home tiles)",
+    "PetsBand (PetAvatarCard x n, first pet with the selected border, \"Add a Pet\" card; empty = centred Add a Pet button)",
+    "UpcomingBookingsBand (CustomerBookingCard x n; hidden while there are no pets)",
+    "PastReservationsLink (underlined \"View Past Reservations\")",
+    "AddPetFirstAlert (Modal size alert: \"Hey!\" with Back / Add a Pet split footer)"
    ],
    "data": [
     "customers",
@@ -45,25 +43,21 @@
     "useCurrentCustomer(): customers.user_id = session user, else the demo customer for staff previews.",
     "Upcoming = bookings + appointments + daycare days of this customer that are not finished and not in the past, sorted by start; appointment statuses map onto the one lifecycle for the badge.",
     "Service tile: no active pets -> AddAPetFirst modal (R-A01); otherwise navigate to /app/hotel, /app/grooming, /app/daycare when that route exists, else a \"coming soon\" toast.",
-    "Location chip opens a picker; choosing sets LocationProvider.setLocationId and customers.home_location_id (R-X23).",
+    "The Petrock location is chosen in the hotel / grooming / daycare flows and Settings (no location chip on home, D-189; R-X23 still applies when it is saved).",
     "Pet card status: petApproval(pet, petVaccineSummary()) (R-A04, R-X20); warning triangle for needs_details / expired.",
-    "Bell badge = unread notifications for the user."
+    "Unread notifications show as the dot on the paw tab (PhoneShell); In Home opens a coming-soon toast (D-003)."
    ],
    "integrations": [],
    "components": [
+    "HomeHero",
+    "Section",
     "HomeServiceTile",
     "PetAvatarCard",
     "CustomerBookingCard",
-    "VaccineStatusChip",
-    "Badge",
     "StatusBadge",
-    "IconButton",
-    "Chip",
     "Button",
     "Card",
     "Modal",
-    "RadioGroup",
-    "EmptyState",
     "Toast",
     "Avatar"
    ],
@@ -79,17 +73,16 @@
     "R-X23"
    ],
    "states": [
-    "no pets (empty strip, services gated)",
+    "no pets (Home Page-2: Pets band with a single Add a Pet button, Upcoming hidden)",
     "pets without bookings",
     "pets with upcoming bookings",
-    "vaccine banner",
-    "add-a-pet-first modal",
-    "location picker open"
+    "pet needing vaccines (coral status line)",
+    "\"Hey!\" add-a-pet-first alert (Home Page-5)"
    ],
    "figma": [
-    "Home Page-1.png",
+    "Home Page.png",
     "Home Page-2.png",
-    "Home Page-4.png",
+    "Home Page-5.png",
     "Services.png",
     "Frame 1171276424.png"
    ],
@@ -101,8 +94,9 @@
     1920
    ],
    "notes": [
-    "In Home is not a tile (D-003: out of scope; inquiry via chat).",
-    "Hero uses a brand gradient until a licensed photo exists (open question 116)."
+    "In Home is a tile per Services.png but not bookable (D-003): it opens a coming-soon toast pointing to chat.",
+    "HomeHero shows a brand gradient placeholder with the logo until a licensed pool photo exists (open question 116).",
+    "Fidelity part (b), prompt 0012: layout rebuilt block by block against Home Page.png (hero 142, services 170..263, pets 312..461, bookings 491..729, link row, nav 71)."
    ]
   }
  },
@@ -2979,6 +2973,7 @@
   ],
   "spec": {
    "code": "C-50",
+   "tone": "list",
    "name": "Grooming & Spa",
    "purpose": "Entry point of the Grooming & Spa service for a pet parent: what it is, live price menu by package and size, spa add-ons, upcoming orders, and the Book now call to action (D-004 / D-011: one service, Spa is a package category).",
    "layout": [
@@ -3067,6 +3062,7 @@
   ],
   "spec": {
    "code": "C-51",
+   "tone": "form",
    "name": "Choose pet & package",
    "purpose": "Step 1 of the Grooming & Spa order: pick the pet and the package; prices are the package table values for that pet's size tier.",
    "layout": [
@@ -3144,6 +3140,7 @@
   ],
   "spec": {
    "code": "C-52",
+   "tone": "form",
    "name": "Add-ons",
    "purpose": "Step 2: toggle spa add-ons for the current pet (price and added minutes by size), see the running total, and add another pet to the same order.",
    "layout": [
@@ -3215,6 +3212,7 @@
   ],
   "spec": {
    "code": "C-53",
+   "tone": "form",
    "name": "Choose date & time",
    "purpose": "Step 3: location, date, groomer and start time. Slots come from location hours, grooming capacity and existing appointments; the Figma export had no slot screen (open question 54) so this is designed fresh.",
    "layout": [
@@ -3294,6 +3292,7 @@
   ],
   "spec": {
    "code": "C-54",
+   "tone": "form",
    "name": "Summary & payment",
    "purpose": "Step 4: review when / where / who, per-pet package and add-ons, pick card or pay at location, see engine totals (tax, card fee) and pay. Creates the order, appointments, invoice, payment and notification.",
    "layout": [
@@ -3383,6 +3382,7 @@
   ],
   "spec": {
    "code": "C-56",
+   "tone": "list",
    "name": "Your Grooming & Spa orders",
    "purpose": "History of Grooming & Spa orders split into upcoming and past, each re-creatable in one tap; entry to a new order.",
    "layout": [
@@ -3449,6 +3449,7 @@
   ],
   "spec": {
    "code": "C-55",
+   "tone": "list",
    "name": "Order detail & confirmation",
    "purpose": "One Grooming & Spa order: confirmation state right after booking, status in the one lifecycle, per-pet lines, location, groomer, payment and invoice totals; re-create it or cancel before confirmation.",
    "layout": [
@@ -3531,6 +3532,7 @@
   ],
   "spec": {
    "code": "C-60",
+   "tone": "list",
    "name": "Daycare",
    "purpose": "Entry point of Daycare: what it is, live pricing (full day, half day, play hour, walk with the hour threshold and the extra-pet discount), upcoming days and Book now. Replaces the \"Coming soon\" placeholder (R-A03).",
    "layout": [
@@ -3607,6 +3609,7 @@
   ],
   "spec": {
    "code": "C-61",
+   "tone": "form",
    "name": "Daycare reservation",
    "purpose": "Step 1: pick pets, location and day, set drop-off and pick-up times and see the computed price live; the day length decides whether grooming can be added (R-X02 / R-X17).",
    "layout": [
@@ -3699,6 +3702,7 @@
   ],
   "spec": {
    "code": "C-62",
+   "tone": "form",
    "name": "Additional pet details",
    "purpose": "Step 2: per selected pet, vet-recommended flea medication (brand, last applied) and medical alerts for the handlers.",
    "layout": [
@@ -3763,6 +3767,7 @@
   ],
   "spec": {
    "code": "C-63",
+   "tone": "form",
    "name": "Daycare checkout",
    "purpose": "Step 3: summary of day, times, location and pets, payment method, engine totals and pay. The Figma checkout was empty (DayCare-3), so this is designed to match the grooming checkout.",
    "layout": [
@@ -3847,6 +3852,7 @@
   ],
   "spec": {
    "code": "C-65",
+   "tone": "list",
    "name": "Your daycare days",
    "purpose": "History of daycare days split into upcoming and past; book any day again in one tap.",
    "layout": [
@@ -3907,6 +3913,7 @@
   ],
   "spec": {
    "code": "C-64",
+   "tone": "list",
    "name": "Daycare day detail",
    "purpose": "One daycare day: confirmation right after booking, status, pets with their questionnaire answers, payment and totals; book again, cancel before confirmation, or add grooming when the day is long enough.",
    "layout": [
@@ -3987,12 +3994,13 @@
   ],
   "spec": {
    "code": "C-11",
+   "tone": "list",
    "name": "My pets",
    "purpose": "Every active pet of the household in a grid with photo, breed, weight and approval / vaccine status; entry point to add a pet or open a profile.",
    "layout": [
-    "PhonePageHeader (back, title, add)",
-    "SummaryLine (count, needs attention)",
-    "PetGrid (PetAvatarCard x n)",
+    "CustomerScreenHeader (back, \"My Pets\", no rule)",
+    "AddPetTextAction (right-aligned \"Add Pet\" link)",
+    "PetGrid (2-up PetAvatarCard lg: avatar 76, display name, \"Breed: X\"; status text only when a pet needs attention)",
     "EmptyState"
    ],
    "data": [
@@ -4012,13 +4020,10 @@
    ],
    "integrations": [],
    "components": [
-    "PhonePageHeader",
+    "CustomerScreenHeader",
     "PetAvatarCard",
-    "VaccineStatusChip",
-    "Badge",
     "Button",
-    "EmptyState",
-    "IconButton"
+    "EmptyState"
    ],
    "rules": [
     "R-A04",
@@ -4039,6 +4044,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b): #F4F6FA list tone, 24 px gutter, 20 px grid gap, no summary line or approval pills (My pets (more than one pet).jpg)."
    ]
   }
  },
@@ -4053,17 +4061,18 @@
   ],
   "spec": {
    "code": "C-12",
+   "tone": "form",
    "name": "Add pet wizard",
    "purpose": "Five clean steps to add a dog: Basics (photo, name, type, breed, sex, neutered, colour, date of birth), Size (weight in lbs with the computed size band), Personality & feeding, Vet & emergency contact, Vaccines (per required / recommended vaccine: date, expiry, proof). Resolves the duplicated Figma steps into one stepper.",
    "layout": [
-    "PhonePageHeader (back, title)",
-    "Stepper (5 steps)",
-    "Step 1 Basics (PetPhotoPicker, Input, Select x5, date)",
+    "CustomerScreenHeader (back, \"Add Pet\", no rule)",
+    "Stepper (5 filled circles, no labels, D-190)",
+    "Step 1 Basics (PetPhotoPicker 70 with the green camera dot, Name, Type / Breed, Sex / Neutered/Spayed, Color / Date Of Birth in the 4 px input skin)",
     "Step 2 Size & weight (Input lbs, size band card)",
     "Step 3 Personality & feeding (Checkbox group, RadioGroup, Select, Textarea x3)",
     "Step 4 Vet & emergency (Select vets + add, Input name/phone/relationship, Textarea conditions/allergies)",
     "Step 5 Vaccines (VaccineRecordRow x5 + VaccineRecordForm, pending warning)",
-    "WizardFooter (Back / Next / Submit / Skip)"
+    "WizardFooter (full-width 40 px Next / Submit, small back arrow from step 2, Skip)"
    ],
    "data": [
     "pets",
@@ -4092,7 +4101,7 @@
     "Company-OS file storage (later; proofs and photos are mock URLs / data URLs now)"
    ],
    "components": [
-    "PhonePageHeader",
+    "CustomerScreenHeader",
     "Stepper",
     "PetPhotoPicker",
     "Input",
@@ -4152,7 +4161,8 @@
     1920
    ],
    "notes": [
-    "Type defaults to Dog; other species are allowed in the select but all copy says dog (open question 25 -> decision pending)."
+    "Type defaults to Dog; other species are allowed in the select but all copy says dog (open question 25 -> decision pending).",
+    "Fidelity part (b): #EEF2F5 form tone, single 40 px Next (Pet Edit.png 337x40), no step headings on step 1."
    ]
   }
  },
@@ -4167,17 +4177,15 @@
   ],
   "spec": {
    "code": "C-13",
+   "tone": "list",
    "name": "Pet profile",
    "purpose": "Everything about one pet: photo, name, breed, approval status, stats (sex, age, weight and size band), vaccine summary with a link to the records, care and feeding, medical and vet, emergency contact, upcoming bookings; edit or remove the pet.",
    "layout": [
-    "PhonePageHeader (back, title, edit)",
-    "ProfileHero (Avatar, name, breed, approval badge)",
-    "StatsRow (sex, age, weight / size)",
-    "VaccinesSection (VaccineStatusChip per type, link to C-21)",
-    "CareSection (personality, socialised with, food, meals, treats, feeding notes)",
-    "MedicalSection (conditions, allergies, vet)",
-    "EmergencyContactSection",
-    "UpcomingBookingsSection (CustomerBookingCard)",
+    "CustomerScreenHeader (back, \"Pet Profile\")",
+    "AccountProfileHero (110 px photo in the dashed coral ring, purple pencil disc -> edit, display name, \"Breed: X\"; coral attention line when not approved)",
+    "StatsCard (Gender / Birthday / Weight with vertical rules)",
+    "ReminderSection (next booking card: title, calendar row, location + pets row, line-art glyph)",
+    "NotesSection (\"Notes for <pet>\" + Edit: AccountMenuRow x4 - Vaccines, Care & feeding, Medical & vet, Emergency contact - with chevrons; detail modals)",
     "DangerZone (remove pet) + ConfirmModal"
    ],
    "data": [
@@ -4205,15 +4213,13 @@
    ],
    "integrations": [],
    "components": [
-    "PhonePageHeader",
-    "Avatar",
-    "Badge",
-    "VaccineStatusChip",
+    "CustomerScreenHeader",
+    "AccountProfileHero",
+    "AccountMenuRow",
     "Card",
     "Section",
-    "CustomerBookingCard",
     "Button",
-    "IconButton",
+    "Icon",
     "Modal",
     "EmptyState",
     "Toast"
@@ -4246,7 +4252,8 @@
     1920
    ],
    "notes": [
-    "The UI-kit Reminder / Notes concept is not built (open question 26); care notes come from the pet record instead."
+    "The UI-kit Reminder / Notes concept is not built (open question 26); care notes come from the pet record instead.",
+    "Fidelity part (b): rebuilt against Pet Profile (Single Pet).jpg; care / medical / emergency details open in modals from the notes rows and are edited in C-14."
    ]
   }
  },
@@ -4261,13 +4268,14 @@
   ],
   "spec": {
    "code": "C-14",
+   "tone": "form",
    "name": "Edit pet",
    "purpose": "The same five-step wizard prefilled with the pet, with a Save on every step; vaccine records edited here are saved immediately as submitted.",
    "layout": [
-    "PhonePageHeader (back, title)",
-    "Stepper (5 steps, all clickable)",
+    "CustomerScreenHeader (back, \"Edit Pet\", no rule)",
+    "Stepper (5 filled circles, all clickable)",
     "Steps 1-5 as C-12",
-    "WizardFooter (Back / Next / Save changes)"
+    "WizardFooter (Next / Save changes, back arrow)"
    ],
    "data": [
     "pets",
@@ -4291,7 +4299,7 @@
    ],
    "integrations": [],
    "components": [
-    "PhonePageHeader",
+    "CustomerScreenHeader",
     "Stepper",
     "PetPhotoPicker",
     "Input",
@@ -4436,6 +4444,7 @@
   ],
   "spec": {
    "code": "C-20",
+   "tone": "form",
    "name": "Vaccines",
    "purpose": "Choose a pet, see each vaccine's status and upload proofs: the customer side of the vaccine flow that gates bookings (pending_vaccines until the front desk verifies).",
    "layout": [
@@ -4524,15 +4533,16 @@
   ],
   "spec": {
    "code": "C-30",
+   "tone": "form",
    "name": "Hotel: choose pets & dates",
    "purpose": "First step of a hotel stay: pick the location, the pets that are coming, whether they share a room, and the check-in / check-out days and times on a range calendar bounded by opening hours.",
    "layout": [
-    "HotelBookingFrame (back, title, Stepper 1/7)",
-    "Location Select",
-    "Pet cards (BookingPetCard, multi-select, approval + vaccine chips)",
-    "Share-a-room Select (2+ pets)",
-    "StayDatesCard (check-in / check-out + inline range calendar)",
-    "Sticky footer: Next"
+    "HotelBookingFrame (CustomerScreenHeader \"Hotel Reservation\" with rule, no stepper - D-191)",
+    "SelectYourPet (centred label + BookingPetCard x n: 100x138, primary fill when selected, vaccine pill; Manage pets link)",
+    "ShareRoomSelect (only with 2+ pets, 28 px xs select)",
+    "LocationSelect (xs)",
+    "StayDatesCard (calendar card, then Check In / Check Out card with 48 px fields and filled icons)",
+    "Footer (full-width Next 48)"
    ],
    "data": [
     "customers",
@@ -4596,7 +4606,8 @@
    ],
    "notes": [
     "Chosen over the text-input variant: the room-share question is a Yes/No select (open question 39).",
-    "Grooming is its own step (C-33) instead of the Yes/No dropdown on this screen."
+    "Grooming is its own step (C-33) instead of the Yes/No dropdown on this screen.",
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4610,14 +4621,14 @@
   ],
   "spec": {
    "code": "C-31",
+   "tone": "form",
    "name": "Hotel: choose room type",
    "purpose": "Pick Penthouse or Suite for the chosen pets and dates. Cards show the inclusions copy, the average nightly rate per pet from the pricing engine, rooms left, and are disabled by the fit rules (55 lb Suite only, 30 lb bottom rooms) or when the location is full.",
    "layout": [
-    "HotelBookingFrame (Stepper 2/7)",
-    "Stay summary line (pets, nights, location)",
-    "HotelRoomTypeCard per room_types row",
-    "Fit / capacity explanations",
-    "Sticky footer: Next"
+    "HotelBookingFrame (\"Choose Your Room Type\", no stepper)",
+    "SummaryLine (pets, dates, location, rooms)",
+    "HotelRoomTypeCard x n (239 px photo with BOOK NOW overlay, title 20/600, inclusions 12, \"$150 Avg Per Night/Pet\"; books from the card)",
+    "Footer Next only once a room is selected"
    ],
    "data": [
     "room_types",
@@ -4677,7 +4688,8 @@
    ],
    "notes": [
     "Suite description is its own copy (the Figma card repeats the Penthouse text).",
-    "Prices are never hardcoded: $150 / $105 / $115 in the exports were conflicting placeholders (open question 48)."
+    "Prices are never hardcoded: $150 / $105 / $115 in the exports were conflicting placeholders (open question 48).",
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4691,6 +4703,7 @@
   ],
   "spec": {
    "code": "C-32",
+   "tone": "form",
    "name": "Hotel: pet stay details",
    "purpose": "Per pet coming to stay: feeding plan, own food, medication and dosing, vet-recommended flea medication (brand, last dose), belongings, medical alert and notes. Prefilled from the pet profile.",
    "layout": [
@@ -4748,7 +4761,8 @@
     1920
    ],
    "notes": [
-    "Resolves open question 42: the form is per pet (one section each), titled once; the unlabeled date is the last flea dose."
+    "Resolves open question 42: the form is per pet (one section each), titled once; the unlabeled date is the last flea dose.",
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4762,6 +4776,7 @@
   ],
   "spec": {
    "code": "C-33",
+   "tone": "form",
    "name": "Hotel: add grooming during the stay",
    "purpose": "Optionally add one Grooming & Spa package (Gold / Platinum / Diamond priced by the pet size) plus add-ons per pet, scheduled at the end of the stay. Skippable.",
    "layout": [
@@ -4821,6 +4836,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4834,6 +4852,7 @@
   ],
   "spec": {
    "code": "C-34",
+   "tone": "form",
    "name": "Hotel: customer details",
    "purpose": "Confirm the contact and billing details for the stay: names, mobile and alternate phone, email, US address. Prefilled from the customer record and written back on payment.",
    "layout": [
@@ -4879,6 +4898,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4892,17 +4914,17 @@
   ],
   "spec": {
    "code": "C-35",
+   "tone": "form",
    "name": "Hotel: estimate",
    "purpose": "Pre-payment estimate: room line items by night kind and season, multi-dog and long-stay discounts, tax, grooming, then the two payment paths (deposit or full) with the card fee shown for the amount charged now.",
    "layout": [
-    "HotelBookingFrame (Stepper 6/7)",
-    "Pay plan SegmentedControl (deposit / full)",
-    "Payment method RadioGroup (card / cash at location)",
-    "HotelEstimateCard per stay (lines, total)",
-    "StayDatesCard read-only",
-    "Grooming HotelEstimateCard or Add grooming band",
-    "Payment details card (hotel, grooming, total, due now, fee, balance)",
-    "Sticky footer: Pay deposit / Pay in full"
+    "HotelBookingFrame (\"Estimate\", no stepper)",
+    "\"Booking Detail\" + HotelEstimateCard (line-art house, room name in primary, total in green, Room / discount / Tax / TOTAL lines)",
+    "StayDatesCard readOnly (Check-in / Check-out)",
+    "Grooming HotelEstimateCard (when grooming was added)",
+    "\"Payment Details\" + HotelEstimateCard (Hotel Rent, Tax, Total, deposit, balance)",
+    "GroomingBand (#DED0E9 full-bleed copy + outlined Add Grooming) when no grooming",
+    "PayButtons (Pay Deposit 48 primary, green note, Pay In Full 40 outlined)"
    ],
    "data": [
     "rates",
@@ -4976,7 +4998,8 @@
     1920
    ],
    "notes": [
-    "Merges the two Estimate variants: Payment Details card AND the card-fee footnote (open question 46)."
+    "Merges the two Estimate variants: Payment Details card AND the card-fee footnote (open question 46).",
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -4990,15 +5013,15 @@
   ],
   "spec": {
    "code": "C-36",
+   "tone": "form",
    "name": "Hotel: payment",
    "purpose": "Charge the deposit or the full amount with a Stripe-shaped card form through the PaymentProvider (mock today), or record cash at location; then create the booking, its pets, care notes, grooming appointments, invoice, payment and notification.",
    "layout": [
-    "HotelBookingFrame (Stepper 7/7)",
-    "Amount due card (due now, fee, balance)",
-    "Payment method RadioGroup",
-    "HotelCardPaymentForm (card) or cash notice",
-    "Terms line",
-    "Sticky footer: Pay $X / Confirm booking"
+    "HotelBookingFrame (\"Choose Payment\", no stepper)",
+    "PaymentMethodRows (RadioGroup cards: Credit card / Pay With Cash At Location, purple radio right)",
+    "HotelEstimateCard compact (due now, fee, charged now, balance)",
+    "HotelCardPaymentForm (card) or cash note",
+    "Footer (Pay / Confirm booking)"
    ],
    "data": [
     "bookings",
@@ -5065,6 +5088,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: no stepper on the hotel flow (D-191), #EEF2F5 form tone, CustomerScreenHeader with the #B6B6B6 rule, flat 48 px CTA."
    ]
   }
  },
@@ -5078,6 +5104,7 @@
   ],
   "spec": {
    "code": "C-37",
+   "tone": "list",
    "name": "Hotel: confirmation",
    "purpose": "After payment: the booking code, the current status on the lifecycle timeline, what happens next (vaccine proofs, desk confirmation, balance at check-in) and links to the reservation and home.",
    "layout": [
@@ -5140,6 +5167,7 @@
   ],
   "spec": {
    "code": "C-38",
+   "tone": "list",
    "name": "My reservations",
    "purpose": "Every reservation of the pet parent in one list: hotel stays, Grooming & Spa appointments and daycare days, split into Upcoming and Previous, filterable by kind; tapping a stay opens its detail.",
    "layout": [
@@ -5215,6 +5243,7 @@
   ],
   "spec": {
    "code": "C-39",
+   "tone": "list",
    "name": "Reservation detail",
    "purpose": "One stay in full: status timeline, dates, pets with vaccine state and care notes, linked grooming, payment summary with balance, open change requests, and the actions to request a change or cancel.",
    "layout": [
@@ -5306,6 +5335,7 @@
   ],
   "spec": {
    "code": "C-40",
+   "tone": "list",
    "name": "Reservation invoice",
    "purpose": "Printable invoice for a stay: line items, discounts, tax, card fee, total, deposit paid and balance due, payments made, footer. Print button.",
    "layout": [
@@ -5373,6 +5403,7 @@
   ],
   "spec": {
    "code": "C-41",
+   "tone": "list",
    "name": "Request a change",
    "purpose": "Ask the front desk to modify a stay: new dates, add or remove a pet, add grooming, or something else, with a message. Creates a booking_change_requests row and notifies the desk at that location.",
    "layout": [
@@ -5441,15 +5472,13 @@
   ],
   "spec": {
    "code": "C-70",
+   "tone": "list",
    "name": "Profile hub",
    "purpose": "The Settings tab of the customer app: photo, name and email, then the account menu (edit profile, pets, payment methods, notifications, chat, app settings, help, rate, about, log out).",
    "layout": [
-    "CustomerScreenHeader",
-    "AccountProfileHero (photo picker)",
-    "Preview chip (staff viewing as customer)",
-    "Account menu (Card of AccountMenuRow)",
-    "More menu",
-    "Log out"
+    "CustomerScreenHeader (\"Settings\", no rule)",
+    "AccountProfileHero (110 px avatar in the dashed coral ring, purple camera disc, display name, email)",
+    "MenuRows (AccountMenuRow x12 directly on the #F4F6FA screen, alternating purple / coral filled icons, 1 px rules, no groups / sub-labels / chevrons: Edit Profile, My Pets, Add Pets, Address, Payment methods, Notifications, Front Desk Chat, Setting, Rate App, About App, Help, Logout)"
    ],
    "data": [
     "customers",
@@ -5498,6 +5527,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: rebuilt against profile.jpg / setting.jpg / notification.png (rows on the list tone, no cards or group labels; Chat left the bottom nav and lives here and in Settings)."
    ]
   }
  },
@@ -5511,6 +5543,7 @@
   ],
   "spec": {
    "code": "C-71",
+   "tone": "form",
    "name": "Edit profile",
    "purpose": "Edit contact details and address; email and password change through separate confirmation flows.",
    "layout": [
@@ -5580,13 +5613,13 @@
   ],
   "spec": {
    "code": "C-72",
+   "tone": "list",
    "name": "App settings",
    "purpose": "Device and account settings: language, dark mode, colour theme, notification preferences, change password, payment methods, delete account.",
    "layout": [
-    "CustomerScreenHeader",
-    "Appearance (language row, dark mode toggle, colour theme segmented)",
-    "Account (notifications, password, payment methods, delete account)",
-    "Version"
+    "CustomerScreenHeader (\"Settings\", no rule)",
+    "MenuRows (Language + value, Change password, Dark mode + toggle, Notifications, Payment methods, Colour theme + segmented, Delete account)",
+    "Version line"
    ],
    "data": [
     "users"
@@ -5625,6 +5658,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: rebuilt against profile.jpg / setting.jpg / notification.png (rows on the list tone, no cards or group labels; Chat left the bottom nav and lives here and in Settings)."
    ]
   }
  },
@@ -5638,6 +5674,7 @@
   ],
   "spec": {
    "code": "C-73",
+   "tone": "list",
    "name": "Language",
    "purpose": "Pick the app language (English, Español) and save it on the device and on the account.",
    "layout": [
@@ -5695,6 +5732,7 @@
   ],
   "spec": {
    "code": "C-74",
+   "tone": "list",
    "name": "Payment methods",
    "purpose": "Saved cards for faster deposits: list, add (tokenised), make default, remove; cash at the location stays available.",
    "layout": [
@@ -5764,6 +5802,7 @@
   ],
   "spec": {
    "code": "C-75",
+   "tone": "list",
    "name": "Notification preferences",
    "purpose": "Choose per category (bookings, vaccines, chat, payments, offers) which channels (push, email, SMS) reach you.",
    "layout": [
@@ -5817,6 +5856,7 @@
   ],
   "spec": {
    "code": "C-76",
+   "tone": "form",
    "name": "Delete account",
    "purpose": "App-store required flow: explain the 30-day grace period, block on active bookings, collect a reason, require typing DELETE, then schedule the deletion and sign out.",
    "layout": [
@@ -5892,6 +5932,7 @@
   ],
   "spec": {
    "code": "C-77",
+   "tone": "list",
    "name": "Help & support",
    "purpose": "Get help: chat with the Front Desk, call a location, browse the FAQ by topic, send a support request and see past requests with staff replies.",
    "layout": [
@@ -5963,6 +6004,7 @@
   ],
   "spec": {
    "code": "C-78",
+   "tone": "list",
    "name": "About & legal",
    "purpose": "App version, legal documents, our locations with today's hours, rate and delete links, company footer.",
    "layout": [
@@ -6022,6 +6064,7 @@
   ],
   "spec": {
    "code": "C-79",
+   "tone": "list",
    "name": "Legal document",
    "purpose": "Reads a published legal document (privacy policy, terms of service, licences) with version and effective date.",
    "layout": [
@@ -6075,13 +6118,14 @@
   ],
   "spec": {
    "code": "C-80",
+   "tone": "list",
    "name": "Notification centre",
    "purpose": "All in-app notifications grouped by day with an unread filter and mark-all-read; the Inbox tab shows the Front Desk threads.",
    "layout": [
-    "CustomerScreenHeader (preferences)",
-    "Tabs Notifications | Inbox (counts)",
-    "Filters (All / Unread, Mark all read)",
-    "Day groups of NotificationRow",
+    "CustomerScreenHeader (\"Notification\", right text action Mark all read)",
+    "Tabs split (Notification | Front Desk Chat (n))",
+    "NotificationRow list (44 px disc, filled while unread, display title, relative time; tap opens the link)",
+    "ConversationList on the chat tab",
     "EmptyState"
    ],
    "data": [
@@ -6129,6 +6173,9 @@
     768,
     1280,
     1920
+   ],
+   "notes": [
+    "Fidelity part (b), prompt 0012: rebuilt against profile.jpg / setting.jpg / notification.png (rows on the list tone, no cards or group labels; Chat left the bottom nav and lives here and in Settings)."
    ]
   }
  },
@@ -6142,6 +6189,7 @@
   ],
   "spec": {
    "code": "C-81",
+   "tone": "list",
    "name": "Inbox",
    "purpose": "The Chat tab: one Front Desk conversation per location with preview, time and unread count; locations without a thread offer to start one.",
    "layout": [
@@ -6203,6 +6251,7 @@
   ],
   "spec": {
    "code": "C-82",
+   "tone": "list",
    "name": "Front Desk chat",
    "purpose": "Message the Front Desk of one location: day markers, bubbles with read receipts, photo attachments, quick replies, typing indicator and a demo staff reply.",
    "layout": [
@@ -6282,6 +6331,7 @@
   ],
   "spec": {
    "code": "C-83",
+   "tone": "list",
    "name": "Rate the app",
    "purpose": "Leave a star rating, tags and a comment; the owner moderates it before it appears on the website.",
    "layout": [
@@ -6349,6 +6399,7 @@
   ],
   "spec": {
    "code": "C-84",
+   "tone": "form",
    "name": "Change password",
    "purpose": "Change the account password with a strength meter and rule checklist; other devices are signed out.",
    "layout": [

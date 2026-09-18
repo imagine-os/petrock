@@ -9,5 +9,12 @@
 .radio.is-checked .radio-dot { border-color: var(--color-primary); border-width: 6px; }
 .radio-input:focus-visible + .radio-dot { box-shadow: var(--shadow-focus); }
 .radio-text { display: flex; flex-direction: column; gap: 2px; } .radio-desc { color: var(--color-text-muted); font-size: var(--fs-xs); }
-.radiogroup.is-cards .radio { padding: var(--sp-3) var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); }
-.radiogroup.is-cards .radio.is-checked { border-color: var(--color-primary); background: var(--color-surface-tint); }
+/* Figma option rows (Payment.png 1807:27202): white r8 56 tall, label 600 14 navy, purple radio at the right; checked = primary ring + dot. */
+.radiogroup.is-cards .radiogroup-options { gap: var(--sp-4); }
+.radiogroup.is-cards .radio { flex-direction: row-reverse; justify-content: space-between; align-items: center; min-height: 56px; padding: var(--sp-2) var(--sp-4); border: 1px solid var(--color-border-card-skin, var(--color-border-card)); border-radius: var(--r-md); background: var(--color-surface); box-shadow: var(--shadow-card, none); }
+.radiogroup.is-cards .radio-text { flex: 1 1 auto; }
+.radiogroup.is-cards .radio-label { font-weight: var(--fw-semibold); color: var(--color-heading); }
+.radiogroup.is-cards .radio-dot { margin-top: 0; border-color: var(--color-primary); }
+.radiogroup.is-cards .radio.is-checked { border-color: var(--color-border-card-skin, var(--color-border-card)); }
+.radiogroup.is-cards .radio.is-checked .radio-dot { border-width: 2px; background: var(--color-primary-soft); }
+.radiogroup.is-cards .radio.is-checked .radio-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--color-primary); }
