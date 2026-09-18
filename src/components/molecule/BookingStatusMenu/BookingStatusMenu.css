@@ -1,0 +1,11 @@
+.statusmenu { position: relative; display: inline-flex; gap: var(--sp-2); align-items: center; }
+.statusmenu-list { position: absolute; top: calc(100% + 6px); right: 0; z-index: 70; margin: 0; padding: 6px; list-style: none; min-width: 200px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-card); box-shadow: var(--shadow-lg); }
+.statusmenu.is-left .statusmenu-list { right: auto; left: 0; }
+.statusmenu-current { padding: 6px 10px 8px; border-bottom: 1px solid var(--color-border); margin-bottom: 4px; }
+.statusmenu-item { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; text-align: left; padding: 8px 10px; border-radius: var(--r-sm); color: var(--color-text); font-size: var(--fs-sm); }
+.statusmenu-item:hover, .statusmenu-item:focus-visible { background: var(--color-surface-2); }
+.statusmenu-dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+.statusmenu-dot[data-status="requested"] { background: var(--status-requested-fg); } .statusmenu-dot[data-status="pending_vaccines"] { background: var(--status-pending_vaccines-fg); }
+.statusmenu-dot[data-status="confirmed"] { background: var(--status-confirmed-fg); } .statusmenu-dot[data-status="checked_in"] { background: var(--status-checked_in-fg); }
+.statusmenu-dot[data-status="checked_out"] { background: var(--status-checked_out-fg); } .statusmenu-dot[data-status="cancelled"] { background: var(--status-cancelled-fg); } .statusmenu-dot[data-status="no_show"] { background: var(--status-no_show-fg); }
+.statusmenu-lock { color: var(--color-text-faint); }

@@ -1,0 +1,14 @@
+.charges { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.charges-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.charges-line { display: flex; justify-content: space-between; gap: var(--sp-3); padding: 10px 12px; border-radius: var(--r-md); background: var(--color-surface-tint); font-size: var(--fs-sm); }
+.charges-label { min-width: 0; } .charges-amt { white-space: nowrap; font-weight: var(--fw-semibold); }
+.charges-totals { margin: 0; display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--color-border); padding-top: var(--sp-3); }
+.charges-totals > div { display: flex; justify-content: space-between; gap: var(--sp-3); align-items: flex-start; font-size: var(--fs-sm); color: var(--color-text-muted); }
+.charges-totals dt { display: flex; flex-direction: column; } .charges-totals dd { margin: 0; white-space: nowrap; }
+.charges-sub { color: var(--color-text-faint); font-weight: var(--fw-regular); }
+.charges-totals .is-discount dd { color: var(--color-success); }
+.charges-totals .is-total { color: var(--color-heading); font-weight: var(--fw-semibold); font-size: var(--fs-md); border-top: 1px solid var(--color-border); padding-top: 6px; margin-top: 2px; }
+.charges-totals .is-balance { color: var(--color-heading); font-weight: var(--fw-semibold); } .charges-totals .is-balance dd { color: var(--color-warn); } .charges-totals .is-balance.is-settled dd { color: var(--color-success); }
+.charges-notes { margin: 0; padding-left: 18px; }
+.charges.is-compact .charges-line { padding: 6px 8px; font-size: var(--fs-xs); } .charges.is-compact .charges-totals > div { font-size: var(--fs-xs); }
+.charges-footer { border-top: 1px solid var(--color-border); padding-top: var(--sp-3); }

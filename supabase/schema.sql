@@ -8,26 +8,6 @@ create extension if not exists pgcrypto;
 create or replace function public.touch_updated_at() returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end $$;
 
--- system · Account deletion requests: App-store requirement: a customer can request deletion; 30-day grace period, then anonymisation (R-M21).
-create table if not exists public.account_deletion_requests (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  user_id uuid not null references public.users(id) on delete set null,
-  customer_id uuid references public.customers(id) on delete set null,
-  reason text check (reason in ('moving', 'no_longer_needed', 'privacy', 'too_many_notifications', 'other')),
-  details text,
-  status text not null check (status in ('requested', 'cancelled', 'completed')),
-  requested_at timestamptz not null,
-  -- Day the data is anonymised unless cancelled
-  scheduled_for date not null,
-  completed_at timestamptz
-);
-create index if not exists account_deletion_requests_user_id_idx on public.account_deletion_requests(user_id);
-create index if not exists account_deletion_requests_customer_id_idx on public.account_deletion_requests(customer_id);
-create trigger account_deletion_requests_touch before update on public.account_deletion_requests for each row execute function public.touch_updated_at();
-
 -- grooming · Grooming add-ons: Add-ons (Furminator, Medicated Shampoo, Nail Trim...) with price, starting-at flag, added time and employee restriction.
 create table if not exists public.addons (
   -- Primary key
@@ -126,8 +106,11 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
--- hotel · Booking change requests: A pet parent asks to modify dates, add / remove a pet, add grooming or cancel a stay. The front desk approves or declines; approving a cancellation of a confirmed stay is PIN-gated (R-I06).
-create table if not exists public.booking_change_requests (
+-- hotel · Booking activity: Activity trail per hotel booking: creation, status changes (with the approval that allowed them), room moves, date changes, notes, payments. Replaces the legacy "Added / Last edited by" line (R-J08).
+-- access:
+--   · staff read
+--   · system write
+create table if not exists public.booking_events (
   -- Primary key
   id uuid primary key default gen_random_uuid(),
   -- Owning location (Encino / Westwood)
@@ -135,49 +118,21 @@ create table if not exists public.booking_change_requests (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   booking_id uuid not null references public.bookings(id) on delete set null,
-  customer_id uuid not null references public.customers(id) on delete set null,
-  kind text not null check (kind in ('modify_dates', 'add_pet', 'remove_pet', 'add_grooming', 'cancel', 'other')),
-  requested_check_in timestamptz,
-  requested_check_out timestamptz,
-  pet_ids jsonb,
-  message text,
-  status text not null check (status in ('open', 'approved', 'declined', 'withdrawn')),
-  handled_by uuid references public.users(id) on delete set null,
-  handled_at timestamptz,
-  staff_note text
+  kind text not null check (kind in ('created', 'status', 'room', 'dates', 'note', 'payment', 'edited')),
+  from_status text check (from_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
+  to_status text check (to_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
+  summary text not null,
+  user_id uuid references public.users(id) on delete set null,
+  user_name text not null,
+  approval_id uuid references public.approvals(id) on delete set null,
+  details jsonb,
+  at timestamptz not null
 );
-create index if not exists booking_change_requests_location_idx on public.booking_change_requests(location_id);
-create index if not exists booking_change_requests_booking_id_idx on public.booking_change_requests(booking_id);
-create index if not exists booking_change_requests_customer_id_idx on public.booking_change_requests(customer_id);
-create index if not exists booking_change_requests_handled_by_idx on public.booking_change_requests(handled_by);
-create trigger booking_change_requests_touch before update on public.booking_change_requests for each row execute function public.touch_updated_at();
-
--- hotel · Stay care notes: Per pet per hotel stay: feeding, own food, belongings, flea medication brand and date, extra notes (the customer fills these in C-32; the desk reads them at check-in).
-create table if not exists public.booking_pet_care (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  booking_id uuid not null references public.bookings(id) on delete set null,
-  booking_pet_id uuid not null references public.booking_pets(id) on delete set null,
-  pet_id uuid not null references public.pets(id) on delete set null,
-  feeding_instructions text,
-  meals_per_day text,
-  own_food boolean not null default false,
-  -- Bed, toys, leash... brought along
-  belongings text,
-  medication_count integer,
-  -- e.g. '1 daily (AM only)'
-  dosing_frequency text,
-  flea_brand text,
-  flea_last_dose_on date,
-  emergency_contact text,
-  notes text
-);
-create index if not exists booking_pet_care_booking_id_idx on public.booking_pet_care(booking_id);
-create index if not exists booking_pet_care_booking_pet_id_idx on public.booking_pet_care(booking_pet_id);
-create index if not exists booking_pet_care_pet_id_idx on public.booking_pet_care(pet_id);
-create trigger booking_pet_care_touch before update on public.booking_pet_care for each row execute function public.touch_updated_at();
+create index if not exists booking_events_location_idx on public.booking_events(location_id);
+create index if not exists booking_events_booking_id_idx on public.booking_events(booking_id);
+create index if not exists booking_events_user_id_idx on public.booking_events(user_id);
+create index if not exists booking_events_approval_id_idx on public.booking_events(approval_id);
+create trigger booking_events_touch before update on public.booking_events for each row execute function public.touch_updated_at();
 
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
@@ -198,6 +153,32 @@ create index if not exists booking_pets_booking_id_idx on public.booking_pets(bo
 create index if not exists booking_pets_pet_id_idx on public.booking_pets(pet_id);
 create index if not exists booking_pets_room_id_idx on public.booking_pets(room_id);
 create trigger booking_pets_touch before update on public.booking_pets for each row execute function public.touch_updated_at();
+
+-- hotel · Booking additional services: Extra services attached to a hotel booking (Veterinary travel, Vaccination fee...): rate snapshot, quantity, occurrence and Morning / Afternoon / Evening flags (R-D16).
+-- access:
+--   · staff read/write
+create table if not exists public.booking_services (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  service_id uuid not null references public.services(id) on delete set null,
+  label text not null,
+  pet_id uuid references public.pets(id) on delete set null,
+  rate numeric(12,2) not null,
+  qty integer not null,
+  total numeric(12,2) not null,
+  occurs text not null check (occurs in ('once', 'daily', 'per_night')),
+  morning boolean not null default false,
+  afternoon boolean not null default false,
+  evening boolean not null default false,
+  note text
+);
+create index if not exists booking_services_booking_id_idx on public.booking_services(booking_id);
+create index if not exists booking_services_service_id_idx on public.booking_services(service_id);
+create index if not exists booking_services_pet_id_idx on public.booking_services(pet_id);
+create trigger booking_services_touch before update on public.booking_services for each row execute function public.touch_updated_at();
 
 -- hotel · Hotel bookings: A stay: customer, dates, room type, status (one lifecycle), totals and payment status.
 create table if not exists public.bookings (
@@ -263,20 +244,6 @@ create table if not exists public.capacities (
 create index if not exists capacities_location_idx on public.capacities(location_id);
 create trigger capacities_touch before update on public.capacities for each row execute function public.touch_updated_at();
 
--- comms · Chat quick replies: Canned messages offered above the chat composer for customers and staff (C-82, F-61).
-create table if not exists public.chat_quick_replies (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  audience text not null check (audience in ('customer', 'staff')),
-  -- May contain {pet} placeholder
-  text text not null,
-  sort_order integer not null,
-  active boolean not null default false
-);
-create trigger chat_quick_replies_touch before update on public.chat_quick_replies for each row execute function public.touch_updated_at();
-
 -- comms · Conversations: One Front Desk chat thread per customer per location.
 create table if not exists public.conversations (
   -- Primary key
@@ -324,28 +291,6 @@ create table if not exists public.customers (
 create index if not exists customers_user_id_idx on public.customers(user_id);
 create index if not exists customers_home_location_id_idx on public.customers(home_location_id);
 create trigger customers_touch before update on public.customers for each row execute function public.touch_updated_at();
-
--- daycare · Daycare booking pets: Per pet on a daycare day: the additional pet details questionnaire (vet-recommended flea medication with brand and date, medical alerts).
--- access:
---   · customer write own
---   · front desk read
-create table if not exists public.daycare_booking_pets (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  daycare_booking_id uuid not null references public.daycare_bookings(id) on delete set null,
-  pet_id uuid not null references public.pets(id) on delete set null,
-  -- On a vet-recommended flea medication
-  flea_medication boolean not null default false,
-  flea_brand text,
-  -- Last application
-  flea_date date,
-  medical_alert text
-);
-create index if not exists daycare_booking_pets_daycare_booking_id_idx on public.daycare_booking_pets(daycare_booking_id);
-create index if not exists daycare_booking_pets_pet_id_idx on public.daycare_booking_pets(pet_id);
-create trigger daycare_booking_pets_touch before update on public.daycare_booking_pets for each row execute function public.touch_updated_at();
 
 -- daycare · Daycare bookings: A daycare day: pets, date, in/out times, computed item and price, status (same lifecycle).
 create table if not exists public.daycare_bookings (
@@ -443,20 +388,6 @@ create index if not exists employees_location_idx on public.employees(location_i
 create index if not exists employees_user_id_idx on public.employees(user_id);
 create trigger employees_touch before update on public.employees for each row execute function public.touch_updated_at();
 
--- comms · FAQ items: Help & support questions and answers grouped by topic (C-77).
-create table if not exists public.faq_items (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  question text not null,
-  answer text not null,
-  topic text not null check (topic in ('booking', 'payment', 'vaccines', 'app', 'other')),
-  sort_order integer not null,
-  active boolean not null default false
-);
-create trigger faq_items_touch before update on public.faq_items for each row execute function public.touch_updated_at();
-
 -- comms · Staff feedback: Feedback staff leave from any page (FeedbackButton); the owner reads it in an inbox.
 create table if not exists public.feedback (
   -- Primary key
@@ -492,51 +423,6 @@ create table if not exists public.fees (
   active boolean not null default false
 );
 create trigger fees_touch before update on public.fees for each row execute function public.touch_updated_at();
-
--- grooming · Grooming & Spa orders: One customer booking of Grooming & Spa for one or more pets at one time: groups the per-pet appointments, carries the payment and the one booking lifecycle status. Past orders can be re-created (R-G16).
--- access:
---   · customer read own
---   · front desk read/write
---   · owner read
-create table if not exists public.grooming_orders (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  -- Owning location (Encino / Westwood)
-  location_id uuid not null references public.locations(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  -- Human reference e.g. GS-1042
-  code text not null,
-  customer_id uuid not null references public.customers(id) on delete set null,
-  -- appointments.id per pet
-  appointment_ids jsonb not null,
-  -- pets.id in order
-  pet_ids jsonb not null,
-  starts_at timestamptz not null,
-  -- Longest chair time; pets are groomed in parallel up to the grooming capacity
-  duration_min integer not null,
-  groomer_id uuid references public.employees(id) on delete set null,
-  status text not null check (status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
-  payment_method text check (payment_method in ('card', 'cash')),
-  payment_status text not null check (payment_status in ('pending', 'authorized', 'paid', 'refunded', 'failed')),
-  -- USD
-  subtotal numeric(12,2) not null,
-  -- USD
-  tax_total numeric(12,2) not null,
-  -- USD
-  fee_total numeric(12,2) not null,
-  -- USD
-  total numeric(12,2) not null,
-  invoice_id uuid references public.invoices(id) on delete set null,
-  notes text,
-  -- app | desk | recreate
-  source text
-);
-create index if not exists grooming_orders_location_idx on public.grooming_orders(location_id);
-create index if not exists grooming_orders_customer_id_idx on public.grooming_orders(customer_id);
-create index if not exists grooming_orders_groomer_id_idx on public.grooming_orders(groomer_id);
-create index if not exists grooming_orders_invoice_id_idx on public.grooming_orders(invoice_id);
-create trigger grooming_orders_touch before update on public.grooming_orders for each row execute function public.touch_updated_at();
 
 -- core · Holidays & closures: Dates marked holiday (excluded from long-stay discounts) or boarding closed.
 create table if not exists public.holidays (
@@ -589,23 +475,6 @@ create index if not exists invoices_location_idx on public.invoices(location_id)
 create index if not exists invoices_customer_id_idx on public.invoices(customer_id);
 create trigger invoices_touch before update on public.invoices for each row execute function public.touch_updated_at();
 
--- system · Legal documents: Privacy policy, terms of service and open-source licences shown in the app (C-79); versioned markdown.
-create table if not exists public.legal_documents (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  slug text not null,
-  title text not null,
-  kind text not null check (kind in ('privacy', 'terms', 'licenses', 'other')),
-  version text not null,
-  effective_on date not null,
-  -- Markdown
-  body text not null,
-  published boolean not null default false
-);
-create trigger legal_documents_touch before update on public.legal_documents for each row execute function public.touch_updated_at();
-
 -- core · Locations: Petrock stores (Encino, Westwood). Adding a location inserts a row; everything else is scoped by location_id.
 -- access:
 --   · everyone read
@@ -647,21 +516,6 @@ create table if not exists public.messages (
 create index if not exists messages_conversation_id_idx on public.messages(conversation_id);
 create index if not exists messages_sender_user_id_idx on public.messages(sender_user_id);
 create trigger messages_touch before update on public.messages for each row execute function public.touch_updated_at();
-
--- comms · Notification preferences: Per user per category: push / email / SMS on or off (C-75).
-create table if not exists public.notification_prefs (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  user_id uuid not null references public.users(id) on delete set null,
-  category text not null check (category in ('bookings', 'vaccines', 'chat', 'payments', 'promotions')),
-  push boolean not null default false,
-  email boolean not null default false,
-  sms boolean not null default false
-);
-create index if not exists notification_prefs_user_id_idx on public.notification_prefs(user_id);
-create trigger notification_prefs_touch before update on public.notification_prefs for each row execute function public.touch_updated_at();
 
 -- comms · Notifications: In-app notifications to a user (booking confirmed, payment done, vaccine expiring...).
 create table if not exists public.notifications (
@@ -721,30 +575,6 @@ create table if not exists public.page_layouts (
   hidden jsonb not null
 );
 create trigger page_layouts_touch before update on public.page_layouts for each row execute function public.touch_updated_at();
-
--- commerce · Saved payment methods: Cards a customer saved in the app. Only brand, last4, expiry and the provider token are stored (mock now; Stripe PaymentMethod ids later).
-create table if not exists public.payment_methods (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  customer_id uuid not null references public.customers(id) on delete set null,
-  type text not null check (type in ('card', 'cash')),
-  brand text check (brand in ('visa', 'mastercard', 'amex', 'discover', 'other')),
-  last4 text,
-  exp_month integer,
-  exp_year integer,
-  holder_name text,
-  billing_zip text,
-  is_default boolean not null default false,
-  -- mock | stripe
-  provider text not null,
-  -- Tokenised reference; never a PAN
-  provider_token text,
-  status text not null check (status in ('active', 'expired', 'removed'))
-);
-create index if not exists payment_methods_customer_id_idx on public.payment_methods(customer_id);
-create trigger payment_methods_touch before update on public.payment_methods for each row execute function public.touch_updated_at();
 
 -- commerce · Payments: Payment attempts and results through the PaymentProvider (mock now, Stripe later).
 create table if not exists public.payments (
@@ -969,28 +799,6 @@ create table if not exists public.settings (
   description text
 );
 create trigger settings_touch before update on public.settings for each row execute function public.touch_updated_at();
-
--- comms · Support requests: Help form submissions from the app; the front desk / owner answers them (C-77).
-create table if not exists public.support_requests (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  -- Owning location (Encino / Westwood)
-  location_id uuid not null references public.locations(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  customer_id uuid references public.customers(id) on delete set null,
-  user_id uuid not null references public.users(id) on delete set null,
-  user_name text not null,
-  email text,
-  topic text not null check (topic in ('booking', 'payment', 'vaccines', 'app', 'other')),
-  message text not null,
-  status text not null check (status in ('new', 'open', 'resolved')),
-  staff_reply text
-);
-create index if not exists support_requests_location_idx on public.support_requests(location_id);
-create index if not exists support_requests_customer_id_idx on public.support_requests(customer_id);
-create index if not exists support_requests_user_id_idx on public.support_requests(user_id);
-create trigger support_requests_touch before update on public.support_requests for each row execute function public.touch_updated_at();
 
 -- commerce · Taxes: Tax settings: one named tax with service / product / boarding rates, prices exclusive by default.
 create table if not exists public.taxes (

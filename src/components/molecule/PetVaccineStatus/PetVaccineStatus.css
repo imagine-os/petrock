@@ -1,0 +1,5 @@
+.petvacc { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.petvacc-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.petvacc-chip { font-size: 11px; padding: 2px 8px; border-radius: var(--r-pill); background: var(--color-surface-3); color: var(--color-text-muted); white-space: nowrap; }
+.petvacc-chip.is-danger { background: var(--color-danger-bg); color: var(--color-danger); }
+.petvacc-chip.is-warn { background: var(--color-warn-bg); color: var(--color-warn); }

@@ -1,0 +1,145 @@
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from '../../tenant/LocationProvider';
+import { PageHeader } from '../../components/molecule/PageHeader/PageHeader';
+import { ReservationDayNav } from '../../components/molecule/ReservationDayNav/ReservationDayNav';
+import { SegmentedControl } from '../../components/molecule/SegmentedControl/SegmentedControl';
+import { Select } from '../../components/atom/Select/Select';
+import { Toggle } from '../../components/atom/Toggle/Toggle';
+import { Button } from '../../components/atom/Button/Button';
+import { Badge, StatusBadge } from '../../components/atom/Badge/Badge';
+import { Modal } from '../../components/organism/Modal/Modal';
+import { RoomTimeline, type TimelineBlock, type TimelineGroup } from '../../components/organism/RoomTimeline/RoomTimeline';
+import { PetVaccineStatus } from '../../components/molecule/PetVaccineStatus/PetVaccineStatus';
+import { BookingStatusMenu } from '../../components/molecule/BookingStatusMenu/BookingStatusMenu';
+import { useToast } from '../../components/molecule/Toast/Toast';
+import { fmtMoney } from '../../pricing/engine';
+import { BOOKING_STATUSES, BOOKING_STATUS_LABEL, type BookingStatus } from '../../domain/booking';
+import { useReservationRows, type ReservationRow } from './lib/reservations';
+import { addDaysIso, combine, diffDays, fmtDate, hhmmOf, todayIso, weekStart } from './lib/dates';
+import { roomFits, staysOverlap, ACTIVE_STATUSES } from './lib/availability';
+import { useBookingActions } from './lib/useBookingActions';
+import { RoomPickModal } from './lib/RoomPickModal';
+import { ViewSwitch } from './ReservationsTablePage';
+import type { RoomRow } from '../../data/schema/core';
+import './frontdesk-reservations.css';
+
+const UNASSIGNED = '__unassigned';
+const DC_ROWS = [{ id: 'dc_full_day', label: 'Full day' }, { id: 'dc_half_day', label: 'Half day' }, { id: 'dc_hour', label: 'Play hour' }];
+
+/** F-13 - rooms × days with stays as blocks (D-008). */
+export function TimelinePage() {
+  const nav = useNavigate();
+  const { toast } = useToast();
+  const { location } = useLocation();
+  const { rows, bookings, rooms, roomTypes } = useReservationRows();
+  const actions = useBookingActions();
+  const today = todayIso();
+  const [start, setStart] = useState(weekStart(today));
+  const [span, setSpan] = useState<'7' | '14'>('14');
+  const [roomType, setRoomType] = useState('');
+  const [status, setStatus] = useState('');
+  const [showClosed, setShowClosed] = useState(false);
+  const [showDaycare, setShowDaycare] = useState(true);
+  const [showUnassigned, setShowUnassigned] = useState(true);
+  const [move, setMove] = useState<{ row: ReservationRow; room: RoomRow | null; dayIn: string; dayOut: string } | null>(null);
+  const [roomFor, setRoomFor] = useState<ReservationRow | null>(null);
+  const days = Number(span);
+
+  const groups = useMemo<TimelineGroup[]>(() => {
+    const g: TimelineGroup[] = [];
+    if (showUnassigned) g.push({ key: 'unassigned', label: 'Unassigned (no room yet)', rows: [{ id: UNASSIGNED, label: 'No room', sub: 'assign from the popover' }] });
+    for (const rt of roomTypes.slice().sort((a, b) => a.sort_order - b.sort_order)) {
+      if (roomType && rt.id !== roomType) continue;
+      const rs = rooms.filter((r) => r.room_type_id === rt.id && r.active !== false).sort((a, b) => a.sort_order - b.sort_order);
+      g.push({ key: rt.id, label: `${rt.name}s (${rs.length})`, rows: rs.map((r) => ({ id: r.id, label: r.code, sub: r.position === 'bottom' ? 'bottom · any weight' : r.position === 'top' ? 'top · ≤30 lb' : undefined })) });
+    }
+    if (showDaycare && !roomType) g.push({ key: 'daycare', label: 'Daycare', rows: DC_ROWS });
+    return g;
+  }, [rooms, roomTypes, roomType, showDaycare, showUnassigned]);
+
+  const blocks = useMemo<TimelineBlock[]>(() => rows.filter((r) => (showClosed || !['cancelled', 'no_show'].includes(r.status)) && (!status || r.status === status) && (!roomType || r.roomTypeId === roomType || r.kind === 'daycare')).map((r) => ({
+    id: r.id, rowId: r.kind === 'daycare' ? `dc_${r.daycare?.item ?? 'full_day'}` : r.roomId ?? UNASSIGNED, startDay: r.dayIn, endDay: r.dayOut, label: r.customer, sub: r.petNames, status: r.status, draggable: r.kind === 'hotel',
+    flags: [...(!r.vaccineOk ? ['vaccine' as const] : []), ...(r.balance > 0 && r.status !== 'cancelled' ? ['unpaid' as const] : []), ...(r.notes ? ['note' as const] : [])],
+  })), [rows, showClosed, status, roomType]);
+  const byId = useMemo(() => Object.fromEntries(rows.map((r) => [r.id, r])), [rows]);
+
+  const onMove = (block: TimelineBlock, rowId: string, day: string) => {
+    const r = byId[block.id]; const b = r?.booking; if (!b) return;
+    const nights = Math.max(1, diffDays(r.dayIn, r.dayOut));
+    const dayIn = day, dayOut = addDaysIso(day, nights);
+    if (rowId.startsWith('dc_')) { toast({ tone: 'danger', title: 'Hotel stays cannot be dropped on daycare rows' }); return; }
+    if (b.status === 'checked_in' && dayIn !== r.dayIn) { toast({ tone: 'danger', title: 'Checked-in stays keep their dates (R-X05)', body: 'Drop on the same day to change the room.' }); return; }
+    if (b.status === 'checked_out' || b.status === 'cancelled' || b.status === 'no_show') { toast({ tone: 'danger', title: `${BOOKING_STATUS_LABEL[b.status as BookingStatus]} stays cannot move` }); return; }
+    const room = rowId === UNASSIGNED ? null : rooms.find((x) => x.id === rowId) ?? null;
+    if (room) {
+      if (room.room_type_id !== b.room_type_id) { toast({ tone: 'danger', title: `${room.code} is a ${roomTypes.find((t) => t.id === room.room_type_id)?.name}; ${b.code} is booked as ${r.roomType}` }); return; }
+      const fit = roomFits(room, roomTypes.find((t) => t.id === room.room_type_id), r.heaviestLbs); if (!fit.ok) { toast({ tone: 'danger', title: `${room.code}: ${fit.reason}` }); return; }
+      const clash = bookings.find((x) => x.id !== b.id && x.room_id === room.id && ACTIVE_STATUSES.includes(x.status) && staysOverlap(x, dayIn, dayOut));
+      if (clash) { toast({ tone: 'danger', title: `${room.code} is taken by ${clash.code} on those nights` }); return; }
+    }
+    if (rowId === (r.roomId ?? UNASSIGNED) && dayIn === r.dayIn) return;
+    setMove({ row: r, room, dayIn, dayOut });
+  };
+  const confirmMove = async () => {
+    if (!move?.row.booking) return;
+    const b = move.row.booking;
+    await actions.moveStay(b, move.room?.id ?? null, move.room?.code ?? 'no room', combine(move.dayIn, hhmmOf(b.check_in)), combine(move.dayOut, hhmmOf(b.check_out)));
+    setMove(null);
+  };
+
+  return (
+    <div className="fdr-page">
+      <PageHeader title="Room timeline" subtitle={`${location.name} · ${rooms.length} rooms · ${blocks.length} stays in the filter`} code="F-13"
+        actions={<div className="fdr-toolbar"><ViewSwitch value="timeline" /><ReservationDayNav value={start} onChange={setStart} step={7} rangeDays={days} /><SegmentedControl size="sm" ariaLabel="Span" value={span} onChange={setSpan} options={[{ value: '7', label: '1 week' }, { value: '14', label: '2 weeks' }]} /><Button icon="plus" onClick={() => nav('/desk/reservations/new')}>New booking</Button></div>}>
+        <div className="fdr-toolbar">
+          <Select size="sm" aria-label="Room type" placeholder="All room types" value={roomType} onChange={(e) => setRoomType(e.target.value)} options={roomTypes.map((t) => ({ value: t.id, label: t.name }))} />
+          <Select size="sm" aria-label="Status" placeholder="Any status" value={status} onChange={(e) => setStatus(e.target.value)} options={BOOKING_STATUSES.map((s) => ({ value: s, label: BOOKING_STATUS_LABEL[s] }))} />
+          <Toggle size="sm" checked={showUnassigned} onChange={setShowUnassigned} label="Unassigned row" />
+          <Toggle size="sm" checked={showDaycare} onChange={setShowDaycare} label="Daycare rows" />
+          <Toggle size="sm" checked={showClosed} onChange={setShowClosed} label="Cancelled / no show" />
+        </div>
+      </PageHeader>
+
+      <div className="fdr-legend">
+        <span>Status:</span>{BOOKING_STATUSES.map((s) => <span key={s}><span className="fdr-legend-swatch" style={{ background: `var(--status-${s}-bg)` }} />{BOOKING_STATUS_LABEL[s]}</span>)}
+        <span className="faint">· flags: vaccine, balance due, notes · drag a block to move it · click an empty cell to book that room</span>
+      </div>
+
+      <RoomTimeline groups={groups} blocks={blocks} startDay={start} days={days} today={today} onBlockMove={onMove}
+        onCellClick={(rowId, day) => { if (rowId === UNASSIGNED || rowId.startsWith('dc_')) return; const room = rooms.find((r) => r.id === rowId); if (!room) return; nav(`/desk/reservations/new?checkIn=${day}&checkOut=${addDaysIso(day, 1)}&roomType=${room.room_type_id}&room=${room.id}`); }}
+        renderDetail={(block, close) => { const r = byId[block.id]; if (!r) return null; return (
+          <div className="fdr-pop-body">
+            <div className="row wrap" style={{ gap: 6 }}><strong>{r.code}</strong><StatusBadge status={r.status} size="sm" />{r.kind === 'daycare' && <Badge size="sm" tone="info">daycare</Badge>}</div>
+            <dl className="fdr-kv">
+              <dt>Customer</dt><dd>{r.customer} · {r.mobile}</dd>
+              <dt>Dates</dt><dd>{fmtDate(r.dayIn)} {r.timeIn} → {fmtDate(r.dayOut)} {r.timeOut}{r.kind === 'hotel' ? ` · ${r.nights} night${r.nights === 1 ? '' : 's'}` : ''}</dd>
+              <dt>Room</dt><dd>{r.room}{r.kind === 'hotel' ? ` · ${r.roomType}` : ''}</dd>
+              <dt>Pets</dt><dd>{r.pets.map((p) => `${p.name} (${p.breed}, ${p.sex === 'male' ? 'M' : 'F'}${p.neutered ? ', fixed' : ''})`).join('; ') || '—'}</dd>
+              <dt>Balance</dt><dd className={r.balance > 0 ? 'tone-warn' : 'tone-success'}>{fmtMoney(r.balance)} of {fmtMoney(r.total)}</dd>
+            </dl>
+            <div className="row wrap" style={{ gap: 4 }}>{r.pets.map((p) => <PetVaccineStatus key={p.id} compact summary={r.vaccines[p.id]} petName={p.name} />)}</div>
+            {r.notes && <p className="xs muted" style={{ fontStyle: 'italic' }}>{r.notes}</p>}
+            {r.kind === 'hotel' && r.booking && (
+              <div className="fdr-inline-actions" style={{ justifyContent: 'flex-start' }}>
+                <Button size="sm" onClick={() => nav(`/desk/reservations/${r.id}`)}>Open</Button>
+                <Button size="sm" variant="secondary" icon="bed" onClick={() => { close(); setRoomFor(r); }}>{r.roomId ? 'Change room' : 'Assign room'}</Button>
+                <BookingStatusMenu status={r.status} align="left" onSelect={(to) => { close(); if (to === 'checked_in' && !r.roomId) { setRoomFor(r); return; } actions.changeStatus(r.booking!, to); }} />
+              </div>
+            )}
+            {r.kind === 'daycare' && <Button size="sm" variant="secondary" onClick={() => nav('/desk/reservations')}>Open in table</Button>}
+          </div>
+        ); }} />
+
+      <Modal open={!!move} onClose={() => setMove(null)} title={move ? `Move ${move.row.code}` : ''} size="sm" footer={<><Button variant="secondary" onClick={() => setMove(null)}>Cancel</Button><Button icon="check" onClick={confirmMove}>Move stay</Button></>}>
+        {move && <div className="stack-sm small">
+          <p><strong>{move.row.customer}</strong> · {move.row.petNames}</p>
+          <dl className="fdr-kv"><dt>From</dt><dd>{move.row.room} · {fmtDate(move.row.dayIn)} → {fmtDate(move.row.dayOut)}</dd><dt>To</dt><dd>{move.room?.code ?? 'No room'} · {fmtDate(move.dayIn)} → {fmtDate(move.dayOut)}</dd></dl>
+          <p className="xs muted">Nights stay the same (R-X07); the rate is not re-quoted here - edit the booking to re-price a date change.</p>
+        </div>}
+      </Modal>
+      {roomFor?.booking && <RoomPickModal booking={roomFor.booking} rooms={rooms} roomTypes={roomTypes} bookings={bookings} heaviestLbs={roomFor.heaviestLbs} onClose={() => setRoomFor(null)} onPick={(roomId, code) => { const b = roomFor.booking!; setRoomFor(null); void actions.assignRoom(b, roomId, code); }} />}
+      {actions.modal}
+    </div>
+  );
+}
