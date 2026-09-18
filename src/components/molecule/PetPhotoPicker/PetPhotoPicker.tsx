@@ -37,7 +37,7 @@ export function PetPhotoPicker({ name, value, onChange, size = 96, disabled = fa
     <div className="photopick">
       <button type="button" className="photopick-btn" onClick={() => ref.current?.click()} disabled={disabled} aria-label={value ? 'Change photo' : 'Add photo'} style={{ width: size, height: size }}>
         <Avatar name={name || 'Pet'} src={value} size={size} kind="pet" />
-        <span className="photopick-badge" aria-hidden><Icon name="image" size={14} strokeWidth={2} /></span>
+        <span className="photopick-badge" aria-hidden><Icon name="image" size={12} strokeWidth={2} /></span>
       </button>
       <input ref={ref} type="file" accept="image/*" capture="environment" className="sr-only" onChange={onPick} tabIndex={-1} aria-hidden />
       {value && !disabled && <button type="button" className="photopick-remove" onClick={() => onChange(null)}>Remove photo</button>}

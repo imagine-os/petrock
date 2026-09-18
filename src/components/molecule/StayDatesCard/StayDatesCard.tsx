@@ -19,7 +19,7 @@ export interface StayDatesCardProps {
 
 export const fmtDay = (iso: string | null | undefined, opts: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) => (iso ? new Date(iso.length === 10 ? `${iso}T00:00:00` : iso).toLocaleDateString('en-US', opts) : '—');
 
-/** Check-in / check-out card (Figma Choose Pets): two columns with date + time, an inline range calendar that fills check-in then check-out. */
+/** Figma Hotel Reservation.png: white calendar card (month 18/600, outlined arrow squares, purple 600 days) above the white "Check In / Check Out" card with two 48 px grey-bordered fields (filled calendar / alarm icons right). The calendar fills check-in then check-out. */
 export function StayDatesCard({ value, onChange, hoursFor, minDate, error, nights, readOnly = false }: StayDatesCardProps) {
   const [picking, setPicking] = useState<'in' | 'out'>(value.checkIn && !value.checkOut ? 'out' : 'in');
   const today = toIso(new Date());
@@ -41,9 +41,9 @@ export function StayDatesCard({ value, onChange, hoursFor, minDate, error, night
       <div className={`staydates-col ${!readOnly && picking === which ? 'is-picking' : ''}`}>
         <div className="staydates-label">{which === 'in' ? 'Check in' : 'Check out'}</div>
         <button type="button" className="staydates-field" disabled={readOnly} onClick={() => setPicking(which)} aria-label={`Pick ${which === 'in' ? 'check-in' : 'check-out'} date`}>
-          <Icon name="calendar" size={16} /><span>{date ? fmtDay(date, { day: 'numeric', month: 'short', year: 'numeric' }) : 'Select date'}</span>
+          <span>{date ? fmtDay(date, { day: 'numeric', month: 'short', year: 'numeric' }) : 'Select date'}</span><Icon name="calendar-filled" size={16} />
         </button>
-        {readOnly ? <div className="staydates-field is-static"><Icon name="clock" size={16} /><span>{fmt12(time)}</span></div>
+        {readOnly ? <div className="staydates-field is-static"><span>{fmt12(time)}</span><Icon name="clock-filled" size={16} /></div>
           : <TimePicker value={time} min={h?.open ?? '06:00'} max={h?.close ?? '21:00'} onChange={(t) => onChange?.(which === 'in' ? { ...value, checkInTime: t } : { ...value, checkOutTime: t })} size="sm" />}
         {h === null && <div className="staydates-closed"><Icon name="warning" size={12} /> Closed that day</div>}
       </div>
@@ -51,15 +51,15 @@ export function StayDatesCard({ value, onChange, hoursFor, minDate, error, night
   };
   return (
     <div className={`staydates ${error ? 'has-error' : ''}`}>
+      {!readOnly && (
+        <div className="staydates-cal">
+          <DatePicker value={value.checkIn} rangeEnd={value.checkOut} onChange={pick} min={min} disabledDates={(iso) => hoursFor?.(iso) === null} />
+          <div className="staydates-hint">{picking === 'in' ? 'Tap your check-in day' : 'Now tap your check-out day'}</div>
+        </div>
+      )}
       <div className="staydates-cols">{col('in')}{col('out')}</div>
       {nights != null && value.checkIn && value.checkOut && <div className="staydates-nights"><Icon name="moon" size={14} /> {nights} night{nights === 1 ? '' : 's'}</div>}
       {error && <div className="staydates-error">{error}</div>}
-      {!readOnly && (
-        <div className="staydates-cal">
-          <div className="staydates-hint">{picking === 'in' ? 'Tap your check-in day' : 'Now tap your check-out day'}</div>
-          <DatePicker value={value.checkIn} rangeEnd={value.checkOut} onChange={pick} min={min} disabledDates={(iso) => hoursFor?.(iso) === null} />
-        </div>
-      )}
     </div>
   );
 }

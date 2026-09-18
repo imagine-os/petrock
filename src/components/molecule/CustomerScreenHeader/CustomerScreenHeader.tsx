@@ -9,6 +9,8 @@ export interface CustomerScreenHeaderProps {
   subtitle?: ReactNode;
   /** Route for the back chevron; `-1` or omitted goes back in history; `null` hides the chevron. */
   backTo?: string | number | null;
+  /** Custom back handler (wizard step back); wins over backTo. */
+  onBack?: () => void;
   /** Right-hand slot: a text action (`<Button variant="link">Add Pet</Button>`), IconButton, Badge... */
   actions?: ReactNode;
   /** Stays visible while the screen scrolls (default true). */
@@ -25,9 +27,9 @@ export interface CustomerScreenHeaderProps {
  * #33363F chevron, Open Sans 600 20 black title centred, optional right text action in primary, 1 px #B6B6B6 rule.
  * Transparent over the screen tone. PhonePageHeader is a thin alias of this component.
  */
-export function CustomerScreenHeader({ title, subtitle, backTo, actions, sticky = true, align = 'center', rule = true, className = '' }: CustomerScreenHeaderProps) {
+export function CustomerScreenHeader({ title, subtitle, backTo, onBack, actions, sticky = true, align = 'center', rule = true, className = '' }: CustomerScreenHeaderProps) {
   const nav = useNavigate();
-  const back = backTo === null ? null : () => (typeof backTo === 'string' ? nav(backTo) : nav(-1));
+  const back = onBack ? onBack : backTo === null ? null : () => (typeof backTo === 'string' ? nav(backTo) : nav(-1));
   return (
     <header className={`cshead cshead-${align} ${sticky ? 'is-sticky' : ''} ${rule ? 'has-rule' : ''} ${className}`}>
       <div className="cshead-side">{back && <button type="button" className="cshead-back" onClick={back} aria-label="Back"><Icon name="chevron-left" size={24} strokeWidth={2} /></button>}</div>

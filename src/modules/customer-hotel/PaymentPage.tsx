@@ -15,12 +15,12 @@ import { HotelEstimateCard } from '../../components/molecule/HotelEstimateCard/H
 import { EMPTY_CARD, HotelCardPaymentForm, cardLast4, detectBrand, validateCard, type CardFormValue } from '../../components/organism/HotelCardPaymentForm/HotelCardPaymentForm';
 import { useToast } from '../../components/molecule/Toast/Toast';
 import { useT } from '../../i18n';
-import { STEP_LABELS, STEP_PATHS, draftStage, useHotelDraft } from './draft';
+import { STEP_PATHS, draftStage, useHotelDraft } from './draft';
 import { combineDateTime, initialStatusFor, nextCode, useCustomerAccount } from './lib';
 import { useEstimate } from './EstimatePage';
 import './customer-hotel.css';
 
-/** C-36 · Hotel: payment through the PaymentProvider, then the booking and its satellite rows are created. */
+/** C-36 · Choose Payment (Figma Payment.png, Payment-2..4): two white option rows (Credit card / Pay With Cash At Location) with the purple radio at the right, then the card form; pays through the PaymentProvider and creates the booking and its satellite rows. */
 export function PaymentPage() {
   const t = useT();
   const nav = useNavigate();
@@ -100,13 +100,13 @@ export function PaymentPage() {
   };
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.payment')} backTo={STEP_PATHS[5]} steps={STEP_LABELS} step={6} onStepClick={(i) => nav(STEP_PATHS[i])}
-      footer={<Button size="lg" block loading={busy} onClick={submit} icon={isCard ? 'lock' : 'check'}>{isCard ? `Pay ${fmtMoney(charge.charged)}` : 'Confirm booking'}</Button>}
+    <HotelBookingFrame title={t('customer-hotel.payment')} backTo={STEP_PATHS[5]}
+      footer={<Button block loading={busy} onClick={submit} icon={isCard ? 'lock' : 'check'}>{isCard ? `Pay ${fmtMoney(charge.charged)}` : 'Confirm booking'}</Button>}
       footerNote={isCard ? `Charging ${fmtMoney(charge.charged)} now${balance ? ` · ${fmtMoney(balance)} at check-in` : ''}` : `Nothing charged now · ${fmtMoney(baseTotal)} at check-in`}>
-      <HotelEstimateCard icon="dollar" title={paidInFull ? 'Pay in full' : `Deposit (${est.settings.deposit_percent}%)`} compact lines={[{ label: `${roomType?.name ?? 'Stay'}${grooming.length ? ' + grooming' : ''}`, qty: 1, unit: baseTotal, amount: baseTotal, kind: 'service' }]}
-        extras={[{ label: 'Due now', value: fmtMoney(dueBase), strong: true }, ...(charge.fee ? [{ label: `Card service fee (${charge.feePercent}%)`, value: fmtMoney(charge.fee), tone: 'muted' as const }] : []), { label: isCard ? 'Charged now' : 'Charged now', value: fmtMoney(isCard ? charge.charged : 0), strong: true, tone: 'success' as const }, { label: 'Balance at check-in', value: fmtMoney(isCard ? balance : baseTotal), tone: 'muted' as const }]} />
-      <RadioGroup cards name="method" label="Payment method" value={draft.payMethod} onChange={(v) => patch({ payMethod: v })} options={[{ value: 'card', label: <span className="row" style={{ gap: 8 }}><Icon name="card" size={16} /> Credit card</span>, description: charge.feePercent ? `${charge.feePercent}% non-cash fee applies` : undefined }, { value: 'cash', label: <span className="row" style={{ gap: 8 }}><Icon name="dollar" size={16} /> Pay with cash at location</span>, description: 'No fee; pay at the front desk on check-in' }]} />
-      {isCard ? <Card><HotelCardPaymentForm value={card} onChange={setCard} errors={errs} disabled={busy} /></Card>
+      <RadioGroup cards name="method" value={draft.payMethod} onChange={(v) => patch({ payMethod: v })} options={[{ value: 'card', label: <span className="row ch-paymethod"><span className="ch-paymethod-icon is-card" aria-hidden><Icon name="card" size={18} /></span> Credit card</span>, description: charge.feePercent ? `${charge.feePercent}% non-cash fee applies` : undefined }, { value: 'cash', label: <span className="row ch-paymethod"><span className="ch-paymethod-icon is-cash" aria-hidden><Icon name="dollar" size={18} /></span> Pay With Cash At Location</span>, description: 'No fee; pay at the front desk on check-in' }]} />
+      <HotelEstimateCard title={paidInFull ? 'Pay In Full' : `Deposit (${est.settings.deposit_percent}%)`} compact lines={[{ label: `${roomType?.name ?? 'Stay'}${grooming.length ? ' + grooming' : ''}`, qty: 1, unit: baseTotal, amount: baseTotal, kind: 'service' }]}
+        extras={[{ label: 'Due now', value: fmtMoney(dueBase), strong: true }, ...(charge.fee ? [{ label: `Card service fee (${charge.feePercent}%)`, value: fmtMoney(charge.fee), tone: 'muted' as const }] : []), { label: 'Charged now', value: fmtMoney(isCard ? charge.charged : 0), strong: true, tone: 'success' as const }, { label: 'Balance at check-in', value: fmtMoney(isCard ? balance : baseTotal), tone: 'muted' as const }]} />
+      {isCard ? <Card padding="md" className="ch-cardform"><HotelCardPaymentForm value={card} onChange={setCard} errors={errs} disabled={busy} /></Card>
         : <Card tint><p className="small">Your stay is requested without a payment. The front desk confirms it and takes {paidInFull ? 'the full amount' : `the ${est.settings.deposit_percent}% deposit`} in cash when you arrive.</p></Card>}
       {error && <p className="tone-danger small" role="alert">{error}</p>}
       <p className="xs faint">By paying you agree to the Petrock boarding terms. Free cancellation up to {est.settings.free_cancellation_hours} h before check-in; stays stay pending until required vaccines are verified.</p>

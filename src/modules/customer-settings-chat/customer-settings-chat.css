@@ -5,6 +5,8 @@
 .csc-group { display: flex; flex-direction: column; }
 .csc-group-title { padding: var(--sp-3) var(--sp-4) var(--sp-1); }
 .csc-list { display: flex; flex-direction: column; }
+.csc-list > .acctrow:last-child, .csc-list > .ntfrow:last-child { border-bottom: 1px solid var(--color-border); }
+.csc-screen .tabs-split { margin: 0; }
 .csc-sticky-cta { position: sticky; bottom: calc(var(--h-bottomnav) + env(safe-area-inset-bottom) + 8px); padding: var(--sp-3) var(--sp-4); background: linear-gradient(to top, var(--color-bg-phone) 70%, transparent); z-index: 5; }
 .csc-preview { display: inline-flex; align-items: center; gap: 6px; margin: 0 auto; }
 .csc-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }

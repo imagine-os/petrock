@@ -7,11 +7,11 @@ import { Button } from '../../components/atom/Button/Button';
 import { Icon } from '../../components/atom/Icon/Icon';
 import { HotelRoomTypeCard } from '../../components/molecule/HotelRoomTypeCard/HotelRoomTypeCard';
 import { useT } from '../../i18n';
-import { STEP_LABELS, STEP_PATHS, draftStage, useHotelDraft } from './draft';
+import { STEP_PATHS, draftStage, useHotelDraft } from './draft';
 import { availability, avgNightly, combineDateTime, fmtDate, roomFit, useCustomerAccount, usePricingTables } from './lib';
 import './customer-hotel.css';
 
-/** C-31 · Hotel: choose room type (Figma Choose Your Room Type) with fit + capacity rules. */
+/** C-31 · Choose Your Room Type (Figma Choose Your Room.png): photo cards with BOOK NOW, title, inclusions, avg price per night / pet; fit + capacity rules; books straight from the card (D-191). */
 export function RoomTypePage() {
   const t = useT();
   const nav = useNavigate();
@@ -48,9 +48,8 @@ export function RoomTypePage() {
   const current = cards.find((c) => c.rt.id === draft.roomTypeId);
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.chooseRoom')} backTo={STEP_PATHS[0]} steps={STEP_LABELS} step={1} onStepClick={(i) => nav(STEP_PATHS[i])}
-      footer={<Button size="lg" block disabled={!current || current.disabled} onClick={() => nav(STEP_PATHS[2])}>{t('customer-hotel.next')}</Button>}
-      footerNote={current && !current.disabled ? `${current.rt.name} selected` : 'Tap Book now on a room type'}>
+    <HotelBookingFrame title={t('customer-hotel.chooseRoom')} backTo={STEP_PATHS[0]}
+      footer={current && !current.disabled ? <Button block onClick={() => nav(STEP_PATHS[2])}>{t('customer-hotel.next')}</Button> : undefined}>
       <div className="ch-summary"><span className="row" style={{ gap: 4 }}><Icon name="paw" size={14} /> {pets.map((p) => p.name).join(', ')}</span><span className="row" style={{ gap: 4 }}><Icon name="calendar" size={14} /> {fmtDate(draft.checkIn)} → {fmtDate(draft.checkOut)}</span><span className="row" style={{ gap: 4 }}><Icon name="location" size={14} /> {location?.short_name}</span><span className="row" style={{ gap: 4 }}><Icon name="bed" size={14} /> {roomsNeeded} room{roomsNeeded === 1 ? '' : 's'}</span></div>
       {cards.map(({ rt, avg, chips, disabled, reason }) => (
         <HotelRoomTypeCard key={rt.id} name={rt.name} description={rt.description} photoUrl={(rt as unknown as { photo_url?: string | null }).photo_url ?? null} priceLabel={avg != null ? fmtMoney(avg) : '—'} chips={chips} selected={draft.roomTypeId === rt.id} disabled={disabled} reason={reason} onSelect={() => choose(rt.id)} />

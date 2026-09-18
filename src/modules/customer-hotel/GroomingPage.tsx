@@ -8,7 +8,7 @@ import { Avatar } from '../../components/atom/Avatar/Avatar';
 import { HotelEstimateCard } from '../../components/molecule/HotelEstimateCard/HotelEstimateCard';
 import { fmtMoney, packagePrice, round2, type Size } from '../../pricing/engine';
 import { useT } from '../../i18n';
-import { STEP_LABELS, STEP_PATHS, draftStage, useHotelDraft } from './draft';
+import { STEP_PATHS, draftStage, useHotelDraft } from './draft';
 import { buildGroomingQuotes, useCustomerAccount, usePricingTables } from './lib';
 import './customer-hotel.css';
 
@@ -28,8 +28,8 @@ export function GroomingPage() {
   const go = (skip: boolean) => { patch({ groomingDecided: true, ...(skip ? { grooming: {} } : {}) }); nav(STEP_PATHS[4]); };
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.grooming')} backTo={STEP_PATHS[2]} steps={STEP_LABELS} step={3} onStepClick={(i) => nav(STEP_PATHS[i])}
-      footer={<><Button size="lg" variant="secondary" onClick={() => go(true)}>Skip</Button><Button size="lg" onClick={() => go(false)}>{items.length ? `Add ${fmtMoney(total)} of grooming` : 'Continue'}</Button></>}
+    <HotelBookingFrame title={t('customer-hotel.grooming')} backTo={STEP_PATHS[2]}
+      footer={<><Button variant="secondary" onClick={() => go(true)}>Skip</Button><Button onClick={() => go(false)}>{items.length ? `Add ${fmtMoney(total)} of grooming` : 'Continue'}</Button></>}
       footerNote="Groomed on check-out morning so your dog comes home fresh.">
       <div className="ch-band"><span className="ch-band-title">Grooming & Spa at the end of the stay</span><span>{t('customer-hotel.groomCopy')}</span></div>
       {pets.map((p) => {

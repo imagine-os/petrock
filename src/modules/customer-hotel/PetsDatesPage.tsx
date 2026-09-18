@@ -11,11 +11,11 @@ import { BookingPetCard } from '../../components/molecule/BookingPetCard/Booking
 import { StayDatesCard } from '../../components/molecule/StayDatesCard/StayDatesCard';
 import { Badge } from '../../components/atom/Badge/Badge';
 import { useT } from '../../i18n';
-import { STEP_LABELS, useHotelDraft } from './draft';
+import { useHotelDraft } from './draft';
 import { hoursForLocation, petVaccineState, useCustomerAccount, useHotelSettings, validateStay } from './lib';
 import './customer-hotel.css';
 
-/** C-30 · Hotel: choose pets & dates (Figma Choose Pets-3). */
+/** C-30 · Hotel Reservation (Figma Hotel Reservation.png, D-191 no stepper): "Select Your Pet" cards (selected = primary fill), share-a-room select, location, calendar card, Check In / Check Out card, Next. */
 export function PetsDatesPage() {
   const t = useT();
   const nav = useNavigate();
@@ -45,25 +45,22 @@ export function PetsDatesPage() {
   if (!pets.length) return <HotelBookingFrame title={t('customer-hotel.choosePets')} backTo="/app"><EmptyState icon="paw" title="Hey! To book a stay please first add a pet" body="Every stay needs at least one pet on your account (with vaccine records)." action={<Link to="/app/pets"><Button icon="plus">Add a pet</Button></Link>} /></HotelBookingFrame>;
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.choosePets')} backTo="/app" steps={STEP_LABELS} step={0}
-      footer={<Button size="lg" block onClick={next} disabled={touched && !canNext}>{t('customer-hotel.next')}</Button>}
+    <HotelBookingFrame title={t('customer-hotel.choosePets')} backTo="/app"
+      footer={<Button block onClick={next} disabled={touched && !canNext}>{t('customer-hotel.next')}</Button>}
       footerNote={selected.length ? `${selected.map((p) => p.name).join(', ')}${nights ? ` · ${nights} night${nights === 1 ? '' : 's'}` : ''}${location ? ` · ${location.short_name}` : ''}` : 'Select at least one pet'}>
-      <Select label="Location" value={locationId ?? ''} onChange={(e) => patch({ locationId: e.target.value })} options={locations.map((l) => ({ value: l.id, label: `${l.name} · ${l.city}` }))} hint={location?.address ?? undefined} />
       <div>
-        <div className="row-between" style={{ marginBottom: 8 }}><span className="ch-label">Select your pets</span><Link to="/app/pets" className="xs">Manage pets</Link></div>
+        <div className="ch-center-label">{t('customer-hotel.selectPet')}</div>
         <div className="ch-pets">
-          {pets.map((p) => <BookingPetCard key={p.id} name={p.name} breed={p.breed} weightLbs={p.weight_lbs} photoUrl={null} approval={p.approval_status} vaccine={petVaccineState(p.id, records, vtypes)} selected={draft.petIds.includes(p.id)} onToggle={() => toggle(p.id)} />)}
+          {pets.map((p) => <BookingPetCard key={p.id} name={p.name} breed={p.breed} weightLbs={p.weight_lbs} photoUrl={p.photo_url as string | null} approval={p.approval_status} vaccine={petVaccineState(p.id, records, vtypes)} selected={draft.petIds.includes(p.id)} onToggle={() => toggle(p.id)} />)}
         </div>
-        {selected.some((p) => petVaccineState(p.id, records, vtypes) !== 'ok') && <p className="xs muted" style={{ marginTop: 6 }}>Stays with unverified vaccines stay <Badge size="sm" tone="warn">Pending verification</Badge> until the front desk checks the proofs (you can still book).</p>}
+        <div className="row-between" style={{ marginTop: 6 }}><span className="xs muted">{selected.some((p) => petVaccineState(p.id, records, vtypes) !== 'ok') ? <>Unverified vaccines: the stay stays <Badge size="sm" tone="warn" variant="text">Pending verification</Badge> until the front desk checks the proofs.</> : null}</span><Link to="/app/pets" className="xs">Manage pets</Link></div>
       </div>
       {selected.length > 1 && (
-        <Select label={t('customer-hotel.shareRoom')} value={tooMany ? 'no' : draft.shareRoom ? 'yes' : 'no'} disabled={tooMany} onChange={(e) => patch({ shareRoom: e.target.value === 'yes' })} options={[{ value: 'yes', label: 'Yes, one room together' }, { value: 'no', label: 'No, a room each' }]}
+        <Select size="xs" label={t('customer-hotel.shareRoom')} value={tooMany ? 'no' : draft.shareRoom ? 'yes' : 'no'} disabled={tooMany} onChange={(e) => patch({ shareRoom: e.target.value === 'yes' })} options={[{ value: 'yes', label: 'Yes, one room together' }, { value: 'no', label: 'No, a room each' }]}
           hint={tooMany ? `Up to ${settings.max_pets_per_room} pets share a room; ${selected.length} pets get separate rooms.` : draft.shareRoom ? 'Sharing a room gives a per-dog per-night discount.' : 'Each pet is quoted as its own room.'} />
       )}
-      <div>
-        <div className="ch-label" style={{ marginBottom: 8 }}>Check in / check out</div>
-        <StayDatesCard value={{ checkIn: draft.checkIn, checkInTime: draft.checkInTime, checkOut: draft.checkOut, checkOutTime: draft.checkOutTime }} onChange={(v) => patch(v)} hoursFor={hoursFor} nights={nights} error={touched || (draft.checkIn && draft.checkOut) ? error : null} />
-      </div>
+      <Select size="xs" label="Location" value={locationId ?? ''} onChange={(e) => patch({ locationId: e.target.value })} options={locations.map((l) => ({ value: l.id, label: `${l.name} · ${l.city}` }))} hint={location?.address ?? undefined} />
+      <StayDatesCard value={{ checkIn: draft.checkIn, checkInTime: draft.checkInTime, checkOut: draft.checkOut, checkOutTime: draft.checkOutTime }} onChange={(v) => patch(v)} hoursFor={hoursFor} nights={nights} error={touched || (draft.checkIn && draft.checkOut) ? error : null} />
     </HotelBookingFrame>
   );
 }

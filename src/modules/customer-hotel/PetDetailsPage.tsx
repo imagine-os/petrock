@@ -8,7 +8,7 @@ import { Toggle } from '../../components/atom/Toggle/Toggle';
 import { Section } from '../../components/molecule/Section/Section';
 import { Avatar } from '../../components/atom/Avatar/Avatar';
 import { useT } from '../../i18n';
-import { EMPTY_PET_DETAILS, STEP_LABELS, STEP_PATHS, draftStage, useHotelDraft, type PetStayDetails } from './draft';
+import { EMPTY_PET_DETAILS, STEP_PATHS, draftStage, useHotelDraft, type PetStayDetails } from './draft';
 import { useCustomerAccount } from './lib';
 import type { PetRow } from '../../data/schema/core';
 import './customer-hotel.css';
@@ -35,8 +35,8 @@ export function PetDetailsPage() {
   const next = () => { patch((d) => ({ petDetails: Object.fromEntries(pets.map((p) => [p.id, d.petDetails[p.id] ?? defaultsFor(p)])) })); nav(STEP_PATHS[3]); };
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.petDetails')} backTo={STEP_PATHS[1]} steps={STEP_LABELS} step={2} onStepClick={(i) => nav(STEP_PATHS[i])}
-      footer={<Button size="lg" block onClick={next}>{t('customer-hotel.next')}</Button>} footerNote="Prefilled from each pet profile; adjust for this stay.">
+    <HotelBookingFrame title={t('customer-hotel.petDetails')} backTo={STEP_PATHS[1]}
+      footer={<Button block onClick={next}>{t('customer-hotel.next')}</Button>} footerNote="Prefilled from each pet profile; adjust for this stay.">
       {pets.map((p, i) => {
         const v = get(p);
         return (

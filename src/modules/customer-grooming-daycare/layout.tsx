@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageHeader } from '../../components/molecule/PageHeader/PageHeader';
+import { CustomerScreenHeader } from '../../components/molecule/CustomerScreenHeader/CustomerScreenHeader';
 import { Stepper } from '../../components/molecule/Stepper/Stepper';
 import { Modal } from '../../components/organism/Modal/Modal';
 import { Button } from '../../components/atom/Button/Button';
@@ -14,7 +14,8 @@ export const DAYCARE_STEPS = ['Pets & day', 'Pet details', 'Pay'];
 export function CgdPage({ title, subtitle, backTo, steps, step, onStep, actions, children }: { title: string; subtitle?: ReactNode; backTo?: string; steps?: string[]; step?: number; onStep?: (i: number) => void; actions?: ReactNode; children: ReactNode }) {
   return (
     <div className="cgd">
-      <PageHeader title={title} subtitle={subtitle} backTo={backTo} actions={actions}>{steps && step != null && <Stepper steps={steps} current={step} onStepClick={onStep} />}</PageHeader>
+      <CustomerScreenHeader title={title} subtitle={subtitle} backTo={backTo ?? null} actions={actions} />
+      {steps && step != null && <div className="cgd-steps"><Stepper steps={steps} current={step} onStepClick={onStep} compact /></div>}
       <div className="cgd-body">{children}</div>
     </div>
   );
@@ -28,8 +29,8 @@ export function Notice({ tone = 'info', icon, children }: { tone?: 'info' | 'war
 export function NoPetsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const nav = useNavigate();
   return (
-    <Modal open={open} onClose={onClose} title="Hey! Add a pet first" size="sm" footer={<><Button variant="secondary" onClick={onClose}>Back</Button><Button icon="plus" onClick={() => nav('/app/pets/new')}>Add a pet</Button></>}>
-      <p className="muted">To book an appointment please first add a pet to your account. It only takes a minute.</p>
+    <Modal open={open} onClose={onClose} title="Hey!" size="alert" footer={<><Button variant="ghost" onClick={onClose}>Back</Button><Button onClick={() => nav('/app/pets/new')}>Add a Pet</Button></>}>
+      <p>To Book An Appointment Please 1st Add A Pet</p>
     </Modal>
   );
 }

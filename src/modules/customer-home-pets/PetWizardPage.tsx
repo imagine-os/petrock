@@ -7,7 +7,7 @@ import type { PetRow, UserRow } from '../../data/schema/core';
 import type { EmergencyContactRow, PetLookupRow, VetRow } from '../../data/schema/customer-home-pets';
 import { PET_MEALS, PET_PERSONALITIES, PET_SOCIALIZED } from '../../data/schema/customer-home-pets';
 import { PET_SIZES, sizeFromWeightLbs } from '../../domain/booking';
-import { PhonePageHeader } from '../../components/molecule/PhonePageHeader/PhonePageHeader';
+import { CustomerScreenHeader } from '../../components/molecule/CustomerScreenHeader/CustomerScreenHeader';
 import { Stepper } from '../../components/molecule/Stepper/Stepper';
 import { PetPhotoPicker } from '../../components/molecule/PetPhotoPicker/PetPhotoPicker';
 import { Input } from '../../components/atom/Input/Input';
@@ -148,22 +148,22 @@ export function PetWizardPage({ mode }: { mode: 'new' | 'edit' }) {
     } finally { setBusy(false); }
   };
 
-  if (mode === 'edit' && !pet) return <div><PhonePageHeader title={t('customer-home-pets.wizard.edit')} backTo="/app/pets" /><div className="chp-page"><p className="muted small">Pet not found.</p></div></div>;
+  if (mode === 'edit' && !pet) return <div><CustomerScreenHeader title={t('customer-home-pets.wizard.edit')} backTo="/app/pets" rule={false} /><div className="chp-page"><p className="muted small">Pet not found.</p></div></div>;
   if (mode === 'edit' && pet && customer && pet.customer_id !== customer.id && user.role === 'customer') { nav('/app/pets', { replace: true }); return null; }
 
-  const title = mode === 'new' ? t('customer-home-pets.wizard.add') : `${t('customer-home-pets.wizard.edit')} · ${pet?.name ?? ''}`;
+  const title = mode === 'new' ? t('customer-home-pets.wizard.add') : t('customer-home-pets.wizard.edit');
   const editingLine = editing ? petVaccineLines.find((l) => l.type.id === editing) : null;
 
   return (
     <div>
-      <PhonePageHeader title={title} backTo={mode === 'edit' && pet ? `/app/pets/${pet.id}` : '/app/pets'} />
-      <div className="chp-page chp-wizard">
-        <div className="chp-wizard-steps"><Stepper steps={STEPS} current={step} onStepClick={(i) => setStep(i)} /></div>
+      <CustomerScreenHeader title={title} backTo={mode === 'edit' && pet ? `/app/pets/${pet.id}` : '/app/pets'} rule={false} />
+      <div className="chp-wizard">
+        <div className="chp-wizard-steps"><Stepper steps={STEPS} current={step} onStepClick={(i) => setStep(i)} compact /></div>
 
         {step === 0 && (
           <section className="chp-wizard-step" aria-label="Basics">
-            <h2>Basics</h2>
-            <div className="chp-center"><PetPhotoPicker name={form.name || 'Pet'} value={form.photo} onChange={(v) => set('photo', v)} /></div>
+            <h2 className="sr-only">Basics</h2>
+            <div className="chp-center"><PetPhotoPicker name={form.name || 'Pet'} value={form.photo} onChange={(v) => set('photo', v)} size={70} /></div>
             <Input label="Name" value={form.name} onChange={(e) => set('name', e.target.value)} required placeholder="e.g. Boss" error={touched ? errors.name : undefined} autoComplete="off" />
             <div className="chp-two">
               <Select label="Type" required value={form.type} onChange={(e) => set('type', e.target.value)} options={opt(PET_TYPES)} error={touched ? errors.type : undefined} />
@@ -171,11 +171,11 @@ export function PetWizardPage({ mode }: { mode: 'new' | 'edit' }) {
             </div>
             <div className="chp-two">
               <Select label="Sex" required value={form.sex} onChange={(e) => set('sex', e.target.value as Form['sex'])} placeholder="Choose" options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]} error={touched ? errors.sex : undefined} />
-              <Select label="Neutered / spayed" required value={form.neutered} onChange={(e) => set('neutered', e.target.value as Form['neutered'])} placeholder="Choose" options={[{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }]} error={touched ? errors.neutered : undefined} />
+              <Select label="Neutered/Spayed" required value={form.neutered} onChange={(e) => set('neutered', e.target.value as Form['neutered'])} placeholder="Choose" options={[{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }]} error={touched ? errors.neutered : undefined} />
             </div>
             <div className="chp-two">
-              <Select label="Colour" value={form.color} onChange={(e) => (e.target.value === '__add' ? setAdding({ kind: 'color', value: '' }) : set('color', e.target.value))} placeholder="Choose a colour" options={[...opt(colors, form.color), { value: '__add', label: '+ Add another colour' }]} />
-              <Input label="Date of birth" type="date" value={form.dob} max={isoToday()} onChange={(e) => set('dob', e.target.value)} error={touched ? errors.dob : undefined} />
+              <Select label="Color" value={form.color} onChange={(e) => (e.target.value === '__add' ? setAdding({ kind: 'color', value: '' }) : set('color', e.target.value))} placeholder="Choose a colour" options={[...opt(colors, form.color), { value: '__add', label: '+ Add another colour' }]} />
+              <Input label="Date Of Birth" type="date" value={form.dob} max={isoToday()} onChange={(e) => set('dob', e.target.value)} error={touched ? errors.dob : undefined} />
             </div>
           </section>
         )}
@@ -249,13 +249,13 @@ export function PetWizardPage({ mode }: { mode: 'new' | 'edit' }) {
         <div className="chp-wizard-foot">
           {step < STEPS.length - 1 ? (
             <div className="chp-wizard-foot-row">
-              <Button variant="secondary" onClick={back} icon="arrow-left">{t('customer-home-pets.wizard.back')}</Button>
-              <Button onClick={next} iconRight="arrow-right" disabled={touched && !stepValid[step]}>{t('customer-home-pets.wizard.next')}</Button>
+              {step > 0 && <Button variant="ghost" size="sm" onClick={back} icon="arrow-left" aria-label={t('customer-home-pets.wizard.back')} />}
+              <Button size="sm" block onClick={next} disabled={touched && !stepValid[step]}>{t('customer-home-pets.wizard.next')}</Button>
             </div>
           ) : (
             <div className="chp-wizard-foot-row">
-              <Button variant="secondary" onClick={back} icon="arrow-left">{t('customer-home-pets.wizard.back')}</Button>
-              <Button onClick={() => save(true, !requiredCovered && Object.keys(drafts).length === 0)} loading={busy} icon={mode === 'new' ? 'check' : undefined}>{mode === 'new' ? t('customer-home-pets.wizard.submit') : t('customer-home-pets.wizard.save')}</Button>
+              <Button variant="ghost" size="sm" onClick={back} icon="arrow-left" aria-label={t('customer-home-pets.wizard.back')} />
+              <Button size="sm" block onClick={() => save(true, !requiredCovered && Object.keys(drafts).length === 0)} loading={busy}>{mode === 'new' ? t('customer-home-pets.wizard.submit') : t('customer-home-pets.wizard.save')}</Button>
             </div>
           )}
           {mode === 'edit' && step < STEPS.length - 1 && <Button variant="ghost" size="sm" onClick={() => save(false)} loading={busy}>{t('customer-home-pets.wizard.save')}</Button>}

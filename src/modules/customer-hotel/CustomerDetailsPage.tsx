@@ -5,7 +5,7 @@ import { Button } from '../../components/atom/Button/Button';
 import { Input } from '../../components/atom/Input/Input';
 import { Select } from '../../components/atom/Select/Select';
 import { useT } from '../../i18n';
-import { STEP_LABELS, STEP_PATHS, draftStage, useHotelDraft, type CustomerDetailsDraft } from './draft';
+import { STEP_PATHS, draftStage, useHotelDraft, type CustomerDetailsDraft } from './draft';
 import { US_STATES, useCustomerAccount } from './lib';
 import './customer-hotel.css';
 
@@ -36,8 +36,8 @@ export function CustomerDetailsPage() {
   const submit = () => { setTouched(true); if (Object.keys(validate(v)).length) return; patch({ customer: v }); nav(STEP_PATHS[5]); };
 
   return (
-    <HotelBookingFrame title={t('customer-hotel.customer')} backTo={STEP_PATHS[3]} steps={STEP_LABELS} step={4} onStepClick={(i) => nav(STEP_PATHS[i])}
-      footer={<Button size="lg" block onClick={submit}>{t('customer-hotel.next')}</Button>} footerNote="Used for your booking confirmation and invoice.">
+    <HotelBookingFrame title={t('customer-hotel.customer')} backTo={STEP_PATHS[3]}
+      footer={<Button block onClick={submit}>{t('customer-hotel.next')}</Button>} footerNote="Used for your booking confirmation and invoice.">
       <div className="ch-cols-2"><Input label="First name" required autoComplete="given-name" value={v.first_name} onChange={(e) => set('first_name')(e.target.value)} error={errs.first_name} /><Input label="Last name" required autoComplete="family-name" value={v.last_name} onChange={(e) => set('last_name')(e.target.value)} error={errs.last_name} /></div>
       <div className="ch-cols-2"><Input label="Mobile" required type="tel" autoComplete="tel" value={v.mobile} onChange={(e) => set('mobile')(e.target.value)} error={errs.mobile} icon="phone" /><Input label="Alt phone" type="tel" value={v.alt_phone} onChange={(e) => set('alt_phone')(e.target.value)} /></div>
       <Input label="Email" required type="email" autoComplete="email" value={v.email} onChange={(e) => set('email')(e.target.value)} error={errs.email} />

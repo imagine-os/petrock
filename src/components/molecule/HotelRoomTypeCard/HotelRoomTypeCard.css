@@ -1,13 +1,16 @@
-.roomcard { background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color var(--dur-fast) var(--ease-out); }
-.roomcard.is-selected { border-color: var(--color-primary); box-shadow: var(--shadow-focus); }
+/* Figma Choose Your Room.png: photo 370x239 (x=10), BOOK NOW 106x38 r8 at the photo's bottom-right, title 600 20 #000, copy 400 12 #304050, price 700 24 + 600 14 #552583; no card chrome. */
+.roomcard { background: transparent; border: 0; border-radius: 0; overflow: visible; display: flex; flex-direction: column; gap: 4px; }
+.roomcard.is-selected .roomcard-photo { box-shadow: 0 0 0 2px var(--color-border-primary); }
 .roomcard.is-disabled .roomcard-photo, .roomcard.is-disabled .roomcard-desc, .roomcard.is-disabled .roomcard-price { opacity: .55; }
-.roomcard-photo { position: relative; aspect-ratio: 16 / 9; background: var(--color-surface-tint) center / cover no-repeat; display: flex; align-items: center; justify-content: center; }
-.roomcard-photo-ph { color: var(--color-primary); opacity: .55; }
-.roomcard-cta { position: absolute; right: var(--sp-3); bottom: var(--sp-3); }
-.roomcard-body { padding: var(--sp-3) var(--sp-4) var(--sp-4); display: flex; flex-direction: column; gap: 6px; }
-.roomcard-name { font-size: var(--fs-lg); }
-.roomcard-desc { font-size: var(--fs-xs); color: var(--color-text-muted); line-height: var(--lh-base); }
-.roomcard-price { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
-.roomcard-price-value { font-size: var(--fs-xl); font-weight: var(--fw-bold); color: var(--color-primary-text); letter-spacing: -0.02em; }
-.roomcard-price-hint { font-size: var(--fs-xs); color: var(--color-primary-text); font-weight: var(--fw-medium); }
+.roomcard-photo { position: relative; height: 239px; margin: 0 calc(-1 * (var(--sp-5) - 10px)); border-radius: var(--r-sm); background: var(--color-surface-tint) center / cover no-repeat; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.roomcard-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, .18) 100%); pointer-events: none; }
+.roomcard-photo-ph { color: var(--color-primary); opacity: .5; }
+.roomcard-cta { position: absolute; right: 10px; bottom: 10px; z-index: 1; }
+.roomcard-cta .btn { min-width: 106px; }
+.roomcard-body { padding: var(--sp-3) 0 var(--sp-4); display: flex; flex-direction: column; gap: 6px; }
+.roomcard-name { font-size: var(--fs-lg); font-weight: var(--fw-semibold); color: var(--color-title); line-height: var(--lh-title); }
+.roomcard-desc { font-size: var(--fs-xs); color: var(--color-text-secondary); line-height: var(--lh-xs); }
+.roomcard-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.roomcard-price-value { font-size: var(--fs-xl); font-weight: var(--fw-bold); color: var(--color-primary-text); line-height: 1; }
+.roomcard-price-hint { font-size: var(--fs-sm); color: var(--color-primary-text); font-weight: var(--fw-semibold); }
 .roomcard-reason { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--color-danger); }
