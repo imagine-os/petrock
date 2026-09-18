@@ -15,6 +15,8 @@ codes: none
 - `docs/prompts/0011-company-os-integration-plan.md`: prompt log with the verbatim question, the response summary, and an empty "Answers (running log)" table for Justin's replies.
 - `docs/decisions.md`: appended D-192 (proposed, needs Justin) recording the recommended architecture.
 - `docs/kanban.md`: added a Phase 0 backlog item (generate the entity template, `.env.example`, provider chooser) blocked on Justin's answers to prompt 0011.
+- Update 15:24 UTC: Justin ruled out a Petrock-owned server; plan revised (section 2b: Company-OS modules Petrock contributes; phases and D-192 updated; prompt 0011 running log). Open questions now: read-only first; Company-OS dev + lifting D-183; which Supabase project owns Auth; who builds the modules.
+- Update 15:27 UTC: multilingual proposal added (plan section 10, i18n module row in 2b) after Justin noted Company-OS has no multilingual support.
 
 ## Verification
 
