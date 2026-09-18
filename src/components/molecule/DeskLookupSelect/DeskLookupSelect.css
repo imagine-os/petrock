@@ -1,0 +1,6 @@
+.lookupsel { min-width: 0; }
+.lookupsel-row { display: flex; align-items: flex-end; gap: var(--sp-2); min-width: 0; }
+.lookupsel-row > .grow { flex: 1 1 auto; min-width: 0; }
+.lookupsel-plus { margin-bottom: 2px; flex: none; }
+.lookupsel-add { display: flex; align-items: flex-end; gap: var(--sp-2); flex-wrap: wrap; }
+.lookupsel-add > :first-child { flex: 1 1 160px; min-width: 0; }

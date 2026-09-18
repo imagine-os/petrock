@@ -1,0 +1,63 @@
+/* Page-level layout for frontdesk-grooming-people (F-30..F-59). Components keep their own CSS; these are page grids only. */
+.fgp-toolbar { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; justify-content: space-between; }
+.fgp-toolbar-left, .fgp-toolbar-right { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; min-width: 0; }
+.fgp-form-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-3) var(--sp-4); align-items: start; }
+.fgp-form-grid > .span-2 { grid-column: span 2; } .fgp-form-grid > .span-3 { grid-column: span 3; } .fgp-form-grid > .span-4 { grid-column: 1 / -1; }
+.fgp-form-grid .field-check { align-self: end; padding-bottom: 10px; }
+@media (max-width: 1100px) { .fgp-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fgp-form-grid > .span-3 { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .fgp-form-grid { grid-template-columns: 1fr; } .fgp-form-grid > .span-2 { grid-column: auto; } }
+.fgp-form-foot { display: flex; justify-content: flex-end; gap: var(--sp-2); flex-wrap: wrap; position: sticky; bottom: 0; background: var(--color-bg); padding: var(--sp-3) 0; border-top: 1px solid var(--color-border); z-index: 2; }
+@media (max-width: 600px) { .fgp-form-foot > * { flex: 1 1 auto; } }
+.fgp-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--sp-4); align-items: start; }
+.fgp-two > *, .fgp-inbox > *, .fgp-stats > * { min-width: 0; }
+@media (max-width: 900px) { .fgp-two { grid-template-columns: 1fr; } }
+.fgp-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4); }
+.fgp-fact { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .fgp-fact .eyebrow { color: var(--color-text-muted); } .fgp-fact strong { color: var(--color-heading); overflow-wrap: anywhere; }
+@media (max-width: 600px) { .fgp-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fgp-lines { display: flex; flex-direction: column; }
+.fgp-line { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-3); border-radius: var(--r-sm); background: var(--color-surface-tint); margin-bottom: var(--sp-2); align-items: center; }
+.fgp-line-icon { width: 40px; height: 40px; border-radius: var(--r-md); display: grid; place-items: center; background: var(--color-surface); color: var(--color-primary); flex: none; }
+.fgp-line-name { flex: 1; min-width: 0; display: flex; flex-direction: column; } .fgp-line-name strong { text-transform: uppercase; letter-spacing: .02em; font-size: var(--fs-sm); }
+.fgp-line-amt { font-weight: var(--fw-semibold); color: var(--color-heading); white-space: nowrap; }
+.fgp-sub { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); color: var(--color-text-muted); border-bottom: 1px dashed var(--color-border-subtle); }
+.fgp-sub.is-total { border-bottom: 0; font-size: var(--fs-md); font-weight: var(--fw-semibold); color: var(--color-heading); border-top: 1px solid var(--color-border); margin-top: var(--sp-1); padding-top: var(--sp-3); }
+.fgp-petpick { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.fgp-petcard { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); cursor: pointer; text-align: left; font: inherit; color: var(--color-text); min-width: 0; }
+.fgp-petcard.is-on { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); background: var(--color-primary-soft); }
+.fgp-petcard:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.fgp-petcard-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .fgp-petcard-text strong { color: var(--color-heading); }
+.fgp-pkgs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3); }
+@media (max-width: 767px) { .fgp-pkgs { grid-template-columns: 1fr; } }
+.fgp-pkg { display: flex; flex-direction: column; gap: var(--sp-1); padding: var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); cursor: pointer; text-align: left; font: inherit; color: var(--color-text); min-width: 0; }
+.fgp-pkg.is-on { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); background: var(--color-primary-soft); }
+.fgp-pkg-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-2); } .fgp-pkg-head strong { color: var(--color-heading); } .fgp-pkg-price { font-weight: var(--fw-semibold); color: var(--color-primary); white-space: nowrap; }
+.fgp-pkg-inc { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.fgp-addons { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-2); }
+.fgp-addon { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); min-width: 0; }
+.fgp-addon.is-on { border-color: var(--color-border-primary); background: var(--color-surface-tint); }
+.fgp-addon-price { white-space: nowrap; font-size: var(--fs-sm); color: var(--color-text-muted); }
+.fgp-warn { display: flex; gap: var(--sp-2); align-items: flex-start; padding: var(--sp-3); border-radius: var(--r-md); background: var(--color-warn-bg); color: var(--color-text); font-size: var(--fs-sm); border: 1px solid color-mix(in srgb, var(--color-warn) 40%, transparent); }
+.fgp-warn.is-success { background: var(--color-success-bg); border-color: color-mix(in srgb, var(--color-success) 40%, transparent); }
+.fgp-warn.is-danger { background: var(--color-danger-bg); border-color: color-mix(in srgb, var(--color-danger) 40%, transparent); }
+.fgp-warn.is-info { background: var(--color-info-bg); border-color: color-mix(in srgb, var(--color-info) 40%, transparent); }
+.fgp-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-3); }
+.fgp-agenda-title { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .fgp-agenda-title a { font-weight: var(--fw-semibold); color: var(--color-primary); text-decoration: none; } .fgp-agenda-title a:hover { text-decoration: underline; }
+.fgp-agenda-items { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.fgp-flags { display: inline-flex; gap: 6px; align-items: center; } .fgp-flags .is-off { opacity: .2; }
+.fgp-inbox { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: var(--sp-4); min-height: 560px; height: calc(100vh - 230px); }
+.fgp-inbox > .card { height: 100%; min-height: 0; } .fgp-inbox .card > * { min-height: 0; }
+@media (max-width: 767px) { .fgp-inbox { grid-template-columns: 1fr; height: auto; min-height: 0; } .fgp-inbox.show-thread .fgp-inbox-list { display: none; } .fgp-inbox:not(.show-thread) .fgp-inbox-thread { display: none; } .fgp-inbox .fgp-inbox-thread { min-height: 70vh; } }
+.fgp-pet-head { display: flex; gap: var(--sp-4); align-items: center; flex-wrap: wrap; }
+.fgp-pet-head h2 { margin: 0; } .fgp-pet-head .grow { display: flex; flex-direction: column; gap: 4px; }
+.fgp-taglist { display: flex; flex-wrap: wrap; gap: 6px; }
+.fgp-notes { display: flex; flex-direction: column; gap: var(--sp-2); }
+.fgp-note { display: flex; flex-direction: column; gap: 2px; padding: var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); }
+.fgp-note.is-pinned { border-color: var(--color-border-primary); background: var(--color-surface-tint); }
+.fgp-note-meta { display: flex; justify-content: space-between; gap: var(--sp-2); font-size: var(--fs-xs); color: var(--color-text-muted); flex-wrap: wrap; }
+.fgp-ntf-day { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); color: var(--color-text-faint); padding: var(--sp-3) var(--sp-2) var(--sp-1); }
+.fgp-vaxrow { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1.4fr; gap: var(--sp-2); align-items: end; padding: var(--sp-2) 0; border-bottom: 1px solid var(--color-border-subtle); }
+@media (max-width: 900px) { .fgp-vaxrow { grid-template-columns: 1fr 1fr; } .fgp-vaxrow > :first-child { grid-column: 1 / -1; } }
+.fgp-cell-person { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; } .fgp-cell-person .grow { display: flex; flex-direction: column; min-width: 0; } .fgp-cell-person strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fgp-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.fgp-status-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.fgp-addon > .checkbox { flex: 1 1 auto; min-width: 0; } .fgp-addon .checkbox-text { min-width: 0; }
