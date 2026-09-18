@@ -1,0 +1,9 @@
+.otp { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); width: 100%; }
+.otp-boxes { display: flex; gap: 8px; justify-content: center; width: 100%; max-width: 340px; }
+.otp-box { flex: 1 1 0; min-width: 0; height: 52px; text-align: center; font-size: var(--fs-xl); font-weight: var(--fw-semibold); color: var(--color-heading); background: var(--color-surface); border: 1.5px solid var(--color-border-strong); border-radius: var(--r-md); outline: none; padding: 0; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); caret-color: var(--color-primary); }
+.otp-box.is-filled { border-color: var(--color-primary); }
+.otp-box:focus { border-color: var(--color-primary); box-shadow: var(--shadow-focus); }
+.otp-box:disabled { opacity: .55; }
+.otp.has-error .otp-box { border-color: var(--color-danger); }
+.otp-error { color: var(--color-danger); font-size: var(--fs-sm); text-align: center; }
+@media (max-width: 360px) { .otp-boxes { gap: 6px; } .otp-box { height: 46px; font-size: var(--fs-lg); } }

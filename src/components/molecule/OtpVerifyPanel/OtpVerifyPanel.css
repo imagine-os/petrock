@@ -1,0 +1,5 @@
+.otpverify { display: flex; flex-direction: column; gap: var(--sp-4); align-items: stretch; }
+.otpverify-sent { text-align: center; color: var(--color-text-muted); font-size: var(--fs-sm); }
+.otpverify-sent strong { color: var(--color-heading); overflow-wrap: anywhere; }
+.otpverify-resend { display: flex; align-items: center; justify-content: center; gap: var(--sp-2); flex-wrap: wrap; }
+.otpverify-ok { display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--color-success); font-weight: var(--fw-semibold); height: var(--h-control); }

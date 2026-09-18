@@ -1,0 +1,9 @@
+.onboard .modal-head { padding-top: var(--sp-3); justify-content: flex-end; }
+.onboard-slide { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--sp-3); padding: var(--sp-2) 0 var(--sp-4); animation: onboard-in var(--dur-base) var(--ease-out); }
+@keyframes onboard-in { from { opacity: 0; transform: translateX(8px); } }
+.onboard-art { width: 88px; height: 88px; border-radius: var(--r-round); background: var(--color-primary-soft); color: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; }
+.onboard-title { font-size: var(--fs-xl); }
+.onboard-body { color: var(--color-text-muted); max-width: 32ch; }
+.onboard-dots { display: flex; justify-content: center; gap: 8px; }
+.onboard-dot { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; background: var(--color-border-strong); transition: width var(--dur-fast), background var(--dur-fast); }
+.onboard-dot.is-on { width: 22px; border-radius: var(--r-pill); background: var(--color-primary); }

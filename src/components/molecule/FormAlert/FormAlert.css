@@ -1,0 +1,10 @@
+.formalert { display: flex; gap: var(--sp-3); align-items: flex-start; padding: var(--sp-3) var(--sp-4); border-radius: var(--r-md); border: 1px solid transparent; font-size: var(--fs-sm); }
+.formalert-icon { flex: 0 0 auto; margin-top: 1px; }
+.formalert-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.formalert-title { font-weight: var(--fw-semibold); }
+.formalert-action { margin-top: 2px; }
+.formalert-danger { background: var(--color-danger-bg); color: var(--color-danger); border-color: color-mix(in srgb, var(--color-danger) 30%, transparent); }
+.formalert-warn { background: var(--color-warn-bg); color: var(--color-warn); border-color: color-mix(in srgb, var(--color-warn) 30%, transparent); }
+.formalert-info { background: var(--color-info-bg); color: var(--color-info); border-color: color-mix(in srgb, var(--color-info) 30%, transparent); }
+.formalert-success { background: var(--color-success-bg); color: var(--color-success); border-color: color-mix(in srgb, var(--color-success) 30%, transparent); }
+.formalert-body { color: var(--color-text); } .formalert-danger .formalert-body { color: inherit; }

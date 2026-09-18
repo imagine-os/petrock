@@ -1,0 +1,17 @@
+.authbrand { display: flex; flex-direction: column; align-items: center; gap: var(--sp-4); text-align: center; position: relative; padding-top: var(--sp-2); }
+.authbrand-back { position: absolute; left: 0; top: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-round); color: var(--color-text-muted); background: var(--color-surface); border: 1px solid var(--color-border); }
+.authbrand-back:hover { color: var(--color-primary-text); text-decoration: none; }
+.authbrand-logo { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.authbrand-word { display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
+.authbrand-name { font-size: var(--fs-2xl); font-weight: var(--fw-bold); color: var(--color-heading); letter-spacing: -0.02em; font-style: italic; }
+.authbrand-tag { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); color: var(--color-text-muted); font-weight: var(--fw-semibold); }
+.authbrand-hero .authbrand-name { font-size: var(--fs-3xl); }
+.authbrand-hero { padding-top: var(--sp-10); gap: var(--sp-6); }
+.authbrand-compact .authbrand-logo { flex-direction: row; gap: var(--sp-2); }
+.authbrand-compact .authbrand-word { align-items: flex-start; }
+.authbrand-compact .authbrand-name { font-size: var(--fs-lg); }
+.authbrand-text { display: flex; flex-direction: column; gap: var(--sp-2); max-width: 34ch; }
+.authbrand-title { font-size: var(--fs-2xl); }
+.authbrand-hero .authbrand-title { font-size: var(--fs-2xl); }
+.authbrand-subtitle { color: var(--color-primary-text); font-size: var(--fs-md); font-weight: var(--fw-medium); }
+@media (max-width: 360px) { .authbrand-title { font-size: var(--fs-xl); } .authbrand-hero .authbrand-title { font-size: var(--fs-xl); } }
