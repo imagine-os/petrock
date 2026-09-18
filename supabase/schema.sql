@@ -106,6 +106,59 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
+-- hotel · Booking change requests: A pet parent asks to modify dates, add / remove a pet, add grooming or cancel a stay. The front desk approves or declines; approving a cancellation of a confirmed stay is PIN-gated (R-I06).
+create table if not exists public.booking_change_requests (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  customer_id uuid not null references public.customers(id) on delete set null,
+  kind text not null check (kind in ('modify_dates', 'add_pet', 'remove_pet', 'add_grooming', 'cancel', 'other')),
+  requested_check_in timestamptz,
+  requested_check_out timestamptz,
+  pet_ids jsonb,
+  message text,
+  status text not null check (status in ('open', 'approved', 'declined', 'withdrawn')),
+  handled_by uuid references public.users(id) on delete set null,
+  handled_at timestamptz,
+  staff_note text
+);
+create index if not exists booking_change_requests_location_idx on public.booking_change_requests(location_id);
+create index if not exists booking_change_requests_booking_id_idx on public.booking_change_requests(booking_id);
+create index if not exists booking_change_requests_customer_id_idx on public.booking_change_requests(customer_id);
+create index if not exists booking_change_requests_handled_by_idx on public.booking_change_requests(handled_by);
+create trigger booking_change_requests_touch before update on public.booking_change_requests for each row execute function public.touch_updated_at();
+
+-- hotel · Stay care notes: Per pet per hotel stay: feeding, own food, belongings, flea medication brand and date, extra notes (the customer fills these in C-32; the desk reads them at check-in).
+create table if not exists public.booking_pet_care (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  booking_pet_id uuid not null references public.booking_pets(id) on delete set null,
+  pet_id uuid not null references public.pets(id) on delete set null,
+  feeding_instructions text,
+  meals_per_day text,
+  own_food boolean not null default false,
+  -- Bed, toys, leash... brought along
+  belongings text,
+  medication_count integer,
+  -- e.g. '1 daily (AM only)'
+  dosing_frequency text,
+  flea_brand text,
+  flea_last_dose_on date,
+  emergency_contact text,
+  notes text
+);
+create index if not exists booking_pet_care_booking_id_idx on public.booking_pet_care(booking_id);
+create index if not exists booking_pet_care_booking_pet_id_idx on public.booking_pet_care(booking_pet_id);
+create index if not exists booking_pet_care_pet_id_idx on public.booking_pet_care(pet_id);
+create trigger booking_pet_care_touch before update on public.booking_pet_care for each row execute function public.touch_updated_at();
+
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
   -- Primary key

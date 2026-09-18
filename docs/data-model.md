@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (41)
 
 ### Core & locations
 
@@ -262,6 +262,51 @@ _Source: entities 4_
 | `address` | text, null |  |
 
 ### Hotel
+
+#### `booking_change_requests` (per location)
+A pet parent asks to modify dates, add / remove a pet, add grooming or cancel a stay. The front desk approves or declines; approving a cancellation of a confirmed stay is PIN-gated (R-I06).  
+_Source: C-39 / C-41 (no Figma screen; D-003 hotel consistency)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `booking_id` | uuid | -> `bookings`  |
+| `customer_id` | uuid | -> `customers`  |
+| `kind` | enum (modify_dates \| add_pet \| remove_pet \| add_grooming \| cancel \| other) |  |
+| `requested_check_in` | timestamptz, null |  |
+| `requested_check_out` | timestamptz, null |  |
+| `pet_ids` | json, null |  |
+| `message` | text, null |  |
+| `status` | enum (open \| approved \| declined \| withdrawn) |  |
+| `handled_by` | uuid, null | -> `users`  |
+| `handled_at` | timestamptz, null |  |
+| `staff_note` | text, null |  |
+
+#### `booking_pet_care` (global)
+Per pet per hotel stay: feeding, own food, belongings, flea medication brand and date, extra notes (the customer fills these in C-32; the desk reads them at check-in).  
+_Source: entities 11, Booking Details Add Pets*.png_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `booking_id` | uuid | -> `bookings`  |
+| `booking_pet_id` | uuid | -> `booking_pets`  |
+| `pet_id` | uuid | -> `pets`  |
+| `feeding_instructions` | text, null |  |
+| `meals_per_day` | text, null |  |
+| `own_food` | bool |  |
+| `belongings` | text, null | Bed, toys, leash... brought along |
+| `medication_count` | int, null |  |
+| `dosing_frequency` | text, null | e.g. '1 daily (AM only)' |
+| `flea_brand` | text, null |  |
+| `flea_last_dose_on` | date, null |  |
+| `emergency_contact` | text, null |  |
+| `notes` | text, null |  |
 
 #### `booking_pets` (global)
 Pets on a stay with the per-booking medical questionnaire.  

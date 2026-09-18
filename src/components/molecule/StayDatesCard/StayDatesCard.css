@@ -1,0 +1,17 @@
+.staydates { display: flex; flex-direction: column; gap: var(--sp-3); }
+.staydates-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-card); padding: var(--sp-3); }
+.staydates-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 4px; border-radius: var(--r-md); }
+.staydates-col.is-picking { box-shadow: inset 0 0 0 1.5px var(--color-primary); }
+.staydates-label { font-size: var(--fs-xs); color: var(--color-text-muted); font-weight: var(--fw-medium); }
+.staydates-field { display: flex; align-items: center; gap: 8px; height: var(--h-control-sm); padding: 0 10px; border-radius: var(--r-md); border: 1px solid var(--color-border); background: var(--color-surface-2); color: var(--color-text); font-size: var(--fs-sm); text-align: left; min-width: 0; }
+.staydates-field span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.staydates-field:disabled, .staydates-field.is-static { cursor: default; background: var(--color-surface-2); }
+.staydates-field .icon { color: var(--color-primary); flex: none; }
+.staydates-closed { font-size: var(--fs-2xs); color: var(--color-danger); display: flex; align-items: center; gap: 4px; }
+.staydates-nights { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.staydates-error { font-size: var(--fs-xs); color: var(--color-danger); }
+.staydates.has-error .staydates-cols { border-color: var(--color-danger); }
+.staydates-cal { display: flex; flex-direction: column; gap: 6px; }
+.staydates-cal .datepicker { max-width: none; }
+.staydates-hint { font-size: var(--fs-xs); color: var(--color-primary-text); font-weight: var(--fw-medium); }
+@media (max-width: 360px) { .staydates-cols { grid-template-columns: 1fr; } }
