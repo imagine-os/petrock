@@ -114,4 +114,4 @@ export class MockProvider implements DataProvider {
 }
 
 /** Bump when the seed shape changes so stale browsers reseed. */
-export const SEED_VERSION = 2;
+export const SEED_VERSION = 3;

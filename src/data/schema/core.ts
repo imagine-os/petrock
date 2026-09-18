@@ -19,7 +19,7 @@ export const APPOINTMENT_STATUS = ['requested', 'confirmed', 'in_progress', 'don
 export const tables = defineTables([
   // ---- core ----
   { name: 'locations', label: 'Locations', description: 'Petrock stores (Encino, Westwood). Adding a location inserts a row; everything else is scoped by location_id.', group: 'core', scope: 'global', titleColumn: 'name', source: 'entities 6', access: ['everyone read', 'owner write'],
-    columns: [text('name'), text('short_name'), text('slug'), text('city'), text('address'), text('phone', true), text('timezone'), { name: 'hours', type: 'json', description: 'weekday -> {open, close} | null', wide: true }, { name: 'sort_order', type: 'int' }, bool('active'), text('note', true)] },
+    columns: [text('name'), text('short_name'), text('slug'), text('city'), text('address'), text('phone', true), text('sms_phone', true, 'Text/SMS line'), text('email', true), text('timezone'), { name: 'hours', type: 'json', description: 'weekday -> {open, close} | null', wide: true }, { name: 'sort_order', type: 'int' }, bool('active'), text('note', true)] },
   { name: 'users', label: 'Users', description: 'Login principals: staff and customers. Role is the primary role; permissions derive from it.', group: 'core', scope: 'global', titleColumn: 'name', source: 'entities 20',
     columns: [text('name'), text('email'), en('role', ROLES), ref('location_id', 'locations', true), text('phone', true), text('avatar_url', true), bool('active'), text('preferred_language', true)] },
   { name: 'roles', label: 'Roles', description: 'Role catalog with label and description; the side menu and permissions key off `key`.', group: 'core', scope: 'global', titleColumn: 'label', source: 'D-002, R-L05',
@@ -77,8 +77,8 @@ export const tables = defineTables([
     columns: [text('code'), ref('customer_id', 'customers'), { name: 'pet_ids', type: 'json' }, { name: 'date', type: 'date' }, { name: 'check_in_time', type: 'time' }, { name: 'check_out_time', type: 'time' }, en('item', ['full_day', 'half_day', 'hour']), en('status', BOOKING_STATUSES), money('subtotal'), money('discount_total'), money('tax_total'), money('total'), en('payment_status', PAYMENT_STATUS), text('notes', true)] },
 
   // ---- commerce ----
-  { name: 'fees', label: 'Fees', description: 'Card / non-cash fee (3.89% through the app) and any other surcharge.', group: 'commerce', scope: 'global', titleColumn: 'name', source: 'R-H03',
-    columns: [text('name'), en('kind', ['card', 'other']), { name: 'percent', type: 'numeric' }, en('applies_to', ['card_payments', 'all']), bool('active')] },
+  { name: 'fees', label: 'Fees', description: 'Card / non-cash fee (3.89% through the app), the $12 grooming sanitation fee (included in every groom price, D-187) and any other surcharge.', group: 'commerce', scope: 'global', titleColumn: 'name', source: 'R-H03, D-187',
+    columns: [text('name'), en('kind', ['card', 'other', 'grooming_sanitation']), { name: 'percent', type: 'numeric' }, { name: 'amount', type: 'money', nullable: true, description: 'Flat USD amount (percent 0)' }, en('applies_to', ['card_payments', 'all', 'grooming']), bool('included', 'Already inside the listed price; the engine never adds it'), bool('active')] },
   { name: 'taxes', label: 'Taxes', description: 'Tax settings: one named tax with service / product / boarding rates, prices exclusive by default.', group: 'commerce', scope: 'global', titleColumn: 'name', source: 'R-H04, R-H05',
     columns: [text('name'), text('tax_number', true), { name: 'service_rate', type: 'numeric' }, { name: 'product_rate', type: 'numeric' }, { name: 'boarding_rate', type: 'numeric' }, bool('prices_inclusive'), bool('active')] },
   { name: 'invoices', label: 'Invoices', description: 'Invoice per booking / appointment / daycare day with line items, totals, deposit and balance.', group: 'commerce', scope: 'location', titleColumn: 'number', source: 'entities 15',
@@ -112,7 +112,7 @@ export const tables = defineTables([
 ]);
 
 // ---- typed rows pages use ----
-export interface LocationRow extends BaseRow { name: string; short_name: string; slug: string; city: string; address: string; phone: string | null; timezone: string; hours: Record<string, { open: string; close: string } | null>; sort_order: number; active: boolean }
+export interface LocationRow extends BaseRow { name: string; short_name: string; slug: string; city: string; address: string; phone: string | null; sms_phone?: string | null; email?: string | null; timezone: string; hours: Record<string, { open: string; close: string } | null>; sort_order: number; active: boolean }
 export interface UserRow extends BaseRow { name: string; email: string; role: string; location_id: string | null; phone: string | null; active: boolean }
 export interface EmployeeRow extends BaseRow { user_id: string | null; name: string; display_name: string | null; email: string | null; job_title: string | null; department: string | null; status: string; color: string | null; is_groomer: boolean; is_handler: boolean; pin_hash: string | null }
 export interface CapacityRow extends BaseRow { kind: 'penthouse' | 'suite' | 'daycare' | 'grooming'; max_simultaneous: number }
@@ -125,7 +125,7 @@ export interface RoomRow extends BaseRow { code: string; room_type_id: string; p
 export interface SeasonRow extends BaseRow { name: string; starts_on: string; ends_on: string; is_holiday: boolean }
 export interface RateRow extends BaseRow { room_type_id: string; day_kind: 'weekday' | 'weekend'; season_id: string | null; price_per_night: number }
 export interface DiscountRow extends BaseRow { name: string; kind: 'multi_dog' | 'long_stay' | 'prepay' | 'daycare_extra_pet'; room_type_id: string | null; dog_count: number | null; min_nights: number | null; amount_off: number; percent_off: number | null; requires_paid_in_full: boolean; excludes_holidays: boolean; active: boolean }
-export interface FeeRow extends BaseRow { name: string; kind: 'card' | 'other'; percent: number; applies_to: 'card_payments' | 'all'; active: boolean }
+export interface FeeRow extends BaseRow { name: string; kind: 'card' | 'other' | 'grooming_sanitation'; percent: number; amount?: number | null; applies_to: 'card_payments' | 'all' | 'grooming'; included?: boolean; active: boolean }
 export interface TaxRow extends BaseRow { name: string; service_rate: number; product_rate: number; boarding_rate: number; prices_inclusive: boolean; active: boolean }
 export interface PackageRow extends BaseRow { name: string; tier: string; inclusions: string | null; price_s: number; price_m: number; price_l: number; price_xl: number; price_giant: number; minutes_s: number; minutes_m: number; minutes_l: number; minutes_xl: number; minutes_giant: number; active: boolean; sort_order: number }
 export interface AddonRow extends BaseRow { name: string; price: number; starting_at: boolean; added_minutes_sm: number; added_minutes_l: number; employee_type: string | null; active: boolean }

@@ -22,4 +22,5 @@ export const strings: StringTable = {
   'cgd.payCash': { en: 'Pay at location', es: 'Pagar en el local' },
   'cgd.cancelBooking': { en: 'Cancel booking', es: 'Cancelar reserva' },
   'cgd.messageDesk': { en: 'Message the front desk', es: 'Escribir a recepción' },
+  'cgd.groomingEstimateNote': { en: 'Grooming rates are estimates; pets are assessed in person for the final rate.', es: 'Las tarifas de peluquería son estimadas; la tarifa final se fija al evaluar a la mascota en persona.' },
 };

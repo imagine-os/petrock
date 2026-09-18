@@ -76,7 +76,7 @@ export function GroomingCheckoutPage() {
       </div>
       {!vaccinesOk && <Notice tone="warn">Some required vaccines are not verified yet: the order will stay "Pending verification" until the front desk checks the proof. Upload it under Pets to speed this up.</Notice>}
       <ServicePayMethod value={method} onChange={setMethod} card={card} onCardChange={setCard} needsCardElement={payments.needsCardElement} feeNote={fee ? `${fee.name} ${fee.percent}% applies to card payments in the app.` : undefined} error={error} />
-      <Card padding="md"><ServiceQuoteLines lines={q.lines} total={q.total} notes={q.notes} /></Card>
+      <Card padding="md"><ServiceQuoteLines lines={q.lines} total={q.total} notes={q.notes} /><p className="xs muted" style={{ marginTop: 8 }}>{t('cgd.groomingEstimateNote')}</p></Card>
       <ServiceFlowFooter primaryLabel={method === 'card' ? `Pay ${fmtMoney(q.total)}` : `Book · pay ${fmtMoney(q.total)} at location`} primaryLoading={busy} primaryDisabled={!ready || (method === 'card' && !payments.needsCardElement && !cardValid(card))} onPrimary={pay} hint={method === 'card' ? 'Mock payment today; Stripe later. Cards ending 0002 are declined.' : 'We hold your slot; pay when you drop off.'} />
     </CgdPage>
   );

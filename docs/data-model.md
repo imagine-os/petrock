@@ -108,6 +108,8 @@ _Source: entities 6_
 | `city` | text |  |
 | `address` | text |  |
 | `phone` | text, null |  |
+| `sms_phone` | text, null | Text/SMS line |
+| `email` | text, null |  |
 | `timezone` | text |  |
 | `hours` | json | weekday -> {open, close} | null |
 | `sort_order` | int |  |
@@ -895,8 +897,8 @@ _Source: R-E01..E08, R-F05_
 | `active` | bool |  |
 
 #### `fees` (global)
-Card / non-cash fee (3.89% through the app) and any other surcharge.  
-_Source: R-H03_
+Card / non-cash fee (3.89% through the app), the $12 grooming sanitation fee (included in every groom price, D-187) and any other surcharge.  
+_Source: R-H03, D-187_
 
 | column | type | notes |
 | --- | --- | --- |
@@ -904,9 +906,11 @@ _Source: R-H03_
 | `created_at` | timestamptz |  |
 | `updated_at` | timestamptz |  |
 | `name` | text |  |
-| `kind` | enum (card \| other) |  |
+| `kind` | enum (card \| other \| grooming_sanitation) |  |
 | `percent` | numeric |  |
-| `applies_to` | enum (card_payments \| all) |  |
+| `amount` | money, null | Flat USD amount (percent 0) |
+| `applies_to` | enum (card_payments \| all \| grooming) |  |
+| `included` | bool | Already inside the listed price; the engine never adds it |
 | `active` | bool |  |
 
 #### `invoices` (per location)

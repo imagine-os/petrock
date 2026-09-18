@@ -7,7 +7,7 @@
 export interface RateLike { room_type_id: string; day_kind: 'weekday' | 'weekend'; season_id: string | null; price_per_night: number; location_id?: string | null }
 export interface SeasonLike { id: string; starts_on: string; ends_on: string; is_holiday: boolean }
 export interface DiscountLike { kind: 'multi_dog' | 'long_stay' | 'prepay' | 'daycare_extra_pet'; room_type_id: string | null; dog_count: number | null; min_nights: number | null; amount_off: number; percent_off: number | null; requires_paid_in_full: boolean; excludes_holidays: boolean; active: boolean; name: string }
-export interface FeeLike { kind: 'card' | 'other'; percent: number; applies_to: 'card_payments' | 'all'; active: boolean; name: string }
+export interface FeeLike { kind: 'card' | 'other' | 'grooming_sanitation'; percent: number; amount?: number | null; applies_to: 'card_payments' | 'all' | 'grooming'; included?: boolean; active: boolean; name: string }
 export interface TaxLike { service_rate: number; product_rate: number; boarding_rate: number; prices_inclusive: boolean; active: boolean; name: string }
 export interface PackageLike { id: string; name: string; price_s: number; price_m: number; price_l: number; price_xl: number; price_giant: number; minutes_s: number; minutes_m: number; minutes_l: number; minutes_xl: number; minutes_giant: number }
 export interface AddonLike { id: string; name: string; price: number; starting_at: boolean; added_minutes_sm: number; added_minutes_l: number }

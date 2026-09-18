@@ -13,13 +13,15 @@
 - Capacitor vs native decision (D-013): customer app as Capacitor wrapper of the web codebase, or separate native apps
 - Port older-section screens into the build (D-010, awaiting Justin): Choose Vaccine, Invoice detail, employees + add-employee, home stats strip, owner KPI dashboard, OTP modal, collapsible nav + location switcher, form redlines
 - Extras category (D-005): report/analytics (in scope), employees (required, user management), education, reviews, walking, management
+- Rooms: display_name/theme column + themed penthouse names per location (D-186, waiting on owner: questions 1-2 in `docs/reference/petrockhotel-site.md`)
+- Verify petrockhotel.com facts on the live site (D-187): Westwood address / hours, phones, Suite copy, $12 sanitation fee, grooming disclaimer; site is network-blocked for the agent until an org owner allows the domain
 - Stripe integration
 - App-store required settings / legal pages
 
 ## Doing
 - Figma fidelity fix at the design-system level (Justin 2026-09-18): follow `docs/design/fidelity-audit.md` - (a) fonts Open Sans / Be Vietnam Pro, tokens, icons, core components; (b) customer screens C-10 first; (c) front desk shell; D-187..D-188 proposed
 - Phase 3 integration: QA pass over every page (D-016 widths, console errors, functional flows), spec completeness to 100 %, StatTile dark-mode hint contrast, PhonePageHeader / CustomerScreenHeader dedupe, core seed chat times relative to now, SessionProvider remember-me expiry (R-X35), DesktopShell reads roles.menu (R-X40) and permissions table (R-X49)
-- Awaiting Justin: **enable GitHub Pages** (Settings > Pages > Source = GitHub Actions, then re-run "Deploy to GitHub Pages"; runs #7 / #8 stopped at configure-pages: "Resource not accessible by integration"); D-179 (PIN at check-in?), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012); answers to the pricing conflicts chosen in the build (daycare 6 h, card fee 3.89 %, Diamond prices)
+- Awaiting Justin: **enable GitHub Pages** (Settings > Pages > Source = GitHub Actions, then re-run "Deploy to GitHub Pages"; runs #7 / #8 stopped at configure-pages: "Resource not accessible by integration"); D-179 (PIN at check-in?), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012); answers to the pricing conflicts chosen in the build (daycare 6 h, card fee 3.89 %, Diamond prices); owner question list (15 questions, prompt 0008 / `docs/reference/petrockhotel-site.md`) to take to the owner
 
 ## Blocked
 - Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`

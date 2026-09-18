@@ -747,16 +747,20 @@ create index if not exists feedback_location_idx on public.feedback(location_id)
 create index if not exists feedback_user_id_idx on public.feedback(user_id);
 create trigger feedback_touch before update on public.feedback for each row execute function public.touch_updated_at();
 
--- commerce · Fees: Card / non-cash fee (3.89% through the app) and any other surcharge.
+-- commerce · Fees: Card / non-cash fee (3.89% through the app), the $12 grooming sanitation fee (included in every groom price, D-187) and any other surcharge.
 create table if not exists public.fees (
   -- Primary key
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   name text not null,
-  kind text not null check (kind in ('card', 'other')),
+  kind text not null check (kind in ('card', 'other', 'grooming_sanitation')),
   percent numeric(12,2) not null,
-  applies_to text not null check (applies_to in ('card_payments', 'all')),
+  -- Flat USD amount (percent 0)
+  amount numeric(12,2),
+  applies_to text not null check (applies_to in ('card_payments', 'all', 'grooming')),
+  -- Already inside the listed price; the engine never adds it
+  included boolean not null default false,
   active boolean not null default false
 );
 create trigger fees_touch before update on public.fees for each row execute function public.touch_updated_at();
@@ -911,6 +915,9 @@ create table if not exists public.locations (
   city text not null,
   address text not null,
   phone text,
+  -- Text/SMS line
+  sms_phone text,
+  email text,
   timezone text not null,
   -- weekday -> {open, close} | null
   hours jsonb not null,

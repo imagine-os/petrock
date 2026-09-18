@@ -23,7 +23,7 @@ export function seed(ctx: SeedCtx) {
 
   // ---- locations & capacities & holidays ----
   LOCS.forEach((l, i) => {
-    add('locations', { id: l.id, name: l.name, short_name: l.shortName, slug: l.slug, city: l.city, address: l.address, phone: l.phone, timezone: l.timezone, hours: l.hours, sort_order: i, active: true, note: null });
+    add('locations', { id: l.id, name: l.name, short_name: l.shortName, slug: l.slug, city: l.city, address: l.address, phone: l.phone, sms_phone: l.smsPhone ?? null, email: l.email ?? null, timezone: l.timezone, hours: l.hours, sort_order: i, active: true, note: null });
     (['penthouse', 'suite', 'daycare', 'grooming'] as const).forEach((kind) => add('capacities', { id: `cap_${l.slug}_${kind}`, location_id: l.id, kind, max_simultaneous: l.capacities[kind], note: kind === 'penthouse' ? 'Dogs over 30 lbs only fit the bottom 6 penthouse rooms' : null }));
     add('holidays', { id: `hol_${l.slug}_xmas`, location_id: l.id, date: `${today.getFullYear()}-12-25`, name: 'Christmas Day', is_holiday: true, boarding_closed: false });
     add('holidays', { id: `hol_${l.slug}_tg`, location_id: l.id, date: `${today.getFullYear()}-11-26`, name: 'Thanksgiving', is_holiday: true, boarding_closed: false });
@@ -102,8 +102,8 @@ export function seed(ctx: SeedCtx) {
   });
 
   // ---- room types, rooms ----
-  const rtPh = add('room_types', { id: 'rt_penthouse', name: 'Penthouse', key: 'penthouse', description: 'Petrock Penthouses offer a TV, premium bed, toys, potty pads, room service, playtime, 2 walks per day, photos and videos every night, a bedtime tuck-in and tummy rub.', max_weight_lbs: null, sort_order: 0, photo_url: null });
-  const rtSu = add('room_types', { id: 'rt_suite', name: 'Suite', key: 'suite', description: 'Petrock Suites offer a premium bed, toys, potty pads, playtime, 2 walks per day and a bedtime tuck-in.', max_weight_lbs: null, sort_order: 1, photo_url: null });
+  const rtPh = add('room_types', { id: 'rt_penthouse', name: 'Penthouse', key: 'penthouse', description: 'TV, premium bed, toys during the day, potty pads, room service, playtime, 2 walks per day, photos and videos every night of the stay, bedtime tuck-in and tummy rub.', max_weight_lbs: null, sort_order: 0, photo_url: null });
+  const rtSu = add('room_types', { id: 'rt_suite', name: 'Suite', key: 'suite', description: 'Premium bed, toys during the day, potty pads, room service, playtime, 2 walks per day, photos and videos every night of the stay, bedtime tuck-in and tummy rub.', max_weight_lbs: null, sort_order: 1, photo_url: null });
   const rooms: Record<string, string[]> = {};
   for (const l of LOCS) {
     rooms[l.id] = [];
@@ -126,7 +126,11 @@ export function seed(ctx: SeedCtx) {
     { id: 'dis_21', name: 'Long stay 21 nights, paid in full', kind: 'long_stay', room_type_id: null, dog_count: null, min_nights: 21, amount_off: 0, percent_off: 10, requires_paid_in_full: true, excludes_holidays: true, active: true },
     { id: 'dis_dc', name: 'Each additional pet (daycare)', kind: 'daycare_extra_pet', room_type_id: null, dog_count: null, min_nights: null, amount_off: 5, percent_off: null, requires_paid_in_full: false, excludes_holidays: false, active: true },
   ].map((d) => add('discounts', d) as unknown as DiscountLike);
-  const feeRows: FeeLike[] = [add('fees', { id: 'fee_card', name: 'Card service fee', kind: 'card', percent: 3.89, applies_to: 'card_payments', active: true }) as unknown as FeeLike];
+  const feeRows: FeeLike[] = [
+    add('fees', { id: 'fee_card', name: 'Card service fee', kind: 'card', percent: 3.89, amount: null, applies_to: 'card_payments', included: false, active: true }) as unknown as FeeLike,
+    // petrockhotel.com/spa: "All grooming prices include a $12 sanitation fee" (D-187). Included in the package price; the engine never adds it.
+    add('fees', { id: 'fee_sanitation', name: 'Grooming sanitation fee', kind: 'grooming_sanitation', percent: 0, amount: 12, applies_to: 'grooming', included: true, active: true }) as unknown as FeeLike,
+  ];
   const taxRows: TaxLike[] = [add('taxes', { id: 'tax_main', name: 'Tax', tax_number: 'US-PETROCK-0001', service_rate: 2, product_rate: 2, boarding_rate: 2, prices_inclusive: false, active: true }) as unknown as TaxLike];
   const pkgRows: PackageLike[] = [
     { id: 'pkg_gold', name: 'Gold Groom', tier: 'gold', inclusions: 'Bath, blow-dry, brush teeth, four-paw massage and scented spray', price_s: 50, price_m: 65, price_l: 80, price_xl: 95, price_giant: 135, minutes_s: 60, minutes_m: 60, minutes_l: 60, minutes_xl: 90, minutes_giant: 90, notes: null, sort_order: 0, active: true },
