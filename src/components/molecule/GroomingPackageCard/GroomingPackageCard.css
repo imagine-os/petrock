@@ -1,0 +1,20 @@
+.pkgcard { display: flex; align-items: flex-start; gap: var(--sp-3); width: 100%; padding: var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); color: var(--color-text); text-align: left; min-width: 0; }
+.pkgcard.is-interactive { cursor: pointer; transition: border-color var(--dur-fast), box-shadow var(--dur-fast), opacity var(--dur-fast); }
+.pkgcard.is-interactive:hover:not(:disabled) { border-color: var(--color-border-primary); box-shadow: var(--shadow-md); }
+.pkgcard.is-interactive:not(.is-selected) { opacity: .82; }
+.pkgcard.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); opacity: 1; }
+.pkgcard:disabled { opacity: .5; cursor: not-allowed; }
+.pkgcard-tile { flex: 0 0 48px; width: 48px; height: 48px; border-radius: var(--r-md); background: var(--color-surface-tint); color: var(--color-primary-text); display: inline-flex; align-items: center; justify-content: center; }
+.pkg-platinum .pkgcard-tile { background: var(--color-info-bg); color: var(--color-info); }
+.pkg-diamond .pkgcard-tile { background: var(--color-primary-soft); color: var(--color-primary-text); }
+.pkgcard-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.pkgcard-title { display: flex; align-items: center; gap: 8px; font-weight: var(--fw-semibold); font-size: var(--fs-md); color: var(--color-heading); flex-wrap: wrap; }
+.pkgcard-title .badge { text-transform: capitalize; }
+.pkgcard-desc { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.pkgcard-meta { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-top: 2px; }
+.pkgcard-meta .xs { display: inline-flex; align-items: center; gap: 3px; }
+.pkgcard-price { color: var(--color-danger); font-size: var(--fs-md); }
+.pkgcard-note { color: var(--color-warn); }
+.pkgcard-check { flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--color-border-strong); display: inline-flex; align-items: center; justify-content: center; color: #fff; align-self: center; }
+.pkgcard.is-selected .pkgcard-check { background: var(--color-primary); border-color: var(--color-primary); }
+.pkgcard.is-compact { padding: var(--sp-3); } .pkgcard.is-compact .pkgcard-tile { width: 40px; height: 40px; flex-basis: 40px; }

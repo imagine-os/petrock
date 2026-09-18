@@ -1,0 +1,7 @@
+.slotpicker { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.slotpicker-group { display: flex; flex-direction: column; gap: 6px; }
+.slotpicker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.slot { height: 40px; border: 1px solid var(--color-border-strong); border-radius: var(--r-md); background: var(--color-surface); color: var(--color-text); font-size: var(--fs-sm); font-weight: var(--fw-medium); transition: background var(--dur-fast), border-color var(--dur-fast); }
+.slot:hover:not(:disabled) { border-color: var(--color-primary); background: var(--color-surface-tint); }
+.slot.is-selected { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); }
+.slot.is-off { text-decoration: line-through; color: var(--color-text-faint); border-style: dashed; cursor: not-allowed; opacity: .7; }

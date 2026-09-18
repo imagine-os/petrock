@@ -1,0 +1,6 @@
+.paymethod { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.paymethod-opt { display: inline-flex; align-items: center; gap: 8px; }
+.paymethod-fields { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-3); border: 1px dashed var(--color-border-strong); border-radius: var(--r-card); }
+.paymethod-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+.paymethod-element { padding: var(--sp-4); border: 1px dashed var(--color-border-strong); border-radius: var(--r-card); color: var(--color-text-muted); font-size: var(--fs-xs); text-align: center; }
+.paymethod-error { color: var(--color-danger); display: inline-flex; gap: 4px; align-items: center; }

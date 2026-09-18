@@ -1,0 +1,16 @@
+.petstrip { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.petstrip-row { display: flex; gap: var(--sp-3); overflow-x: auto; padding: 2px 2px 6px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.petstrip-row::-webkit-scrollbar { height: 4px; } .petstrip-row::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
+.petstrip-card { position: relative; flex: 0 0 auto; width: 132px; min-height: 148px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: var(--sp-3) var(--sp-2); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); color: var(--color-text); text-align: center; scroll-snap-align: start; transition: border-color var(--dur-fast), box-shadow var(--dur-fast), background var(--dur-fast); cursor: pointer; }
+.petstrip-card:hover:not(:disabled) { border-color: var(--color-border-primary); box-shadow: var(--shadow-md); }
+.petstrip-card:disabled { opacity: .5; cursor: not-allowed; }
+.petstrip-card.is-selected { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); box-shadow: var(--shadow-md); }
+.petstrip-name { font-weight: var(--fw-semibold); font-size: var(--fs-sm); line-height: 1.2; }
+.petstrip-sub { font-size: 11px; color: var(--color-text-muted); line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.petstrip-card.is-selected .petstrip-sub { color: rgba(255,255,255,.8); }
+.petstrip-badges { display: flex; flex-direction: column; gap: 4px; align-items: center; margin-top: auto; }
+.petstrip-card.is-selected .badge { background: rgba(255,255,255,.18); color: #fff; }
+.petstrip-check { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--color-surface); color: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; }
+.petstrip-add { border-style: dashed; justify-content: center; color: var(--color-primary-text); }
+.petstrip-addicon { width: 48px; height: 48px; border-radius: 50%; background: var(--color-surface-tint); display: inline-flex; align-items: center; justify-content: center; }
+@media (min-width: 900px) { .petstrip-row { flex-wrap: wrap; overflow: visible; } }

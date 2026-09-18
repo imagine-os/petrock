@@ -1,0 +1,9 @@
+.addonrow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); min-width: 0; opacity: .85; transition: border-color var(--dur-fast), opacity var(--dur-fast); }
+.addonrow.is-on { opacity: 1; border-color: var(--color-border-primary); }
+.addonrow.is-disabled { opacity: .5; }
+.addonrow-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.addonrow-name { font-weight: var(--fw-medium); color: var(--color-heading); }
+.addonrow-price { color: var(--color-success); font-weight: var(--fw-semibold); white-space: nowrap; }
+.addonrow-toggle .toggle { gap: 8px; } .addonrow-yes { font-size: var(--fs-sm); color: var(--color-text-muted); min-width: 24px; display: inline-block; }
+.addonrow-info { grid-column: 1 / -1; display: none; }
+@media (max-width: 360px) { .addonrow { grid-template-columns: minmax(0, 1fr) auto; } .addonrow-toggle { grid-column: 1 / -1; justify-self: end; } }
