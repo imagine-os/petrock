@@ -1,12 +1,12 @@
 # Responsive QA report
 
-generated: 2026-09-18T07:42:51.217Z
+generated: 2026-09-18T14:23:43.227Z
 routes: 181
 widths: 360, 390, 768, 1280, 1920
 themes: light, dark
 cells: 1810
 failing_cells: 0
-a11y_findings: 8730
+a11y_findings: 8356
 
 _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizontal scroll (documentElement.scrollWidth > viewport), a console error, visible text under 12 px, a fixed element covering a sticky one, or a blank page. Customer routes run as the customer demo user with seeded wizard drafts; staff routes as the super admin with dev mode off (D-016 brief). A11y findings come from the same checks D-15 runs live. Open `/#/dev/qa/responsive` for the interactive matrix._
 
@@ -200,7 +200,7 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 
 | Rule | Findings |
 | --- | --- |
-| target-size | 6820 |
+| target-size | 6446 |
 | heading-skip | 940 |
 | landmark-main | 580 |
 | input-label | 360 |
@@ -212,19 +212,19 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | Code | Rule | Sev | Finding | Element | Cells |
 | --- | --- | --- | --- | --- | --- |
 | `C-10` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-10` | target-size | warn | target 46x21 px is under 24 px | `div.chp-page > section.chp-section > div.chp-section-head > a.chp-link` | 10 |
-| `C-10` | target-size | warn | target 129x14 px is under 24 px | `div.chp-page > section.chp-section > div.chp-center > button.btn.btn-link` | 10 |
+| `C-10` | target-size | warn | target 43x21 px is under 24 px | `div.chp-page > section.chp-section > div.chp-section-head > a.chp-link` | 10 |
+| `C-10` | target-size | warn | target 130x14 px is under 24 px | `div.chp-page > section.chp-section > div.chp-center > button.btn.btn-link` | 10 |
 | `C-02` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `F-30` | target-size | warn | target 72x21 px is under 24 px | `div.fgp-toolbar > div.gdatenav.gdatenav-md > div.gdatenav-group > button.gdatenav-label.is-today` | 10 |
 | `A-01` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-card-title > div > h3` | 10 |
-| `A-01` | target-size | warn | target 89x22 px is under 24 px | `div.acp-two > div.card.card-p-md > div.achart > button.achart-toggle` | 10 |
-| `A-01` | target-size | warn | target 41x18 px is under 24 px | `div.card.card-p-md > div.card-header > div.acp-card-title > a.xs` | 10 |
+| `A-01` | target-size | warn | target 85x22 px is under 24 px | `div.acp-two > div.card.card-p-md > div.achart > button.achart-toggle` | 10 |
+| `A-01` | target-size | warn | target 39x18 px is under 24 px | `div.card.card-p-md > div.card-header > div.acp-card-title > a.xs` | 10 |
 | `A-42` | heading-skip | warn | heading jumps from h1 to h3 | `div.acp-two > div.card.card-p-md > div.card-header > h3` | 10 |
-| `A-42` | target-size | warn | target 89x22 px is under 24 px | `div.acp-two > div.card.card-p-md > div.achart > button.achart-toggle` | 20 |
+| `A-42` | target-size | warn | target 85x22 px is under 24 px | `div.acp-two > div.card.card-p-md > div.achart > button.achart-toggle` | 20 |
 | `A-10` | heading-skip | warn | heading jumps from h1 to h3 | `div.card.card-p-md > div.card-header > div.acp-card-title > h3` | 10 |
 | `A-41` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `A-41` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `A-41` | target-size | warn | target 583x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `A-41` | target-size | warn | target 560x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `A-11` | h1 | warn | no visible h1 on the page | `document` | 10 |
 | `A-12` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-card-title > div > h3` | 10 |
 | `A-27` | heading-skip | warn | heading jumps from h1 to h3 | `div.card.card-p-md > div.card-header > div.acp-card-title > h3` | 10 |
@@ -237,30 +237,30 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `A-26` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-card-title > div > h3` | 10 |
 | `A-28` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-provider > div > h3` | 10 |
 | `A-30` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-card-title > div > h3` | 10 |
-| `A-31` | input-label | error | textarea[type=textarea] without a label | `#:r1:` | 70 |
+| `A-31` | input-label | error | textarea[type=textarea] without a label | `#:r2:` | 70 |
 | `A-31` | heading-skip | warn | heading jumps from h1 to h3 | `div.card.card-p-sm > div.card-header > div.acp-card-title > h3` | 10 |
 | `A-35` | heading-skip | warn | heading jumps from h1 to h3 | `#main > div.page.stack > div.empty > h3.empty-title` | 10 |
 | `A-43` | heading-skip | warn | heading jumps from h1 to h3 | `div.page.stack > div.card.card-p-md > div.card-header > h3` | 10 |
 | `A-44` | heading-skip | warn | heading jumps from h1 to h3 | `div.card-header > div.acp-card-title > div > h3` | 10 |
 | `A-00` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `A-00` | target-size | warn | target 96x21 px is under 24 px | `div.pinlogin > div.card.card-p-lg > div.row.wrap > a` | 10 |
-| `A-00` | target-size | warn | target 96x12 px is under 24 px | `div.card.card-p-lg > div.row.wrap > a > button.btn.btn-link` | 10 |
+| `A-00` | target-size | warn | target 97x21 px is under 24 px | `div.pinlogin > div.card.card-p-lg > div.row.wrap > a` | 10 |
+| `A-00` | target-size | warn | target 97x12 px is under 24 px | `div.card.card-p-lg > div.row.wrap > a > button.btn.btn-link` | 10 |
 | `C-01` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-01` | target-size | warn | target 134x16 px is under 24 px | `div.cauth.cauth-welcome > div.cauth-footer > div.row.wrap > button.btn.btn-link` | 10 |
+| `C-01` | target-size | warn | target 136x16 px is under 24 px | `div.cauth.cauth-welcome > div.cauth-footer > div.row.wrap > button.btn.btn-link` | 10 |
 | `C-01` | target-size | warn | target 180x21 px is under 24 px | `div.cauth.cauth-welcome > div.cauth-footer > div.row.wrap > a` | 10 |
 | `C-01` | target-size | warn | target 180x16 px is under 24 px | `div.cauth-footer > div.row.wrap > a > button.btn.btn-link` | 10 |
 | `C-03` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-03` | target-size | warn | target 46x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
 | `C-04` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-05` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-05` | target-size | warn | target 97x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
+| `C-05` | target-size | warn | target 94x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
 | `C-06` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-06` | target-size | warn | target 82x12 px is under 24 px | `form.cauth-form > div.stack-sm > div.row > button.btn.btn-link` | 10 |
-| `C-06` | target-size | warn | target 97x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
+| `C-06` | target-size | warn | target 79x12 px is under 24 px | `form.cauth-form > div.stack-sm > div.row > button.btn.btn-link` | 10 |
+| `C-06` | target-size | warn | target 94x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
 | `C-07` | heading-skip | warn | heading jumps from h1 to h3 | `div.cauth > div.card.card-p-md > div.card-header > h3` | 10 |
 | `C-07` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-07` | target-size | warn | target 124x21 px is under 24 px | `div.card.card-p-md > div.cauth-phones > div.cauth-phone > a` | 20 |
-| `C-07` | target-size | warn | target 83x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
+| `C-07` | target-size | warn | target 117x21 px is under 24 px | `div.card.card-p-md > div.cauth-phones > div.cauth-phone > a` | 20 |
+| `C-07` | target-size | warn | target 82x21 px is under 24 px | `div.cauth > div.cauth-footer > p > a` | 10 |
 | `C-08` | heading-skip | warn | heading jumps from h1 to h3 | `ol.cauth-steps > li.cauth-step > div > h3` | 10 |
 | `C-08` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-09` | landmark-main | warn | no <main> landmark | `document` | 10 |
@@ -270,51 +270,51 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `C-50` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `C-50` | target-size | warn | target 396x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-51` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-51` | target-size | warn | target 155x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-51` | target-size | warn | target 156x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-51` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
 | `C-51` | target-size | warn | target 187x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-52` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-52` | target-size | warn | target 139x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 10 |
+| `C-52` | target-size | warn | target 134x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 10 |
 | `C-52` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-secondary` | 4 |
 | `C-53` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-53` | target-size | warn | target 184x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-53` | target-size | warn | target 189x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-53` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
-| `C-53` | target-size | warn | target 221x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-53` | target-size | warn | target 227x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-54` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-54` | target-size | warn | target 196x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-54` | target-size | warn | target 204x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-54` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
-| `C-54` | target-size | warn | target 236x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-54` | target-size | warn | target 245x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-56` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-56` | target-size | warn | target 269x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
-| `C-56` | target-size | warn | target 323x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-56` | target-size | warn | target 275x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-56` | target-size | warn | target 330x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-55` | heading-skip | warn | heading jumps from h1 to h3 | `div.cgd > div.cgd-body > div.empty > h3.empty-title` | 10 |
 | `C-55` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-55` | target-size | warn | target 155x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-55` | target-size | warn | target 156x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-55` | target-size | warn | target 187x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-60` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-60` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `C-60` | target-size | warn | target 52x21 px is under 24 px | `div.cgd-body > section.cgd-list > div.cgd-section-title > a.small` | 10 |
+| `C-60` | target-size | warn | target 50x21 px is under 24 px | `div.cgd-body > section.cgd-list > div.cgd-section-title > a.small` | 10 |
 | `C-60` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `C-60` | target-size | warn | target 396x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-61` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-61` | target-size | warn | target 188x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-61` | target-size | warn | target 195x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-61` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
-| `C-61` | target-size | warn | target 225x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-61` | target-size | warn | target 234x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-62` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-62` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `C-62` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
 | `C-62` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `C-62` | target-size | warn | target 396x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-63` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-63` | target-size | warn | target 196x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-63` | target-size | warn | target 204x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-63` | target-size | warn | target 296x16 px is under 24 px | `div.cgd-body > div.flowfooter.is-sticky > div.flowfooter-actions > button.btn.btn-primary` | 2 |
-| `C-63` | target-size | warn | target 236x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-63` | target-size | warn | target 245x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-65` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-65` | target-size | warn | target 173x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
-| `C-65` | target-size | warn | target 208x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `C-65` | target-size | warn | target 177x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-65` | target-size | warn | target 212x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-64` | heading-skip | warn | heading jumps from h1 to h3 | `div.cgd > div.cgd-body > div.empty > h3.empty-title` | 10 |
 | `C-64` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-64` | target-size | warn | target 78x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
+| `C-64` | target-size | warn | target 79x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 4 |
 | `C-64` | target-size | warn | target 94x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `C-11` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-12` | input-label | error | input[type=file] without a label | `section.chp-wizard-step > div.chp-center > div.photopick > input.sr-only` | 10 |
@@ -326,33 +326,26 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `C-14` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-21` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-20` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-20` | target-size | warn | target 245x21 px is under 24 px | `div > div.chp-page > div.chp-center > a.chp-link` | 10 |
+| `C-20` | target-size | warn | target 250x21 px is under 24 px | `div > div.chp-page > div.chp-center > a.chp-link` | 10 |
 | `C-30` | input-label | error | select[type=select-one] without a label | `#:r2:` | 20 |
 | `C-30` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-30` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-current > button.step-btn` | 28 |
-| `C-30` | target-size | warn | target 74x18 px is under 24 px | `div.hbf-body > div > div.row-between > a.xs` | 10 |
+| `C-30` | target-size | warn | target 72x18 px is under 24 px | `div.hbf-body > div > div.row-between > a.xs` | 10 |
 | `C-31` | heading-skip | warn | heading jumps from h1 to h3 | `article.roomcard.is-disabled > div.roomcard-body > div.row-between.wrap > h3.roomcard-name` | 10 |
 | `C-31` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-31` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-32` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-32` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-33` | heading-skip | warn | heading jumps from h1 to h3 | `div.hbf-body > section.estcard.is-compact > header.estcard-head > h3.estcard-title` | 10 |
 | `C-33` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-33` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-34` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-34` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-35` | heading-skip | warn | heading jumps from h1 to h3 | `div.hbf-body > section.estcard > header.estcard-head > h3.estcard-title` | 10 |
 | `C-35` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-35` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-36` | heading-skip | warn | heading jumps from h1 to h3 | `div.hbf-body > section.estcard.is-compact > header.estcard-head > h3.estcard-title` | 10 |
 | `C-36` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-36` | target-size | warn | target 20x20 px is under 24 px | `div.hbf-steps > ol.stepper.is-compact > li.step.is-done > button.step-btn` | 28 |
 | `C-37` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-38` | heading-skip | warn | heading jumps from h1 to h3 | `div.rescard > div.rescard-head > div.rescard-titles > h3.rescard-title` | 10 |
+| `C-38` | heading-skip | warn | heading jumps from h1 to h3 | `a.rescard.is-link > div.rescard-head > div.rescard-titles > h3.rescard-title` | 10 |
 | `C-38` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-39` | control-name | error | a without an accessible name | `div.hbf > header.hbf-head > div.hbf-aside > a` | 10 |
 | `C-39` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-39` | target-size | warn | target 41x18 px is under 24 px | `section.section > div.section-head > div.section-actions > a.xs` | 10 |
+| `C-39` | target-size | warn | target 39x18 px is under 24 px | `section.section > div.section-head > div.section-actions > a.xs` | 10 |
 | `C-40` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-41` | heading-skip | warn | heading jumps from h1 to h3 | `div.hbf > div.hbf-body > div.empty > h3.empty-title` | 10 |
 | `C-41` | landmark-main | warn | no <main> landmark | `document` | 10 |
@@ -361,7 +354,7 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `C-71` | input-label | error | input[type=file] without a label | `div.csc-screen > div.acchero > div.acchero-avatar > input.sr-only` | 10 |
 | `C-71` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-71` | target-size | warn | target 79x12 px is under 24 px | `div.section-body > div.stack-sm > div.csc-link-row > button.btn.btn-link` | 10 |
-| `C-71` | target-size | warn | target 103x12 px is under 24 px | `div.section-body > div.stack-sm > div.csc-link-row > button.btn.btn-link` | 10 |
+| `C-71` | target-size | warn | target 102x12 px is under 24 px | `div.section-body > div.stack-sm > div.csc-link-row > button.btn.btn-link` | 10 |
 | `C-72` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-73` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-74` | landmark-main | warn | no <main> landmark | `document` | 10 |
@@ -369,49 +362,40 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `C-76` | heading-skip | warn | heading jumps from h1 to h3 | `div.csc-body > div.card.card-p-md > div.stack-sm > h3` | 10 |
 | `C-76` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-77` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-77` | target-size | warn | target 321x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 283x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 325x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 289x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 238x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 254x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 10 |
-| `C-77` | target-size | warn | target 335x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 8 |
-| `C-77` | target-size | warn | target 336x19 px is under 24 px | `section.section.csc-faq > div.section-head > div.section-text > button.section-toggle` | 8 |
 | `C-78` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-79` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-80` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-80` | target-size | warn | target 74x12 px is under 24 px | `div.csc-screen > div.csc-body.is-flush > div.csc-filters > button.btn.btn-link` | 10 |
+| `C-80` | target-size | warn | target 76x12 px is under 24 px | `div.csc-screen > div.csc-body.is-flush > div.csc-filters > button.btn.btn-link` | 10 |
 | `C-81` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-82` | input-label | error | input[type=file] without a label | `div.csc-chat-composer > div.chatcomp > div.chatcomp-row > input.sr-only` | 10 |
 | `C-82` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-83` | heading-skip | warn | heading jumps from h1 to h3 | `div.csc-body > div.card.card-p-md > div.csc-rate-stars > h3` | 10 |
 | `C-83` | landmark-main | warn | no <main> landmark | `document` | 10 |
 | `C-84` | landmark-main | warn | no <main> landmark | `document` | 10 |
-| `C-84` | target-size | warn | target 103x12 px is under 24 px | `div.card.card-p-md > div.stack-sm > div.csc-link-row > button.btn.btn-link` | 10 |
+| `C-84` | target-size | warn | target 102x12 px is under 24 px | `div.card.card-p-md > div.stack-sm > div.csc-link-row > button.btn.btn-link` | 10 |
 | `D-02` | input-label | error | input[type=file] without a label | `div.comp-usage > div.acchero > div.acchero-avatar > input.sr-only` | 60 |
-| `D-02` | input-label | error | select[type=select-one] without a label | `#:rj:` | 160 |
+| `D-02` | input-label | error | select[type=select-one] without a label | `#:rk:` | 160 |
 | `D-02` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
-| `D-02` | target-size | warn | target 120x14 px is under 24 px | `div.stack-sm > div.comp-usage > div.row.wrap > button.btn.btn-link` | 10 |
+| `D-02` | target-size | warn | target 119x14 px is under 24 px | `div.stack-sm > div.comp-usage > div.row.wrap > button.btn.btn-link` | 10 |
 | `D-02` | target-size | warn | target 16x16 px is under 24 px | `div.comp-usage > div.row.wrap > span.chip.chip-neutral > button.chip-remove` | 20 |
-| `D-02` | target-size | warn | target 20x20 px is under 24 px | `div.stack-sm > div.comp-usage > div.stars.is-readonly > button.stars-star.is-on` | 94 |
-| `D-02` | target-size | warn | target 162x22 px is under 24 px | `div.stack-sm > div.ahours > div.ahours-tools > button` | 10 |
-| `D-02` | target-size | warn | target 99x22 px is under 24 px | `div.stack-sm > div.ahours > div.ahours-tools > button` | 10 |
-| `D-02` | target-size | warn | target 124x21 px is under 24 px | `div.cuscard-text > div.cuscard-meta > span > a` | 40 |
+| `D-02` | target-size | warn | target 20x20 px is under 24 px | `div.stack-sm > div.comp-usage > div.stars.is-readonly > button.stars-star.is-on` | 50 |
+| `D-02` | target-size | warn | target 157x22 px is under 24 px | `div.stack-sm > div.ahours > div.ahours-tools > button` | 10 |
+| `D-02` | target-size | warn | target 95x22 px is under 24 px | `div.stack-sm > div.ahours > div.ahours-tools > button` | 10 |
+| `D-02` | target-size | warn | target 116x21 px is under 24 px | `div.cuscard-text > div.cuscard-meta > span > a` | 40 |
 | `D-02` | target-size | warn | target 41x22 px is under 24 px | `div.comp-usage > figure.figure > figcaption > a.figure-code` | 10 |
-| `D-02` | target-size | warn | target 103x12 px is under 24 px | `div.formalert.formalert-danger > div.formalert-text > div.formalert-action > button.btn.btn-link` | 10 |
+| `D-02` | target-size | warn | target 102x12 px is under 24 px | `div.formalert.formalert-danger > div.formalert-text > div.formalert-action > button.btn.btn-link` | 10 |
 | `D-02` | target-size | warn | target 72x21 px is under 24 px | `div.comp-usage > div.gdatenav.gdatenav-md > div.gdatenav-group > button.gdatenav-label.is-today` | 10 |
-| `D-02` | target-size | warn | target 82x12 px is under 24 px | `div.comp-usage > div.otpverify > div.otpverify-resend > button.btn.btn-link` | 10 |
-| `D-02` | target-size | warn | target 47x18 px is under 24 px | `div.docup > div.docup-card.is-done > div.docup-actions > button.docup-link` | 10 |
-| `D-02` | target-size | warn | target 48x18 px is under 24 px | `div.docup > div.docup-card.is-done > div.docup-actions > button.docup-link.is-danger` | 10 |
-| `D-02` | target-size | warn | target 187x21 px is under 24 px | `ol.shl > li.shl-hit > div.shl-head > a.shl-title` | 10 |
+| `D-02` | target-size | warn | target 79x12 px is under 24 px | `div.comp-usage > div.otpverify > div.otpverify-resend > button.btn.btn-link` | 10 |
+| `D-02` | target-size | warn | target 45x18 px is under 24 px | `div.docup > div.docup-card.is-done > div.docup-actions > button.docup-link` | 10 |
+| `D-02` | target-size | warn | target 47x18 px is under 24 px | `div.docup > div.docup-card.is-done > div.docup-actions > button.docup-link.is-danger` | 10 |
+| `D-02` | target-size | warn | target 188x21 px is under 24 px | `ol.shl > li.shl-hit > div.shl-head > a.shl-title` | 10 |
 | `D-02` | target-size | warn | target 126x21 px is under 24 px | `ol.shl > li.shl-hit > div.shl-head > a.shl-title` | 10 |
-| `D-02` | target-size | warn | target 175x19 px is under 24 px | `section.section > div.section-head > div.section-text > button.section-toggle` | 10 |
 | `D-02` | target-size | warn | target 228x16 px is under 24 px | `div.comp-usage > div.flowfooter > div.flowfooter-actions > button.btn.btn-primary` | 8 |
 | `D-02` | target-size | warn | target 18x18 px is under 24 px | `div > div.toasts > div.toast.toast-success > button.toast-close` | 10 |
-| `D-02` | target-size | warn | target 89x22 px is under 24 px | `div.stack-sm > div.comp-usage > div.achart > button.achart-toggle` | 30 |
-| `D-02` | target-size | warn | target 29x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `D-02` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 220 |
-| `D-02` | target-size | warn | target 152x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `D-02` | target-size | warn | target 85x22 px is under 24 px | `div.stack-sm > div.comp-usage > div.achart > button.achart-toggle` | 30 |
+| `D-02` | target-size | warn | target 28x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `D-02` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `D-02` | target-size | warn | target 150x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `D-02` | target-size | warn | target 81x18 px is under 24 px | `div.trp-side > ul > li.trp-row > a.trp-table` | 30 |
 | `D-02` | target-size | warn | target 88x18 px is under 24 px | `div.trp-side > ul > li.trp-row > a.trp-table` | 10 |
 | `D-02` | target-size | warn | target 52x18 px is under 24 px | `div.trp-side > ul > li.trp-row > a.trp-table` | 20 |
@@ -420,30 +404,31 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `D-02` | target-size | warn | target 117x18 px is under 24 px | `div.trp-side > ul > li.trp-row > a.trp-table` | 10 |
 | `D-02` | target-size | warn | target 132x18 px is under 24 px | `div.trp-side > ul > li.trp-row > a.trp-table` | 20 |
 | `D-02` | target-size | warn | target 72x18 px is under 24 px | `div.container.page > div.card.card-p-lg > div.row.wrap > a` | 10 |
+| `D-02` | target-size | warn | target 36x18 px is under 24 px | `div.container.page > div.card.card-p-lg > div.row.wrap > a` | 210 |
 | `D-02` | target-size | warn | target 226x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `D-02` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
-| `D-02` | target-size | warn | target 240x21 px is under 24 px | `div.cuscard-text > div.cuscard-meta > span > a` | 8 |
+| `D-02` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `D-02` | target-size | warn | target 238x21 px is under 24 px | `div.cuscard-text > div.cuscard-meta > span > a` | 8 |
 | `D-02` | target-size | warn | target 256x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `D-02` | target-size | warn | target 297x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `D-02` | target-size | warn | target 155x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
+| `D-02` | target-size | warn | target 157x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `D-02` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `D-04` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
 | `D-04` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `D-04` | target-size | warn | target 557x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `D-04` | target-size | warn | target 546x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `D-10` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `D-10` | target-size | warn | target 118x18 px is under 24 px | `header.pagehead > div.pagehead-bar > div.row.wrap > a.xs` | 10 |
+| `D-10` | target-size | warn | target 116x18 px is under 24 px | `header.pagehead > div.pagehead-bar > div.row.wrap > a.xs` | 10 |
 | `D-10` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `D-10` | target-size | warn | target 557x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `D-10` | target-size | warn | target 546x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `D-11` | target-size | warn | target 328x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `D-11` | target-size | warn | target 77x18 px is under 24 px | `header.pagehead > div.pagehead-bar > div.row.wrap > a.xs` | 10 |
+| `D-11` | target-size | warn | target 75x18 px is under 24 px | `header.pagehead > div.pagehead-bar > div.row.wrap > a.xs` | 10 |
 | `D-11` | target-size | warn | target 358x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 2 |
-| `D-11` | target-size | warn | target 583x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
+| `D-11` | target-size | warn | target 560x18 px is under 24 px | `header.pagehead > div.pagehead-row > div.pagehead-text > a.pagehead-back` | 6 |
 | `D-18` | heading-skip | warn | heading jumps from h1 to h3 | `#main > div.page.stack > div.empty > h3.empty-title` | 10 |
 | `P-01` | target-size | warn | target 294x18 px is under 24 px | `div.shero-inner.container > div.shero-aside > div.card.card-p-lg > a.xs` | 4 |
-| `P-01` | target-size | warn | target 96x21 px is under 24 px | `div.ps-tiles > div.card.card-p-lg > div.row-between > a.small` | 60 |
+| `P-01` | target-size | warn | target 94x21 px is under 24 px | `div.ps-tiles > div.card.card-p-lg > div.row-between > a.small` | 60 |
 | `P-01` | target-size | warn | target 328x21 px is under 24 px | `#site-main > div.container.ps > section.ps-section > a.small` | 24 |
-| `P-01` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 40 |
-| `P-01` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 20 |
+| `P-01` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 40 |
+| `P-01` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 20 |
 | `P-01` | target-size | warn | target 324x18 px is under 24 px | `div.shero-inner.container > div.shero-aside > div.card.card-p-lg > a.xs` | 4 |
 | `P-01` | target-size | warn | target 358x21 px is under 24 px | `#site-main > div.container.ps > section.ps-section > a.small` | 24 |
 | `P-01` | target-size | warn | target 686x18 px is under 24 px | `div.shero-inner.container > div.shero-aside > div.card.card-p-lg > a.xs` | 4 |
@@ -453,66 +438,66 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `P-01` | target-size | warn | target 1232x21 px is under 24 px | `#site-main > div.container.ps > section.ps-section > a.small` | 8 |
 | `P-01` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 40 |
 | `P-02` | target-size | warn | target 294x21 px is under 24 px | `section.ps-section > div.grid.grid-3 > div.card.card-p-lg > a.small` | 2 |
-| `P-02` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-02` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-02` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-02` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-02` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-02` | target-size | warn | target 324x21 px is under 24 px | `section.ps-section > div.grid.grid-3 > div.card.card-p-lg > a.small` | 2 |
 | `P-02` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-02` | target-size | warn | target 310x21 px is under 24 px | `section.ps-section > div.grid.grid-3 > div.card.card-p-lg > a.small` | 2 |
 | `P-02` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-02` | target-size | warn | target 350x21 px is under 24 px | `section.ps-section > div.grid.grid-3 > div.card.card-p-lg > a.small` | 4 |
 | `P-02` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-03` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-03` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-03` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-03` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-03` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-03` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-03` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-03` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-04` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-04` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-04` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-04` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-04` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-04` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-04` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-04` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-05` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-05` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-05` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-05` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-05` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-05` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-05` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-05` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
 | `P-06` | heading-skip | warn | heading jumps from h1 to h3 | `div.ps-two > div.card.card-p-lg > div.row-between.wrap > h3` | 10 |
-| `P-06` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-06` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-06` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-06` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-06` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-06` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-06` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-06` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
 | `P-07` | heading-skip | warn | heading jumps from h1 to h3 | `article.review.is-compact > div.review-text > div.row.wrap > h3.review-title` | 10 |
-| `P-07` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-07` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-07` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-07` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-07` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-07` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-07` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-07` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-08` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-08` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-08` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-08` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-08` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-08` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-08` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-08` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
 | `P-09` | heading-skip | warn | heading jumps from h1 to h3 | `div.container.ps > div.ps-tiles > div.card.card-p-lg > h3` | 10 |
-| `P-09` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-09` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-09` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-09` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-09` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-09` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-09` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-09` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
 | `P-10` | heading-skip | warn | heading jumps from h1 to h3 | `div.ps-two > div.stack > div.card.card-p-lg > h3` | 10 |
 | `P-10` | target-size | warn | target 294x21 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.small` | 4 |
 | `P-10` | target-size | warn | target 294x18 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.xs` | 4 |
-| `P-10` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-10` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-10` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-10` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-10` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-10` | target-size | warn | target 324x21 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.small` | 4 |
 | `P-10` | target-size | warn | target 324x18 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.xs` | 4 |
 | `P-10` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
@@ -522,92 +507,107 @@ _Written by `npm run qa:responsive` (scripts/qa-responsive.mjs). Fail = horizont
 | `P-10` | target-size | warn | target 450x21 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.small` | 8 |
 | `P-10` | target-size | warn | target 450x18 px is under 24 px | `div.ps-two > div.stack > div.card.card-p-lg > a.xs` | 8 |
 | `P-10` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-11` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-11` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-11` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-11` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-11` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-11` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-11` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-11` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
-| `P-12` | target-size | warn | target 124x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
+| `P-12` | target-size | warn | target 116x21 px is under 24 px | `div.container.site2-foot-grid > div.site2-foot-col > p.small > a` | 20 |
 | `P-12` | target-size | warn | target 328x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
-| `P-12` | target-size | warn | target 66x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
+| `P-12` | target-size | warn | target 65x18 px is under 24 px | `div.site2 > footer.site2-foot > div.container.site2-foot-legal > a` | 10 |
 | `P-12` | target-size | warn | target 358x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-12` | target-size | warn | target 356x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 10 |
 | `P-12` | target-size | warn | target 230x21 px is under 24 px | `footer.site2-foot > div.container.site2-foot-grid > div.site2-foot-col > a` | 20 |
 | `M-10` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
 | `M-10` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 30 |
-| `M-10` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-10` | target-size | warn | target 51x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-10` | target-size | warn | target 66x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-10` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-10` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 20 |
+| `M-10` | target-size | warn | target 50x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-10` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-10` | target-size | warn | target 55x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 6 |
 | `M-11` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 30 |
-| `M-11` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-11` | target-size | warn | target 51x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-11` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-11` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-11` | target-size | warn | target 50x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-11` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-11` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 16 |
 | `M-11` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 210 |
-| `M-11` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-11` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-12` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-12` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-12` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
 | `M-12` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 30 |
-| `M-12` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-12` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-12` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 6 |
+| `M-12` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-12` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-12` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 8 |
 | `M-13` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
 | `M-13` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-13` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-13` | target-size | warn | target 81x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-13` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-13` | target-size | warn | target 77x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-13` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 16 |
 | `M-13` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 190 |
-| `M-13` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-13` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-14` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 30 |
-| `M-14` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-14` | target-size | warn | target 152x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-14` | target-size | warn | target 29x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-14` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-14` | target-size | warn | target 150x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-14` | target-size | warn | target 28x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-14` | target-size | warn | target 54x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-14` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 20 |
-| `M-14` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-14` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-14` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 210 |
-| `M-14` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-14` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-15` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
 | `M-15` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 30 |
-| `M-15` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-15` | target-size | warn | target 55x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-15` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-15` | target-size | warn | target 52x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-15` | target-size | warn | target 42x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-15` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 18 |
-| `M-15` | target-size | warn | target 57x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-15` | target-size | warn | target 55x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-15` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 260 |
-| `M-15` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-15` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-16` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
 | `M-16` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-16` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-16` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 20 |
-| `M-16` | target-size | warn | target 57x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-16` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-16` | target-size | warn | target 87x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-16` | target-size | warn | target 55x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-16` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 110 |
+| `M-16` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-17` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-17` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-17` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
 | `M-17` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 20 |
 | `M-17` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 110 |
-| `M-17` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-17` | target-size | warn | target 36x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
-| `M-17` | target-size | warn | target 152x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-17` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-17` | target-size | warn | target 33x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-17` | target-size | warn | target 150x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-18` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
 | `M-18` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-18` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-18` | target-size | warn | target 24x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-18` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-18` | target-size | warn | target 23x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-18` | target-size | warn | target 54x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-18` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 120 |
-| `M-18` | target-size | warn | target 91x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-18` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-19` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
-| `M-19` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-19` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
 | `M-19` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 30 |
-| `M-19` | target-size | warn | target 152x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-19` | target-size | warn | target 150x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-20` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 20 |
-| `M-20` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-20` | target-size | warn | target 57x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-20` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-20` | target-size | warn | target 55x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-20` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 10 |
 | `M-21` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 60 |
-| `M-21` | target-size | warn | target 68x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
-| `M-21` | target-size | warn | target 29x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-21` | target-size | warn | target 28x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
 | `M-21` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 10 |
+| `M-21` | target-size | warn | target 54x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 23x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 52x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 42x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 87x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-21` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 210 |
+| `M-21` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-22` | heading-skip | warn | heading jumps from h1 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 10 |
+| `M-22` | heading-skip | warn | heading jumps from h2 to h4 | `section.live > header.live-head > div.grow > h4.live-title` | 30 |
+| `M-22` | target-size | warn | target 65x18 px is under 24 px | `div.card.card-p-none > header.manual-head > div.manual-lessons > a.xs` | 10 |
+| `M-22` | target-size | warn | target 75x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-22` | target-size | warn | target 41x22 px is under 24 px | `div.manual-body > figure.figure > figcaption > a.figure-code` | 20 |
+| `M-22` | target-size | warn | target 50x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
+| `M-22` | target-size | warn | target 48x20 px is under 24 px | `div.live-body > ul.live-list > li > a.live-code` | 210 |
+| `M-22` | target-size | warn | target 85x18 px is under 24 px | `section.live > footer.live-foot > span.live-source > a` | 10 |
