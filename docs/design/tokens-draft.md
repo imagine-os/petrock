@@ -97,3 +97,36 @@ Radii observed: 0 (50, mostly rectangles), **8 px (38 - inputs, cards, buttons)*
 Two sources in use: (1) **Hugeicons outline** (`Huge-icon/<category>/outline/<name>`: notification, chat-notification, user, direction-right, information-circle), (2) a custom `_light` / `_line_light` set on the Design System page (`Home_light`, `Setting_line_light`, `Question_light`, `pie_chart_light`, `Chart_light`), plus one-offs `Expand_left` (back chevron, 32 uses), `Ellipsis horizontal 1 - 16px`, `Arrow-Left`, `Message`, `logo_icon 1` (42x40 brand mark), iOS status-bar glyphs (Wifi, Mobile Signal). Recommendation: standardise on one outline set (Hugeicons or Lucide) at 16/20/24 px, keep `logo_icon` as the only custom asset.
 
 ---
+
+## 7. Implemented tokens (2026-09-18, Figma fidelity part a)
+
+`src/design/tokens.ts` now carries the values read from the Figma node JSON in `docs/design/fidelity-audit.md` (section 1, every value with its node id). Generated into `src/styles/tokens.css` by `npm run tokens`. What moved off the draft above:
+
+| Token | Value (light) | Figma role |
+|---|---|---|
+| `--font-sans` | Open Sans 400/600/700 (`@fontsource/open-sans`) | every mobile + front desk text (D-188) |
+| `--font-display` | Be Vietnam Pro 400/500/600 (`@fontsource/be-vietnam-pro`) | auth titles, profile / pet names, settings rows, desk detail headings, StatTile values |
+| `--fs-lg-2` / `--fs-xl-2` | 18 / 22 px | calendar month, auth title |
+| `--lh-title` / `--ls-body` / `--ls-button` | 1.35 / .01em / .04em | mobile titles, 16 px body, desk buttons |
+| `--color-bg` | `#F4F0FF` | desk canvas (was `#F4F6FA`) |
+| `--color-bg-phone` / `-list` / `-form` | `#FFFFFF` / `#F4F6FA` / `#EEF2F5` | home & auth / list screens / booking + pet forms (`spec.tone`, PhoneShell) |
+| `--color-band` | `#EEF2F5` | grey band behind the Services tiles |
+| `--color-title` / `--color-text` | `#000000` / `#181818` | mobile page titles / body, card titles, input values |
+| `--color-label` / `--color-text-faint` | `#808080` / `#A1A1A1` | field labels, home section labels / hints |
+| `--color-text-secondary` / `--color-text-option` | `#304050` / `#3B4256` | card descriptions / checkbox labels |
+| `--color-border` / `-card` / `-input` / `-bar` / `-row` / `-track` / `-strong` / `-subtle` | `#DFDFDF` / `#D8DADE` / `#F1F1F1` / `#EDEDED` / `#D4D4D4` / `#D0D5DD` / `#B6B6B6` / `#F3F3F3` | selects + list rules / cards / mobile text input / desk bar + search / table rows / stepper track / header rule / desk card stroke |
+| `--color-border-primary` | `#9D67EF` (2 px) | selected pet / booking card |
+| `--color-surface-tint-band` | `#DED0E9` | grooming upsell band |
+| `--color-icon-primary` / `--color-accent-coral` / `--color-icon-header` / `--color-icon-muted` | `#9D67EF` / `#FD866E` / `#33363F` / `#C0C2D4` | settings-row icon pair / back chevron / row chevron |
+| `--color-success` / `-text` / `-strong` | `#27B14E` / `#039B00` / `#148F00` | status pill / fine print / desk detail |
+| `--color-warn` / `--color-danger-soft` / `--color-badge` | `#FF7A00` / `#FF6868` / `#BF0000` | pending / needs details / nav badge dot |
+| `--color-completed` / `-bg` | `#25D9AB` / `#E9FBF7` | desk "Completed" badge, `checked_out` hue |
+| `--color-table-head` / `-text` / `--color-table-zebra` | `#552583` / `#FFFFFF` / `rgba(0,0,0,.06)` | table head, form-table zebra |
+| `--r-input` / `--r-cb` | 4 / 3 px | mobile text input / table checkbox |
+| `--shadow-md` = `--shadow-desk` / `--shadow-pet` | `0 2 4 -2 .06 + 0 5 8 -2 .08` black / `0 0 5 rgba(68,29,103,.35)` | desk cards / unselected pet card; mobile cards carry no shadow |
+| `--h-bottomnav` / `--h-topbar` / `--w-sidebar` | 71 / 80 / 243 px | Navbar / top bar / sidebar |
+| `--h-control` / `-sm` / `-xs` / `--h-row` / `--h-thead` | 48 / 40 / 28 / 44 / 49 px | buttons + inputs / compact / mobile select / table row / head |
+
+Dark theme (no Figma dark screens) is derived from the same palette: bg `#14131A`, surface `#1C1C24`, text `#F4F6FA`, muted `#A9ABBD`, borders `rgba(255,255,255,.12)`, primary lifted to `#B18AE0`, table head `{primary700}`, coral / purple icon pair kept. The `sunset` brand still resolves every placeholder. The 12 px floor (D-175) stays: Figma 8 / 10 px roles render at `--fs-xs` with the Figma colour and weight.
+
+Shell skins: `PhoneShell` sets `--r-field: var(--r-input)`, `--color-border-field: var(--color-border-input)`, `--fs-field: 16px`, `--fw-field: 600`, `--section-title-*` (grey 400 labels), `--shadow-card: none`; `DesktopShell` sets `--r-field: var(--r-md)`, `--color-border-field: var(--color-border-bar)`, `--fs-field: 14px`, `--shadow-card: var(--shadow-desk)`, `--color-border-card-skin: var(--color-border-subtle)`. Components read these so one CSS serves both surfaces.

@@ -1,10 +1,13 @@
-@font-face { font-family: 'Inter Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 90.49%; descent-override: 22.56%; line-gap-override: 0%; size-adjust: 107.06%; }
+/* Metric-compatible fallbacks while the @fontsource files load (Open Sans / Be Vietnam Pro vs Arial). */
+@font-face { font-family: 'Open Sans Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 101.18%; descent-override: 27.73%; line-gap-override: 0%; size-adjust: 105.64%; }
+@font-face { font-family: 'Be Vietnam Pro Fallback'; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 93.9%; descent-override: 28.2%; line-gap-override: 0%; size-adjust: 107.6%; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body, #root { min-height: 100%; }
 html { background: var(--color-bg); }
 body { margin: 0; min-height: 100vh; font-family: var(--font-sans); font-size: var(--fs-sm); line-height: var(--lh-base); color: var(--color-text); background: var(--color-bg); -webkit-font-smoothing: antialiased; transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out); }
-h1, h2, h3, h4 { margin: 0; line-height: var(--lh-tight); color: var(--color-heading); font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
+h1, h2, h3, h4 { margin: 0; line-height: var(--lh-title); color: var(--color-heading); font-weight: var(--fw-semibold); }
+.font-display { font-family: var(--font-display); }
 h1 { font-size: var(--fs-xl); } h2 { font-size: var(--fs-lg); } h3 { font-size: var(--fs-md); } h4 { font-size: var(--fs-sm); }
 p { margin: 0; }
 a { color: var(--color-primary-text); text-decoration: none; } a:hover { text-decoration: underline; }

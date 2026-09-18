@@ -33,7 +33,7 @@ export function TokensPage() {
         <div className="row wrap">{BOOKING_STATUSES.map((s) => <StatusBadge key={s} status={s} />)}</div>
         <div className="swatches">{Object.entries(bookingHues).map(([k, h]) => <Swatch key={k} name={k} value={`${h.fg} / ${h.bg}`} cssVar={`--status-${k}-bg`} />)}</div>
       </Section>
-      <Section title="Typography" description="Inter only. 12 / 14 / 16 / 20 / 24 / 32 with 400 / 500 / 600 / 700.">
+      <Section title="Typography" description="Open Sans 400 / 600 / 700 (--font-sans) and Be Vietnam Pro 400 / 500 / 600 (--font-display, D-185). 12 / 14 / 16 / 18 / 20 / 22 / 24 / 32; Figma 8 / 10 px roles render at the 12 px floor.">
         <Card><div className="typescale">{(['fs-xs', 'fs-sm', 'fs-md', 'fs-lg', 'fs-xl', 'fs-2xl'] as const).map((k) => <div key={k} className="typescale-row"><code className="xs muted">{k} · {typeTokens[k]}</code><span style={{ fontSize: `var(--${k})`, fontWeight: k === 'fs-2xl' ? 700 : k.endsWith('lg') || k.endsWith('xl') ? 600 : 400, lineHeight: 1.2 }}>Rock out with your paws out</span></div>)}</div></Card>
       </Section>
       <div className="grid grid-2">
