@@ -106,67 +106,58 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
--- core · Auth one-time codes: Six-digit codes for email verification, password reset and sign-in confirmation. 10 minute expiry, 5 attempts, one live code per email + purpose.
-create table if not exists public.auth_codes (
+-- hotel · Booking change requests: A pet parent asks to modify dates, add / remove a pet, add grooming or cancel a stay. The front desk approves or declines; approving a cancellation of a confirmed stay is PIN-gated (R-I06).
+create table if not exists public.booking_change_requests (
   -- Primary key
   id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  user_id uuid references public.users(id) on delete set null,
-  email text not null,
-  purpose text not null check (purpose in ('verify_email', 'reset_password', 'sign_in')),
-  channel text not null check (channel in ('email', 'sms')),
-  -- Plain in the mock so the demo can show it; hashed server-side later
-  code text not null,
-  expires_at timestamptz not null,
-  consumed_at timestamptz,
-  attempts integer not null
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  customer_id uuid not null references public.customers(id) on delete set null,
+  kind text not null check (kind in ('modify_dates', 'add_pet', 'remove_pet', 'add_grooming', 'cancel', 'other')),
+  requested_check_in timestamptz,
+  requested_check_out timestamptz,
+  pet_ids jsonb,
+  message text,
+  status text not null check (status in ('open', 'approved', 'declined', 'withdrawn')),
+  handled_by uuid references public.users(id) on delete set null,
+  handled_at timestamptz,
+  staff_note text
 );
-create index if not exists auth_codes_user_id_idx on public.auth_codes(user_id);
-create trigger auth_codes_touch before update on public.auth_codes for each row execute function public.touch_updated_at();
+create index if not exists booking_change_requests_location_idx on public.booking_change_requests(location_id);
+create index if not exists booking_change_requests_booking_id_idx on public.booking_change_requests(booking_id);
+create index if not exists booking_change_requests_customer_id_idx on public.booking_change_requests(customer_id);
+create index if not exists booking_change_requests_handled_by_idx on public.booking_change_requests(handled_by);
+create trigger booking_change_requests_touch before update on public.booking_change_requests for each row execute function public.touch_updated_at();
 
--- core · Auth credentials: Customer email + password login (mock hash today; a real auth provider later). Tracks verification, failed attempts and lockout.
--- access:
---   · customer read own
---   · system write
-create table if not exists public.auth_credentials (
+-- hotel · Stay care notes: Per pet per hotel stay: feeding, own food, belongings, flea medication brand and date, extra notes (the customer fills these in C-32; the desk reads them at check-in).
+create table if not exists public.booking_pet_care (
   -- Primary key
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  user_id uuid not null references public.users(id) on delete set null,
-  -- Lower-cased; unique
-  email text not null,
-  -- Mock FNV-1a today; bcrypt/argon2 server-side later
-  password_hash text not null,
-  email_verified boolean not null default false,
-  email_verified_at timestamptz,
-  phone text,
-  failed_attempts integer not null,
-  locked_until timestamptz,
-  last_sign_in_at timestamptz,
-  password_changed_at timestamptz,
-  terms_accepted_at timestamptz not null,
-  -- Last "remember me" choice (30 days vs session)
-  remember_me boolean not null default false
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  booking_pet_id uuid not null references public.booking_pets(id) on delete set null,
+  pet_id uuid not null references public.pets(id) on delete set null,
+  feeding_instructions text,
+  meals_per_day text,
+  own_food boolean not null default false,
+  -- Bed, toys, leash... brought along
+  belongings text,
+  medication_count integer,
+  -- e.g. '1 daily (AM only)'
+  dosing_frequency text,
+  flea_brand text,
+  flea_last_dose_on date,
+  emergency_contact text,
+  notes text
 );
-create index if not exists auth_credentials_user_id_idx on public.auth_credentials(user_id);
-create trigger auth_credentials_touch before update on public.auth_credentials for each row execute function public.touch_updated_at();
-
--- system · Auth events: Sign-up, sign-in, failed attempts, lockouts, code sends, password resets. Feeds the security audit and the owner reports.
-create table if not exists public.auth_events (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  user_id uuid references public.users(id) on delete set null,
-  email text,
-  kind text not null check (kind in ('sign_up', 'email_verified', 'sign_in', 'sign_in_failed', 'locked', 'sign_out', 'otp_sent', 'otp_failed', 'password_reset_requested', 'password_reset')),
-  page_code text,
-  details jsonb
-);
-create index if not exists auth_events_user_id_idx on public.auth_events(user_id);
-create trigger auth_events_touch before update on public.auth_events for each row execute function public.touch_updated_at();
+create index if not exists booking_pet_care_booking_id_idx on public.booking_pet_care(booking_id);
+create index if not exists booking_pet_care_booking_pet_id_idx on public.booking_pet_care(booking_pet_id);
+create index if not exists booking_pet_care_pet_id_idx on public.booking_pet_care(pet_id);
+create trigger booking_pet_care_touch before update on public.booking_pet_care for each row execute function public.touch_updated_at();
 
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
@@ -367,27 +358,6 @@ create table if not exists public.discounts (
 );
 create index if not exists discounts_room_type_id_idx on public.discounts(room_type_id);
 create trigger discounts_touch before update on public.discounts for each row execute function public.touch_updated_at();
-
--- people · Emergency contacts: Who to call about a pet when the parent is unreachable (customer-level, optionally pinned to one pet). Captured on the Add / Edit pet wizard step "Vet & emergency".
--- access:
---   · customer read/write own
---   · staff read
-create table if not exists public.emergency_contacts (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  customer_id uuid not null references public.customers(id) on delete set null,
-  pet_id uuid references public.pets(id) on delete set null,
-  name text not null,
-  phone text not null,
-  -- e.g. Partner, Neighbour, Dog walker
-  relationship text,
-  note text
-);
-create index if not exists emergency_contacts_customer_id_idx on public.emergency_contacts(customer_id);
-create index if not exists emergency_contacts_pet_id_idx on public.emergency_contacts(pet_id);
-create trigger emergency_contacts_touch before update on public.emergency_contacts for each row execute function public.touch_updated_at();
 
 -- people · Employees: Staff records with job, status, calendar colour, working hours and hashed PIN.
 create table if not exists public.employees (
@@ -645,24 +615,6 @@ create table if not exists public.permissions (
   granted boolean not null default false
 );
 create trigger permissions_touch before update on public.permissions for each row execute function public.touch_updated_at();
-
--- pets · Pet lookup lists: Extendable option lists for pet forms: breeds and colours (entities 5: "extendable inline via +"). Customers and staff can add a value from the form.
--- access:
---   · everyone read
---   · signed-in add
-create table if not exists public.pet_lookups (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  kind text not null check (kind in ('breed', 'color')),
-  value text not null,
-  sort_order integer not null,
-  active boolean not null default false,
-  -- user id when added from a form
-  added_by text
-);
-create trigger pet_lookups_touch before update on public.pet_lookups for each row execute function public.touch_updated_at();
 
 -- pets · Pets: Dogs (and other pets) with profile, care instructions and approval status.
 create table if not exists public.pets (

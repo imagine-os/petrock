@@ -1,0 +1,23 @@
+.estcard { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-card); padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); box-shadow: var(--shadow-sm); }
+.estcard.is-compact { padding: var(--sp-3); gap: var(--sp-2); }
+.estcard-head { display: flex; align-items: center; gap: 10px; }
+.estcard-icon { width: 32px; height: 32px; border-radius: var(--r-md); background: var(--color-primary-soft); color: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.estcard-title { font-size: var(--fs-md); color: var(--color-primary-text); flex: 1; min-width: 0; }
+.estcard-headline { font-weight: var(--fw-bold); color: var(--color-success); font-size: var(--fs-md); }
+.estcard-lines { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.estcard-line { display: flex; justify-content: space-between; gap: var(--sp-3); font-size: var(--fs-xs); }
+.estcard-line dt { display: flex; flex-direction: column; gap: 1px; min-width: 0; color: var(--color-text); }
+.estcard-line dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.estcard-qty { font-size: var(--fs-2xs); color: var(--color-text-faint); }
+.estcard-line.is-discount dd, .estcard-line.is-discount .estcard-label { color: var(--color-success); }
+.estcard-line.is-tax dt, .estcard-line.is-fee dt { color: var(--color-text-muted); }
+.estcard-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--color-border); padding-top: var(--sp-2); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); color: var(--color-text-muted); }
+.estcard-total strong { font-size: var(--fs-lg); color: var(--color-heading); letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; }
+.estcard-extras { display: flex; flex-direction: column; gap: 4px; }
+.estcard-extra { display: flex; justify-content: space-between; gap: var(--sp-3); font-size: var(--fs-sm); }
+.estcard-extra.is-strong { font-weight: var(--fw-semibold); color: var(--color-heading); }
+.estcard-extra.tone-muted { color: var(--color-text-muted); font-size: var(--fs-xs); }
+.estcard-notes { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.estcard-notes li { display: flex; gap: 6px; align-items: flex-start; font-size: var(--fs-2xs); color: var(--color-text-muted); }
+.estcard-notes .icon { flex: none; margin-top: 2px; color: var(--color-info); }
+.estcard-foot { font-size: var(--fs-2xs); color: var(--color-text-faint); }
