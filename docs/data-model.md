@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (46)
 
 ### Core & locations
 
@@ -557,6 +557,28 @@ _Source: entities 15_
 | `issued_at` | timestamptz, null |  |
 | `footer` | text, null |  |
 
+#### `payment_methods` (global)
+Cards a customer saved in the app. Only brand, last4, expiry and the provider token are stored (mock now; Stripe PaymentMethod ids later).  
+_Source: entities 16, Payment-1.png, R-M22_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid | -> `customers`  |
+| `type` | enum (card \| cash) |  |
+| `brand` | enum (visa \| mastercard \| amex \| discover \| other), null |  |
+| `last4` | text, null |  |
+| `exp_month` | int, null |  |
+| `exp_year` | int, null |  |
+| `holder_name` | text, null |  |
+| `billing_zip` | text, null |  |
+| `is_default` | bool |  |
+| `provider` | text | mock | stripe |
+| `provider_token` | text, null | Tokenised reference; never a PAN |
+| `status` | enum (active \| expired \| removed) |  |
+
 #### `payments` (per location)
 Payment attempts and results through the PaymentProvider (mock now, Stripe later).  
 _Source: entities 16_
@@ -615,6 +637,20 @@ _Source: R-H04, R-H05_
 
 ### Messages, reviews & feedback
 
+#### `chat_quick_replies` (global)
+Canned messages offered above the chat composer for customers and staff (C-82, F-61).  
+_Source: D-018 (chat best practices)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `audience` | enum (customer \| staff) |  |
+| `text` | text | May contain {pet} placeholder |
+| `sort_order` | int |  |
+| `active` | bool |  |
+
 #### `conversations` (per location)
 One Front Desk chat thread per customer per location.  
 _Source: entities 22_
@@ -631,6 +667,21 @@ _Source: entities 22_
 | `unread_staff` | int |  |
 | `unread_customer` | int |  |
 | `status` | enum (open \| closed) |  |
+
+#### `faq_items` (global)
+Help & support questions and answers grouped by topic (C-77).  
+_Source: profile.jpg (Help)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `question` | text |  |
+| `answer` | text |  |
+| `topic` | enum (booking \| payment \| vaccines \| app \| other) |  |
+| `sort_order` | int |  |
+| `active` | bool |  |
 
 #### `feedback` (per location)
 Feedback staff leave from any page (FeedbackButton); the owner reads it in an inbox.  
@@ -669,6 +720,21 @@ _Source: entities 22_
 | `sent_at` | timestamptz |  |
 | `read` | bool |  |
 
+#### `notification_prefs` (global)
+Per user per category: push / email / SMS on or off (C-75).  
+_Source: setting.jpg, R-M23_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `user_id` | uuid | -> `users`  |
+| `category` | enum (bookings \| vaccines \| chat \| payments \| promotions) |  |
+| `push` | bool |  |
+| `email` | bool |  |
+| `sms` | bool |  |
+
 #### `notifications` (global)
 In-app notifications to a user (booking confirmed, payment done, vaccine expiring...).  
 _Source: entities 21_
@@ -703,7 +769,44 @@ _Source: entities 23_
 | `tags` | json, null |  |
 | `status` | enum (pending \| published \| archived) |  |
 
+#### `support_requests` (per location)
+Help form submissions from the app; the front desk / owner answers them (C-77).  
+_Source: profile.jpg (Help)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid, null | -> `customers`  |
+| `user_id` | uuid | -> `users`  |
+| `user_name` | text |  |
+| `email` | text, null |  |
+| `topic` | enum (booking \| payment \| vaccines \| app \| other) |  |
+| `message` | text |  |
+| `status` | enum (new \| open \| resolved) |  |
+| `staff_reply` | text, null |  |
+
 ### System
+
+#### `account_deletion_requests` (global)
+App-store requirement: a customer can request deletion; 30-day grace period, then anonymisation (R-M21).  
+_Source: setting.jpg, Frame 1171276432.png, R-M05_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `user_id` | uuid | -> `users`  |
+| `customer_id` | uuid, null | -> `customers`  |
+| `reason` | enum (moving \| no_longer_needed \| privacy \| too_many_notifications \| other), null |  |
+| `details` | text, null |  |
+| `status` | enum (requested \| cancelled \| completed) |  |
+| `requested_at` | timestamptz |  |
+| `scheduled_for` | date | Day the data is anonymised unless cancelled |
+| `completed_at` | timestamptz, null |  |
 
 #### `approvals` (per location)
 Every manager-PIN approval: who approved what, for whom, on which record.  
@@ -742,6 +845,23 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
+
+#### `legal_documents` (global)
+Privacy policy, terms of service and open-source licences shown in the app (C-79); versioned markdown.  
+_Source: app-store requirements (build plan phase 5)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `slug` | text |  |
+| `title` | text |  |
+| `kind` | enum (privacy \| terms \| licenses \| other) |  |
+| `version` | text |  |
+| `effective_on` | date |  |
+| `body` | text | Markdown |
+| `published` | bool |  |
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  
