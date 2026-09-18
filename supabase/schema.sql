@@ -306,6 +306,27 @@ create table if not exists public.discounts (
 create index if not exists discounts_room_type_id_idx on public.discounts(room_type_id);
 create trigger discounts_touch before update on public.discounts for each row execute function public.touch_updated_at();
 
+-- people · Emergency contacts: Who to call about a pet when the parent is unreachable (customer-level, optionally pinned to one pet). Captured on the Add / Edit pet wizard step "Vet & emergency".
+-- access:
+--   · customer read/write own
+--   · staff read
+create table if not exists public.emergency_contacts (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  customer_id uuid not null references public.customers(id) on delete set null,
+  pet_id uuid references public.pets(id) on delete set null,
+  name text not null,
+  phone text not null,
+  -- e.g. Partner, Neighbour, Dog walker
+  relationship text,
+  note text
+);
+create index if not exists emergency_contacts_customer_id_idx on public.emergency_contacts(customer_id);
+create index if not exists emergency_contacts_pet_id_idx on public.emergency_contacts(pet_id);
+create trigger emergency_contacts_touch before update on public.emergency_contacts for each row execute function public.touch_updated_at();
+
 -- people · Employees: Staff records with job, status, calendar colour, working hours and hashed PIN.
 create table if not exists public.employees (
   -- Primary key
@@ -562,6 +583,24 @@ create table if not exists public.permissions (
   granted boolean not null default false
 );
 create trigger permissions_touch before update on public.permissions for each row execute function public.touch_updated_at();
+
+-- pets · Pet lookup lists: Extendable option lists for pet forms: breeds and colours (entities 5: "extendable inline via +"). Customers and staff can add a value from the form.
+-- access:
+--   · everyone read
+--   · signed-in add
+create table if not exists public.pet_lookups (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  kind text not null check (kind in ('breed', 'color')),
+  value text not null,
+  sort_order integer not null,
+  active boolean not null default false,
+  -- user id when added from a form
+  added_by text
+);
+create trigger pet_lookups_touch before update on public.pet_lookups for each row execute function public.touch_updated_at();
 
 -- pets · Pets: Dogs (and other pets) with profile, care instructions and approval status.
 create table if not exists public.pets (

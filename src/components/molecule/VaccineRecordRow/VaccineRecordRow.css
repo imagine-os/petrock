@@ -1,0 +1,14 @@
+.vrow { display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-card); min-width: 0; }
+.vrow-icon { display: inline-flex; padding: 8px; border-radius: 50%; background: var(--color-surface-tint); color: var(--color-primary-text); flex: 0 0 auto; }
+.vrow[data-status="expired"] .vrow-icon, .vrow[data-status="rejected"] .vrow-icon { background: var(--color-danger-bg); color: var(--color-danger); }
+.vrow[data-status="missing"] .vrow-icon { background: var(--color-surface-3); color: var(--color-text-muted); }
+.vrow[data-status="verified"] .vrow-icon { background: var(--color-success-bg); color: var(--color-success); }
+.vrow-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.vrow-head { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.vrow-name { font-weight: var(--fw-semibold); color: var(--color-heading); font-size: var(--fs-sm); }
+.vrow-meta { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.vrow-meta > span { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
+.vrow-proof { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vrow-note { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.vrow-action { flex: 0 0 auto; }
+@media (max-width: 420px) { .vrow { flex-wrap: wrap; } .vrow-action { width: 100%; display: flex; justify-content: flex-end; } }

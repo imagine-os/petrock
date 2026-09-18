@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (41)
 
 ### Core & locations
 
@@ -148,6 +148,24 @@ _Source: entities 1_
 | `note` | text, null |  |
 | `balance` | money | Outstanding balance, USD |
 
+#### `emergency_contacts` (global)
+Who to call about a pet when the parent is unreachable (customer-level, optionally pinned to one pet). Captured on the Add / Edit pet wizard step "Vet & emergency".  
+_Source: customer-home-pets (R-X22)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid | -> `customers`  |
+| `pet_id` | uuid, null | -> `pets`  |
+| `name` | text |  |
+| `phone` | text |  |
+| `relationship` | text, null | e.g. Partner, Neighbour, Dog walker |
+| `note` | text, null |  |
+
+**Access:** customer read/write own; staff read
+
 #### `employees` (per location)
 Staff records with job, status, calendar colour, working hours and hashed PIN.  
 _Source: entities 20_
@@ -175,6 +193,23 @@ _Source: entities 20_
 | `note` | text, null |  |
 
 ### Pets & vaccines
+
+#### `pet_lookups` (global)
+Extendable option lists for pet forms: breeds and colours (entities 5: "extendable inline via +"). Customers and staff can add a value from the form.  
+_Source: entities 5, Pet Edit.png_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (breed \| color) |  |
+| `value` | text |  |
+| `sort_order` | int |  |
+| `active` | bool |  |
+| `added_by` | text, null | user id when added from a form |
+
+**Access:** everyone read; signed-in add
 
 #### `pets` (global)
 Dogs (and other pets) with profile, care instructions and approval status.  
