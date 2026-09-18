@@ -6,7 +6,7 @@ Live: https://imagine-os.github.io/petrock/ (GitHub Pages, deployed from `main` 
 
 ## Stack (binding)
 
-Vite 5 + React 18 + TypeScript strict; `react-router-dom` **HashRouter**; plain CSS with tokens as CSS custom properties (no Tailwind); `base: './'`. Mock data (localStorage) behind the `DataProvider` interface with `CompanyOsProvider` as the REST adapter seam (`docs/reference/company-os.md`). Payments behind `PaymentProvider` (`MockPaymentProvider` now, `StripePaymentProvider` stub; no keys in the repo). Scripts: `dev`, `build` (= tokens + tsc + vite), `typecheck`, `tokens`, `sql`, `specs`, `screenshots`, `qa:responsive` (full D-016 matrix, `docs/qa/responsive-report.*`), `test:pricing`; `node scripts/qa-fixes-e2e.mjs` re-runs the fixed journeys. Chromium is preinstalled at `/opt/pw-browsers`; never run `playwright install`.
+Vite 5 + React 18 + TypeScript strict; `react-router-dom` **HashRouter**; plain CSS with tokens as CSS custom properties (no Tailwind); `base: './'`. Mock data (localStorage) behind the `DataProvider` interface with `CompanyOsProvider` as the REST adapter seam (`docs/reference/company-os.md`). Payments behind `PaymentProvider` (`MockPaymentProvider` now, `StripePaymentProvider` stub; no keys in the repo). Scripts: `dev`, `build` (= tokens + tsc + vite), `typecheck`, `tokens`, `sql`, `specs`, `screenshots`, `qa:responsive` (full D-016 matrix, `docs/qa/responsive-report.*`), `test:pricing`; `node scripts/qa-fixes-e2e.mjs` re-runs the fixed journeys; `node scripts/fidelity-shots.mjs` + `python3 scripts/fidelity-composite.py` rebuild the Figma-vs-app composites in `docs/design/fidelity/`. Chromium is preinstalled at `/opt/pw-browsers`; never run `playwright install`.
 
 ## Folder map
 

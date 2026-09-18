@@ -1,5 +1,5 @@
 /* Figma timeline (all reservation grooming.jpg, front desk-9.jpg): white grid with #D9D9D9 hairlines, week range header 12 px black,
-   day head 54 tall (DOW 12/600 + number 14/600, weekends #148F00, TODAY black pill), alternating white / #EEF2F5 day columns,
+   day head 54 tall (DOW 12/600 + number 14/600, weekends #148F00, TODAY black pill), alternating white / #CDD2D8 day columns (head #B1B8C2),
    dashed today line, grey group rows, 54 px room rows with a 32 px grey disc, flat square blocks (status hue, black 12 px text). */
 .rtl { --rtl-label-w: 135px; --rtl-lane-h: 46px; --rtl-lane-gap: 4px; position: relative; min-width: 0; }
 .rtl-scroll { overflow: auto; border: 1px solid var(--color-border-grid); background: var(--color-surface); max-height: 75vh; }
@@ -13,12 +13,12 @@
 .rtl-corner-label { display: flex; align-items: center; padding: 0 var(--sp-6); font-weight: var(--fw-semibold); font-size: var(--fs-md); color: var(--color-title); }
 .rtl-corner { height: 28px; } .rtl-dayhead .rtl-corner { height: 54px; }
 .rtl-day { flex: 1 1 0; min-width: var(--rtl-day-min); height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); font-size: var(--fs-xs); gap: 2px; position: relative; background: var(--color-surface); }
-.rtl-day.is-alt { background: var(--color-surface-3); }
+.rtl-day.is-alt { background: var(--color-grid-alt-head); }
 .rtl-dow { font-size: var(--fs-xs); font-weight: var(--fw-semibold); letter-spacing: .02em; color: var(--color-text); line-height: 1; } .rtl-dnum { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-text); line-height: 1; }
 .rtl-day.is-weekend .rtl-dow, .rtl-day.is-weekend .rtl-dnum { color: var(--color-success-strong); }
 .rtl-day.is-today .rtl-dow { color: var(--color-text-faint); }
 .rtl-todaytag { font-size: var(--fs-xs); letter-spacing: .04em; font-weight: var(--fw-bold); line-height: 1; color: var(--color-text-on-primary); background: var(--color-title); border-radius: var(--r-pill); padding: 3px 7px; }
-.rtl-grouphead { width: 100%; border: 0; text-align: left; background: var(--color-border-card); color: var(--color-title); font-weight: var(--fw-semibold); font-size: var(--fs-sm); padding: 0 var(--sp-5); height: 26px; gap: 10px; align-items: center; position: sticky; left: 0; }
+.rtl-grouphead { width: 100%; border: 0; text-align: left; background: var(--color-border-grid); color: var(--color-title); font-weight: var(--fw-semibold); font-size: var(--fs-sm); padding: 0 var(--sp-5); height: 26px; gap: 10px; align-items: center; position: sticky; left: 0; }
 .rtl-groupcaret { color: var(--color-title); transition: transform var(--dur-fast); } .rtl-groupcaret.is-collapsed { transform: rotate(-90deg); }
 .rtl-groupcount { display: none; }
 .rtl-row { min-height: calc(8px + var(--rtl-lanes) * (var(--rtl-lane-h) + var(--rtl-lane-gap))); }
@@ -28,7 +28,7 @@
 /* dashed today line at the middle of the today column */
 .rtl-cells { background-image: repeating-linear-gradient(to bottom, var(--color-text-muted) 0 4px, transparent 4px 8px); background-size: 1px 100%; background-repeat: no-repeat; background-position: var(--rtl-today) 0; }
 .rtl-cell { flex: 1 1 0; min-width: var(--rtl-day-min); border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); min-height: 100%; background: var(--color-surface); }
-.rtl-cell.is-alt { background: var(--color-surface-3); }
+.rtl-cell.is-alt { background: var(--color-grid-alt); }
 .rtl-cell.is-over { outline: 2px dashed var(--color-primary); outline-offset: -2px; background: var(--color-primary-soft); }
 .rtl-block { position: absolute; height: var(--rtl-lane-h); border: 0; border-radius: 0; padding: 0 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--fs-xs); font-weight: var(--fw-regular); text-align: center; cursor: pointer; overflow: hidden; white-space: nowrap; z-index: 2; background: var(--timeline-confirmed-fill); color: var(--color-title); }
 .rtl-block[data-status="requested"] { background: var(--timeline-requested-fill); } .rtl-block[data-status="pending_vaccines"] { background: var(--timeline-pending_vaccines-fill); }

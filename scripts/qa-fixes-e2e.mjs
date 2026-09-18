@@ -17,9 +17,9 @@ mkdirSync(SHOTS, { recursive: true });
 const results = [];
 const check = (name, ok, detail = '') => { results.push({ name, ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ` - ${detail}` : ''}`); };
 
-async function session(browser, userId, width = 1280) {
+async function session(browser, userId, width = 1280, devMode = false) {
   const ctx = await browser.newContext({ viewport: { width, height: width < 600 ? 844 : 900 } });
-  await ctx.addInitScript(...initScript('light', '/desk', { userId }));
+  await ctx.addInitScript(...initScript('light', '/desk', { userId, devMode }));
   const page = await ctx.newPage();
   await page.route(/^https?:\/\/(?!localhost)/, (r) => r.abort());
   const errors = [];
@@ -113,8 +113,9 @@ async function main() {
       await go(page, '/desk');
       await page.evaluate(() => localStorage.removeItem('petrock.sidebar.manager'));
       await page.reload({ waitUntil: 'load' }); await go(page, '/desk');
-      const codes = await page.$$eval('.sidebar-code', (els) => els.map((e) => e.textContent));
-      const title = await page.innerText('.shell-brand-text');
+      const hrefs = await page.$$eval('.sidebar a', (els) => els.map((e) => e.getAttribute('href') ?? '')); // code pills are dev-mode (super admin) only since fidelity part (c): check the routes instead
+      const codes = hrefs.map((h) => (h.endsWith('/admin/approvals') ? 'A-37' : h.endsWith('/admin/employees') ? 'A-30' : h));
+      const title = (await page.getAttribute('.shell-brand', 'title')) ?? ''; // brand is the logo image since fidelity part (c)
       await page.screenshot({ path: new URL('05-manager-menu.jpg', SHOTS).pathname, type: 'jpeg', quality: 60 });
       check('manager menu lists A-37 approvals from /desk', codes.includes('A-37') && !codes.includes('A-30'), `${codes.filter((c) => c.startsWith('A-')).join(',')} · ${title.trim()}`);
       await ctx.close();

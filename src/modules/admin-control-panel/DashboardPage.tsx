@@ -89,7 +89,7 @@ export function DashboardPage() {
     <div className="page stack">
       <PageHeader code="A-01" title="Dashboard" subtitle={`${locLabel} · ${today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`} actions={<Link to="/admin/reports"><Button variant="secondary" icon="chart">Reports</Button></Link>} />
       <div className="acp-kpis">
-        <StatTile label="Revenue today" value={fmtMoney(revenueToday)} tone="primary" icon="dollar" hint={`${fmtMoney(revenueMonth)} this month`} />
+        <StatTile label="Revenue today" value={fmtMoney(revenueToday)} icon="dollar" hint={`${fmtMoney(revenueMonth)} this month`} />
         <StatTile label="Dogs in house" value={fmtInt(inHouse.length)} icon="bed" hint={`${arriving.length} arriving · ${departing.length} departing`} />
         <StatTile label="Grooms today" value={groomsToday.length} icon="scissors" hint={`${dcToday.length} daycare`} />
         <StatTile label="Needs attention" value={pendingVax.length + newFeedback + pendingReviews} icon="flag" hint={`${pendingVax.length} bookings waiting · ${newFeedback} feedback · ${pendingReviews} reviews`} />

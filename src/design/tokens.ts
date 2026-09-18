@@ -141,6 +141,10 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-table-zebra': 'rgba(0,0,0,.06)',
     'color-focus': '{primary400}',
     'color-scrim': 'rgba(50,50,50,.80)',
+    'color-scrim-soft': 'rgba(0,0,0,.20)', // Home Page-5 alert over the phone screen
+    'color-grid-alt': '#CDD2D8',          // timeline alternating day columns (all reservation grooming.jpg)
+    'color-grid-alt-head': '#B1B8C2',     // timeline day head over an alternating column
+    'color-field-fill': '{n-75}',         // Hotel Reservation.png check-in / check-out fields #F2F4F7
     'color-placeholder': '{n-200}',
     'shadow-color': '0,0,0',
   },
@@ -191,6 +195,10 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-table-zebra': 'rgba(255,255,255,.05)',
     'color-focus': '{primaryOnDark}',
     'color-scrim': 'rgba(0,0,0,.72)',
+    'color-scrim-soft': 'rgba(0,0,0,.45)',
+    'color-grid-alt': 'rgba(255,255,255,.07)',
+    'color-grid-alt-head': 'rgba(255,255,255,.13)',
+    'color-field-fill': '{n-800}',
     'color-placeholder': '{n-700}',
     'shadow-color': '0,0,0',
   },

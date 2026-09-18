@@ -183,6 +183,10 @@
   --color-table-zebra: rgba(0,0,0,.06);
   --color-focus: #9D67EF;
   --color-scrim: rgba(50,50,50,.80);
+  --color-scrim-soft: rgba(0,0,0,.20);
+  --color-grid-alt: #CDD2D8;
+  --color-grid-alt-head: #B1B8C2;
+  --color-field-fill: #F4F6FA;
   --color-placeholder: #E0E0E0;
   --shadow-color: 0,0,0;
   --color-success: #27B14E;
@@ -258,6 +262,10 @@
   --color-table-zebra: rgba(255,255,255,.05);
   --color-focus: #B18AE0;
   --color-scrim: rgba(0,0,0,.72);
+  --color-scrim-soft: rgba(0,0,0,.45);
+  --color-grid-alt: rgba(255,255,255,.07);
+  --color-grid-alt-head: rgba(255,255,255,.13);
+  --color-field-fill: #2A2933;
   --color-placeholder: #4B4D5E;
   --shadow-color: 0,0,0;
   --color-success: #5FD65B;
@@ -343,6 +351,10 @@
   --color-table-zebra: rgba(0,0,0,.06);
   --color-focus: #FF9556;
   --color-scrim: rgba(50,50,50,.80);
+  --color-scrim-soft: rgba(0,0,0,.20);
+  --color-grid-alt: #CDD2D8;
+  --color-grid-alt-head: #B1B8C2;
+  --color-field-fill: #F4F6FA;
   --color-placeholder: #E0E0E0;
   --shadow-color: 0,0,0;
   --color-success: #27B14E;
@@ -418,6 +430,10 @@
   --color-table-zebra: rgba(255,255,255,.05);
   --color-focus: #FF9F66;
   --color-scrim: rgba(0,0,0,.72);
+  --color-scrim-soft: rgba(0,0,0,.45);
+  --color-grid-alt: rgba(255,255,255,.07);
+  --color-grid-alt-head: rgba(255,255,255,.13);
+  --color-field-fill: #2A2933;
   --color-placeholder: #4B4D5E;
   --shadow-color: 0,0,0;
   --color-success: #5FD65B;

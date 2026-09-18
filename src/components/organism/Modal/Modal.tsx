@@ -19,7 +19,7 @@ export function Modal({ open, onClose, title, children, footer, size = 'md', clo
   }, [open, onClose]);
   if (!open) return null;
   return createPortal(
-    <div className="modal-scrim" onMouseDown={(e) => { if (closeOnScrim && e.target === e.currentTarget) onClose(); }}>
+    <div className={`modal-scrim ${size === 'alert' ? 'is-alert' : ''}`} onMouseDown={(e) => { if (closeOnScrim && e.target === e.currentTarget) onClose(); }}>
       <div className={`modal modal-${size} ${className}`} role="dialog" aria-modal="true" aria-label={typeof title === 'string' ? title : undefined} ref={ref} tabIndex={-1}>
         <div className="modal-head">{title && <h2 className="modal-title">{title}</h2>}{size !== 'alert' && <IconButton icon="close" label="Close" size="sm" onClick={onClose} />}</div>
         <div className="modal-body">{children}</div>

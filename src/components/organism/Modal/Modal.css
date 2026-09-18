@@ -8,6 +8,8 @@
 .modal-body { padding: var(--sp-4) var(--sp-5); overflow: auto; }
 .modal-foot { display: flex; justify-content: flex-end; gap: var(--sp-2); padding: 0 var(--sp-5) var(--sp-5); flex-wrap: wrap; }
 /* Figma alert (Home Page-5 "Hey!"): 270 wide, r10, centred copy, split footer */
+.modal-scrim.is-alert { background: var(--color-scrim-soft); }
+.modal-alert .modal-foot .btn-ghost { color: var(--color-primary-text); }
 .modal-alert { max-width: 270px; border-radius: var(--r-card); box-shadow: none; text-align: center; }
 .modal-alert .modal-head { justify-content: center; padding: var(--sp-5) var(--sp-4) 0; }
 .modal-alert .modal-body { padding: var(--sp-2) var(--sp-4) var(--sp-4); font-size: var(--fs-sm); color: var(--color-text); }
