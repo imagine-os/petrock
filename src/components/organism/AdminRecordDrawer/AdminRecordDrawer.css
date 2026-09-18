@@ -1,0 +1,9 @@
+.arecord { display: flex; flex-direction: column; gap: var(--sp-4); }
+.arecord-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+.arecord-grid > .is-full { grid-column: 1 / -1; }
+@media (max-width: 480px) { .arecord-grid { grid-template-columns: 1fr; } }
+.arecord-color { display: flex; flex-direction: column; gap: 6px; font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--color-text-muted); }
+.arecord-color input { width: 48px; height: var(--h-control); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); padding: 2px; }
+.arecord-meta { font-size: var(--fs-2xs); color: var(--color-text-faint); display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.arecord-foot { display: flex; gap: var(--sp-2); width: 100%; align-items: center; flex-wrap: wrap; }
+.arecord-foot .grow { flex: 1; }

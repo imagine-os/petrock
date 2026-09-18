@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (47)
+## Tables (41)
 
 ### Core & locations
 
@@ -121,43 +121,6 @@ _Source: entities 20_
 
 ### People & staff
 
-#### `customer_notes` (global)
-Timeline of staff notes on a customer (who, when, pinned). The 100-char customers.note stays the headline note (R-J02).  
-_Source: legacy Notes tab, Customer Details.pdf_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `customer_id` | uuid | -> `customers`  |
-| `author_id` | uuid, null | -> `users`  |
-| `author_name` | text |  |
-| `text` | text |  |
-| `pinned` | bool |  |
-
-**Access:** staff write; owner read
-
-#### `customer_profiles` (global)
-Front desk Customer Details fields that are not on the core customers row: title, home / work phone, alternative contact, reference, attributes (R-J01, Customer Details.pdf).  
-_Source: Customer Details.pdf, entities 1_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `customer_id` | uuid | -> `customers`  |
-| `title` | text, null | Mr. / Ms. / Dr. |
-| `home_phone` | text, null |  |
-| `work_phone` | text, null |  |
-| `alt_contact` | text, null | Name of another person to call |
-| `reference` | text, null | How they heard about Petrock |
-| `attributes` | json, null | Staff flags e.g. VIP, Late payer |
-| `customer_since` | date, null |  |
-
-**Access:** front_desk write; customer read
-
 #### `customers` (global)
 Pet parents. One row per household account; linked to a user when they sign up in the app.  
 _Source: entities 1_
@@ -212,25 +175,6 @@ _Source: entities 20_
 | `note` | text, null |  |
 
 ### Pets & vaccines
-
-#### `pet_profiles` (global)
-Front desk Pet Details fields beyond the core pets row: registration and microchip numbers, approximate-age flag, temper, saved groom style (R-C06, Pet Details .pdf).  
-_Source: Pet Details .pdf, Groom Booking .pdf, entities 2, 13_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `pet_id` | uuid | -> `pets`  |
-| `registration_number` | text, null |  |
-| `microchip_number` | text, null |  |
-| `dob_approximate` | bool | Date of birth is an estimate |
-| `temper` | text, null | Front desk temper (mirrors personality on the app) |
-| `groom_style` | text, null | Saved groom style used to prefill groom bookings |
-| `groom_notes` | text, null |  |
-
-**Access:** front_desk write
 
 #### `pets` (global)
 Dogs (and other pets) with profile, care instructions and approval status.  
@@ -439,28 +383,6 @@ _Source: R-G08..G13_
 | `description` | text, null |  |
 | `active` | bool |  |
 
-#### `appointment_extras` (global)
-Groom Bookings form fields not on the core appointments row: reminder, pickup / delivery, discount %, payment method, include-notes-on-invoice, groom style at booking (Groom Booking .pdf).  
-_Source: Groom Booking .pdf, entities 12_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `appointment_id` | uuid | -> `appointments`  |
-| `reminder` | bool |  |
-| `pickup_at` | timestamptz, null |  |
-| `delivery_at` | timestamptz, null |  |
-| `discount_pct` | numeric | Percent discount applied with manager PIN (R-P01) |
-| `payment_method` | enum (card \| cash), null |  |
-| `include_notes_on_invoice` | bool |  |
-| `groom_style` | text, null |  |
-| `approval_id` | uuid, null | -> `approvals`  |
-| `invoice_id` | uuid, null | -> `invoices`  |
-
-**Access:** front_desk write
-
 #### `appointments` (per location)
 Grooming & Spa appointments: pet, package, add-ons, groomer, time, status, linked hotel booking.  
 _Source: entities 12_
@@ -487,24 +409,6 @@ _Source: entities 12_
 | `total` | money | USD |
 | `payment_status` | enum (pending \| authorized \| paid \| refunded \| failed) |  |
 | `notes` | text, null |  |
-
-#### `groomer_column_prefs` (per location)
-Per staff user per location: groomer column order, colour and hidden state on the grooming day view (Grooming.png context menu).  
-_Source: Grooming.png, open question 82_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `user_id` | uuid | -> `users`  |
-| `groomer_id` | uuid | -> `employees`  |
-| `color` | text, null | Hex tint; null = employee colour |
-| `sort_order` | int |  |
-| `hidden` | bool |  |
-
-**Access:** staff write own
 
 #### `packages` (global)
 Gold / Platinum / Diamond priced by dog size S/M/L/XL/Giant with calendar minutes per size and inclusions.  
@@ -711,24 +615,6 @@ _Source: R-H04, R-H05_
 
 ### Messages, reviews & feedback
 
-#### `conversation_assignments` (per location)
-Which staff member owns a Front Desk chat thread (assign / reassign from the inbox).  
-_Source: message-1.jpg (D-018 improvement)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `conversation_id` | uuid | -> `conversations`  |
-| `assignee_user_id` | uuid, null | -> `users`  |
-| `assignee_name` | text, null |  |
-| `assigned_by` | uuid, null | -> `users`  |
-| `assigned_at` | timestamptz |  |
-
-**Access:** staff write
-
 #### `conversations` (per location)
 One Front Desk chat thread per customer per location.  
 _Source: entities 22_
@@ -840,25 +726,6 @@ _Source: R-I06_
 | `details` | json, null |  |
 | `approved_at` | timestamptz |  |
 
-#### `attachments` (global)
-Mock file uploads from the add forms (customer / pet / appointment / vaccine certificate). URLs are mock:// until storage lands.  
-_Source: Customer/Pet Details .pdf dropzone (R-J11)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `subject_table` | enum (customers \| pets \| appointments \| vaccine_records) |  |
-| `subject_id` | text |  |
-| `name` | text |  |
-| `url` | text |  |
-| `size_bytes` | int |  |
-| `mime` | text, null |  |
-| `uploaded_by` | uuid, null | -> `users`  |
-
-**Access:** staff write
-
 #### `audit_log` (per location)
 Who changed what: table, row, action, diff.  
 _Source: entities 9 (audit)_
@@ -876,21 +743,47 @@ _Source: entities 9 (audit)_
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
 
-#### `lookup_values` (global)
-Extendable dropdown lists used by the add forms: breed, color, city, reference, attribute, customer title, temper (R-J04).  
-_Source: Customer Details.pdf, Pet Details .pdf (+ buttons)_
+#### `backups` (global)
+Log of JSON exports of the mock database (A-43). Each row records who exported, how many tables / rows and the file size.  
+_Source: project brief (backups / export)_
 
 | column | type | notes |
 | --- | --- | --- |
 | `id` | uuid | Primary key |
 | `created_at` | timestamptz |  |
 | `updated_at` | timestamptz |  |
-| `kind` | enum (breed \| color \| city \| reference \| attribute \| customer_title \| temper) |  |
-| `value` | text |  |
-| `sort_order` | int |  |
-| `active` | bool |  |
+| `kind` | enum (manual \| scheduled) |  |
+| `file_name` | text |  |
+| `table_count` | int |  |
+| `row_count` | int |  |
+| `size_bytes` | int |  |
+| `created_by` | uuid, null | -> `users`  |
+| `created_by_name` | text, null |  |
+| `note` | text, null |  |
 
-**Access:** staff write
+**Access:** owner read/write; super_admin read/write
+
+#### `providers` (global)
+Outbound channel configuration: email (None / Gmail / SMTP), SMS (None / Twilio / Petlinx), push (None / FCM / APNs). Secrets are masked; test-send is a stub until an integration exists.  
+_Source: 5.pdf, R-M13_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (email \| sms \| push) |  |
+| `name` | text | Display name (email From name, SMS sender name) |
+| `provider` | text | none | gmail | smtp | twilio | petlinx | fcm | apns |
+| `from_address` | text, null |  |
+| `config` | json, null | Non-secret settings (host, port, sender id) |
+| `secret_masked` | text, null | Last 4 of the API key; the real secret never lives in the mock |
+| `status` | enum (not_configured \| configured \| test_ok \| error) |  |
+| `last_test_at` | timestamptz, null |  |
+| `last_test_result` | text, null |  |
+| `enabled` | bool |  |
+
+**Access:** owner write; super_admin write
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

@@ -1,0 +1,58 @@
+/* admin-control-panel (A-01..A-49) page styles. Tokens only. */
+.acp-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-3); }
+@media (max-width: 1100px) { .acp-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .acp-kpis { grid-template-columns: 1fr; } }
+.acp-two { display: grid; grid-template-columns: 2fr 1fr; gap: var(--sp-4); align-items: start; }
+.acp-two-even { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); align-items: start; }
+@media (max-width: 1000px) { .acp-two, .acp-two-even { grid-template-columns: 1fr; } }
+.acp-card-title { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; }
+.acp-card-title h3 { font-size: var(--fs-md); }
+.acp-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+.acp-item { display: grid; grid-template-columns: auto 1fr auto; gap: var(--sp-3); align-items: center; padding: var(--sp-2) 0; border-bottom: 1px solid var(--color-border-subtle); font-size: var(--fs-sm); }
+.acp-item:last-child { border-bottom: 0; }
+.acp-item-time { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-text-muted); min-width: 64px; }
+.acp-item-main { min-width: 0; } .acp-item-main small { display: block; color: var(--color-text-muted); font-size: var(--fs-xs); }
+.acp-filters { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.acp-filters > * { min-width: 0; }
+.acp-note { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.acp-mono { font-family: var(--font-mono); font-size: var(--fs-xs); }
+.acp-diff { display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-2xs); font-family: var(--font-mono); max-width: 360px; }
+.acp-diff span { white-space: normal; overflow-wrap: anywhere; } .acp-diff del { color: var(--color-danger); text-decoration: line-through; } .acp-diff ins { color: var(--color-success); text-decoration: none; }
+.acp-price-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--sp-2); }
+.acp-price { padding: var(--sp-2) var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface-2); font-size: var(--fs-xs); }
+.acp-price strong { display: block; font-size: var(--fs-md); color: var(--color-heading); }
+.acp-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-4); }
+@media (max-width: 420px) { .acp-loc-grid { grid-template-columns: 1fr; } }
+.acp-loc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); }
+.acp-caps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); }
+@media (max-width: 480px) { .acp-caps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.acp-cap { text-align: center; padding: var(--sp-2); border-radius: var(--r-md); background: var(--color-surface-tint-2); font-size: var(--fs-2xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); }
+.acp-cap strong { display: block; font-size: var(--fs-lg); color: var(--color-heading); letter-spacing: 0; text-transform: none; }
+.acp-quote { display: grid; grid-template-columns: 1fr auto; gap: 4px var(--sp-4); font-size: var(--fs-sm); }
+.acp-quote .is-total { font-weight: var(--fw-bold); color: var(--color-heading); border-top: 1px solid var(--color-border); padding-top: 6px; margin-top: 4px; }
+.acp-quote .is-discount { color: var(--color-success); }
+.acp-menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
+.acp-menu-cat { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-2) 0; border-bottom: 1px solid var(--color-border-subtle); }
+.acp-menu-cat:last-child { border-bottom: 0; }
+.acp-menu-cat small { color: var(--color-text-muted); display: block; font-size: var(--fs-2xs); }
+.acp-menu-preview { border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-sidebar); padding: var(--sp-3); font-size: var(--fs-xs); display: flex; flex-direction: column; gap: 4px; max-height: 420px; overflow: auto; }
+.acp-menu-preview .cat { font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); font-size: var(--fs-2xs); color: var(--color-text-muted); margin-top: 6px; }
+.acp-menu-preview .item { padding: 2px 0 2px 12px; color: var(--color-text); display: flex; justify-content: space-between; } .acp-menu-preview .item code { color: var(--color-text-faint); }
+.acp-menu-preview .is-hidden { opacity: .4; text-decoration: line-through; }
+.acp-review { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-3); }
+.acp-stars { color: var(--color-warn); letter-spacing: 1px; font-size: var(--fs-sm); }
+.acp-empty-inline { color: var(--color-text-faint); font-size: var(--fs-xs); }
+.acp-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+.acp-form-grid > .is-full { grid-column: 1 / -1; }
+@media (max-width: 600px) { .acp-form-grid { grid-template-columns: 1fr; } }
+.acp-badge-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.acp-provider { display: grid; grid-template-columns: auto 1fr auto; gap: var(--sp-3); align-items: center; }
+.acp-provider-icon { display: inline-flex; padding: 10px; border-radius: var(--r-md); background: var(--color-primary-soft); color: var(--color-primary-text); }
+.acp-role-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-3); }
+.acp-wide-scroll { overflow-x: auto; }
+.acp-pin-preview { font-family: var(--font-mono); letter-spacing: 6px; font-size: var(--fs-xl); }
+.acp-funnel { display: flex; flex-direction: column; gap: 6px; }
+.acp-funnel-row { display: grid; grid-template-columns: 140px 1fr 56px; gap: var(--sp-2); align-items: center; font-size: var(--fs-xs); }
+.acp-funnel-bar { height: 18px; border-radius: 4px; background: var(--color-primary); min-width: 2px; opacity: .9; }
+@media (max-width: 480px) { .acp-funnel-row { grid-template-columns: 100px 1fr 48px; } }
+.acp-tabs-scroll { overflow-x: auto; }

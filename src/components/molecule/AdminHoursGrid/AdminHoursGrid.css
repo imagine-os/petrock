@@ -1,0 +1,10 @@
+.ahours { display: flex; flex-direction: column; gap: 6px; }
+.ahours-row { display: grid; grid-template-columns: minmax(120px, 1fr) auto auto auto; gap: var(--sp-2); align-items: center; padding: 6px 0; border-bottom: 1px solid var(--color-border-subtle); }
+.ahours-row.is-closed .ahours-times { color: var(--color-text-faint); font-size: var(--fs-xs); }
+.ahours-times { display: contents; }
+.ahours-sep { color: var(--color-text-faint); font-size: var(--fs-xs); }
+.ahours-tools { display: flex; gap: var(--sp-2); flex-wrap: wrap; font-size: var(--fs-xs); }
+.ahours-tools button { background: none; border: 0; color: var(--color-primary-text); padding: 2px 4px; font-size: var(--fs-xs); }
+.ahours-ro { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--sp-3); font-size: var(--fs-xs); }
+.ahours-ro dt { color: var(--color-text-muted); } .ahours-ro dd { margin: 0; }
+@media (max-width: 480px) { .ahours-row { grid-template-columns: 1fr 1fr; } .ahours-row > :first-child { grid-column: 1 / -1; } .ahours-sep { display: none; } }

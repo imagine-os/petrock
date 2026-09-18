@@ -26,31 +26,6 @@ create table if not exists public.addons (
 );
 create trigger addons_touch before update on public.addons for each row execute function public.touch_updated_at();
 
--- grooming · Appointment extras: Groom Bookings form fields not on the core appointments row: reminder, pickup / delivery, discount %, payment method, include-notes-on-invoice, groom style at booking (Groom Booking .pdf).
--- access:
---   · front_desk write
-create table if not exists public.appointment_extras (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  appointment_id uuid not null references public.appointments(id) on delete set null,
-  reminder boolean not null default false,
-  pickup_at timestamptz,
-  delivery_at timestamptz,
-  -- Percent discount applied with manager PIN (R-P01)
-  discount_pct numeric(12,2) not null,
-  payment_method text check (payment_method in ('card', 'cash')),
-  include_notes_on_invoice boolean not null default false,
-  groom_style text,
-  approval_id uuid references public.approvals(id) on delete set null,
-  invoice_id uuid references public.invoices(id) on delete set null
-);
-create index if not exists appointment_extras_appointment_id_idx on public.appointment_extras(appointment_id);
-create index if not exists appointment_extras_approval_id_idx on public.appointment_extras(approval_id);
-create index if not exists appointment_extras_invoice_id_idx on public.appointment_extras(invoice_id);
-create trigger appointment_extras_touch before update on public.appointment_extras for each row execute function public.touch_updated_at();
-
 -- grooming · Grooming appointments: Grooming & Spa appointments: pet, package, add-ons, groomer, time, status, linked hotel booking.
 create table if not exists public.appointments (
   -- Primary key
@@ -112,25 +87,6 @@ create index if not exists approvals_requested_by_idx on public.approvals(reques
 create index if not exists approvals_approved_by_idx on public.approvals(approved_by);
 create trigger approvals_touch before update on public.approvals for each row execute function public.touch_updated_at();
 
--- system · Attachments: Mock file uploads from the add forms (customer / pet / appointment / vaccine certificate). URLs are mock:// until storage lands.
--- access:
---   · staff write
-create table if not exists public.attachments (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  subject_table text not null check (subject_table in ('customers', 'pets', 'appointments', 'vaccine_records')),
-  subject_id text not null,
-  name text not null,
-  url text not null,
-  size_bytes integer not null,
-  mime text,
-  uploaded_by uuid references public.users(id) on delete set null
-);
-create index if not exists attachments_uploaded_by_idx on public.attachments(uploaded_by);
-create trigger attachments_touch before update on public.attachments for each row execute function public.touch_updated_at();
-
 -- system · Audit log: Who changed what: table, row, action, diff.
 create table if not exists public.audit_log (
   -- Primary key
@@ -150,33 +106,26 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
--- hotel · Booking activity: Activity trail per hotel booking: creation, status changes (with the approval that allowed them), room moves, date changes, notes, payments. Replaces the legacy "Added / Last edited by" line (R-J08).
+-- system · Backups & exports: Log of JSON exports of the mock database (A-43). Each row records who exported, how many tables / rows and the file size.
 -- access:
---   · staff read
---   · system write
-create table if not exists public.booking_events (
+--   · owner read/write
+--   · super_admin read/write
+create table if not exists public.backups (
   -- Primary key
   id uuid primary key default gen_random_uuid(),
-  -- Owning location (Encino / Westwood)
-  location_id uuid not null references public.locations(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  booking_id uuid not null references public.bookings(id) on delete set null,
-  kind text not null check (kind in ('created', 'status', 'room', 'dates', 'note', 'payment', 'edited')),
-  from_status text check (from_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
-  to_status text check (to_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
-  summary text not null,
-  user_id uuid references public.users(id) on delete set null,
-  user_name text not null,
-  approval_id uuid references public.approvals(id) on delete set null,
-  details jsonb,
-  at timestamptz not null
+  kind text not null check (kind in ('manual', 'scheduled')),
+  file_name text not null,
+  table_count integer not null,
+  row_count integer not null,
+  size_bytes integer not null,
+  created_by uuid references public.users(id) on delete set null,
+  created_by_name text,
+  note text
 );
-create index if not exists booking_events_location_idx on public.booking_events(location_id);
-create index if not exists booking_events_booking_id_idx on public.booking_events(booking_id);
-create index if not exists booking_events_user_id_idx on public.booking_events(user_id);
-create index if not exists booking_events_approval_id_idx on public.booking_events(approval_id);
-create trigger booking_events_touch before update on public.booking_events for each row execute function public.touch_updated_at();
+create index if not exists backups_created_by_idx on public.backups(created_by);
+create trigger backups_touch before update on public.backups for each row execute function public.touch_updated_at();
 
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
@@ -197,32 +146,6 @@ create index if not exists booking_pets_booking_id_idx on public.booking_pets(bo
 create index if not exists booking_pets_pet_id_idx on public.booking_pets(pet_id);
 create index if not exists booking_pets_room_id_idx on public.booking_pets(room_id);
 create trigger booking_pets_touch before update on public.booking_pets for each row execute function public.touch_updated_at();
-
--- hotel · Booking additional services: Extra services attached to a hotel booking (Veterinary travel, Vaccination fee...): rate snapshot, quantity, occurrence and Morning / Afternoon / Evening flags (R-D16).
--- access:
---   · staff read/write
-create table if not exists public.booking_services (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  booking_id uuid not null references public.bookings(id) on delete set null,
-  service_id uuid not null references public.services(id) on delete set null,
-  label text not null,
-  pet_id uuid references public.pets(id) on delete set null,
-  rate numeric(12,2) not null,
-  qty integer not null,
-  total numeric(12,2) not null,
-  occurs text not null check (occurs in ('once', 'daily', 'per_night')),
-  morning boolean not null default false,
-  afternoon boolean not null default false,
-  evening boolean not null default false,
-  note text
-);
-create index if not exists booking_services_booking_id_idx on public.booking_services(booking_id);
-create index if not exists booking_services_service_id_idx on public.booking_services(service_id);
-create index if not exists booking_services_pet_id_idx on public.booking_services(pet_id);
-create trigger booking_services_touch before update on public.booking_services for each row execute function public.touch_updated_at();
 
 -- hotel · Hotel bookings: A stay: customer, dates, room type, status (one lifecycle), totals and payment status.
 create table if not exists public.bookings (
@@ -288,28 +211,6 @@ create table if not exists public.capacities (
 create index if not exists capacities_location_idx on public.capacities(location_id);
 create trigger capacities_touch before update on public.capacities for each row execute function public.touch_updated_at();
 
--- comms · Conversation assignments: Which staff member owns a Front Desk chat thread (assign / reassign from the inbox).
--- access:
---   · staff write
-create table if not exists public.conversation_assignments (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  -- Owning location (Encino / Westwood)
-  location_id uuid not null references public.locations(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  conversation_id uuid not null references public.conversations(id) on delete set null,
-  assignee_user_id uuid references public.users(id) on delete set null,
-  assignee_name text,
-  assigned_by uuid references public.users(id) on delete set null,
-  assigned_at timestamptz not null
-);
-create index if not exists conversation_assignments_location_idx on public.conversation_assignments(location_id);
-create index if not exists conversation_assignments_conversation_id_idx on public.conversation_assignments(conversation_id);
-create index if not exists conversation_assignments_assignee_user_id_idx on public.conversation_assignments(assignee_user_id);
-create index if not exists conversation_assignments_assigned_by_idx on public.conversation_assignments(assigned_by);
-create trigger conversation_assignments_touch before update on public.conversation_assignments for each row execute function public.touch_updated_at();
-
 -- comms · Conversations: One Front Desk chat thread per customer per location.
 create table if not exists public.conversations (
   -- Primary key
@@ -328,50 +229,6 @@ create table if not exists public.conversations (
 create index if not exists conversations_location_idx on public.conversations(location_id);
 create index if not exists conversations_customer_id_idx on public.conversations(customer_id);
 create trigger conversations_touch before update on public.conversations for each row execute function public.touch_updated_at();
-
--- people · Customer notes: Timeline of staff notes on a customer (who, when, pinned). The 100-char customers.note stays the headline note (R-J02).
--- access:
---   · staff write
---   · owner read
-create table if not exists public.customer_notes (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  customer_id uuid not null references public.customers(id) on delete set null,
-  author_id uuid references public.users(id) on delete set null,
-  author_name text not null,
-  text text not null,
-  pinned boolean not null default false
-);
-create index if not exists customer_notes_customer_id_idx on public.customer_notes(customer_id);
-create index if not exists customer_notes_author_id_idx on public.customer_notes(author_id);
-create trigger customer_notes_touch before update on public.customer_notes for each row execute function public.touch_updated_at();
-
--- people · Customer profile extras: Front desk Customer Details fields that are not on the core customers row: title, home / work phone, alternative contact, reference, attributes (R-J01, Customer Details.pdf).
--- access:
---   · front_desk write
---   · customer read
-create table if not exists public.customer_profiles (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  customer_id uuid not null references public.customers(id) on delete set null,
-  -- Mr. / Ms. / Dr.
-  title text,
-  home_phone text,
-  work_phone text,
-  -- Name of another person to call
-  alt_contact text,
-  -- How they heard about Petrock
-  reference text,
-  -- Staff flags e.g. VIP, Late payer
-  attributes jsonb,
-  customer_since date
-);
-create index if not exists customer_profiles_customer_id_idx on public.customer_profiles(customer_id);
-create trigger customer_profiles_touch before update on public.customer_profiles for each row execute function public.touch_updated_at();
 
 -- people · Customers: Pet parents. One row per household account; linked to a user when they sign up in the app.
 create table if not exists public.customers (
@@ -534,28 +391,6 @@ create table if not exists public.fees (
 );
 create trigger fees_touch before update on public.fees for each row execute function public.touch_updated_at();
 
--- grooming · Groomer column preferences: Per staff user per location: groomer column order, colour and hidden state on the grooming day view (Grooming.png context menu).
--- access:
---   · staff write own
-create table if not exists public.groomer_column_prefs (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  -- Owning location (Encino / Westwood)
-  location_id uuid not null references public.locations(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  user_id uuid not null references public.users(id) on delete set null,
-  groomer_id uuid not null references public.employees(id) on delete set null,
-  -- Hex tint; null = employee colour
-  color text,
-  sort_order integer not null,
-  hidden boolean not null default false
-);
-create index if not exists groomer_column_prefs_location_idx on public.groomer_column_prefs(location_id);
-create index if not exists groomer_column_prefs_user_id_idx on public.groomer_column_prefs(user_id);
-create index if not exists groomer_column_prefs_groomer_id_idx on public.groomer_column_prefs(groomer_id);
-create trigger groomer_column_prefs_touch before update on public.groomer_column_prefs for each row execute function public.touch_updated_at();
-
 -- core · Holidays & closures: Dates marked holiday (excluded from long-stay discounts) or boarding closed.
 create table if not exists public.holidays (
   -- Primary key
@@ -630,21 +465,6 @@ create table if not exists public.locations (
   note text
 );
 create trigger locations_touch before update on public.locations for each row execute function public.touch_updated_at();
-
--- system · Lookup lists: Extendable dropdown lists used by the add forms: breed, color, city, reference, attribute, customer title, temper (R-J04).
--- access:
---   · staff write
-create table if not exists public.lookup_values (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  kind text not null check (kind in ('breed', 'color', 'city', 'reference', 'attribute', 'customer_title', 'temper')),
-  value text not null,
-  sort_order integer not null,
-  active boolean not null default false
-);
-create trigger lookup_values_touch before update on public.lookup_values for each row execute function public.touch_updated_at();
 
 -- comms · Messages: Chat messages between a customer and the front desk (text, optional image, system markers).
 create table if not exists public.messages (
@@ -764,28 +584,6 @@ create table if not exists public.permissions (
 );
 create trigger permissions_touch before update on public.permissions for each row execute function public.touch_updated_at();
 
--- pets · Pet profile extras: Front desk Pet Details fields beyond the core pets row: registration and microchip numbers, approximate-age flag, temper, saved groom style (R-C06, Pet Details .pdf).
--- access:
---   · front_desk write
-create table if not exists public.pet_profiles (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  pet_id uuid not null references public.pets(id) on delete set null,
-  registration_number text,
-  microchip_number text,
-  -- Date of birth is an estimate
-  dob_approximate boolean not null default false,
-  -- Front desk temper (mirrors personality on the app)
-  temper text,
-  -- Saved groom style used to prefill groom bookings
-  groom_style text,
-  groom_notes text
-);
-create index if not exists pet_profiles_pet_id_idx on public.pet_profiles(pet_id);
-create trigger pet_profiles_touch before update on public.pet_profiles for each row execute function public.touch_updated_at();
-
 -- pets · Pets: Dogs (and other pets) with profile, care instructions and approval status.
 create table if not exists public.pets (
   -- Primary key
@@ -824,6 +622,32 @@ create table if not exists public.pets (
 create index if not exists pets_customer_id_idx on public.pets(customer_id);
 create index if not exists pets_vet_id_idx on public.pets(vet_id);
 create trigger pets_touch before update on public.pets for each row execute function public.touch_updated_at();
+
+-- system · Providers: Outbound channel configuration: email (None / Gmail / SMTP), SMS (None / Twilio / Petlinx), push (None / FCM / APNs). Secrets are masked; test-send is a stub until an integration exists.
+-- access:
+--   · owner write
+--   · super_admin write
+create table if not exists public.providers (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  kind text not null check (kind in ('email', 'sms', 'push')),
+  -- Display name (email From name, SMS sender name)
+  name text not null,
+  -- none | gmail | smtp | twilio | petlinx | fcm | apns
+  provider text not null,
+  from_address text,
+  -- Non-secret settings (host, port, sender id)
+  config jsonb,
+  -- Last 4 of the API key; the real secret never lives in the mock
+  secret_masked text,
+  status text not null check (status in ('not_configured', 'configured', 'test_ok', 'error')),
+  last_test_at timestamptz,
+  last_test_result text,
+  enabled boolean not null default false
+);
+create trigger providers_touch before update on public.providers for each row execute function public.touch_updated_at();
 
 -- commerce · Room rates: Nightly rate per room type, day kind (Mon-Thu / Fri-Sun) and season (null = base).
 create table if not exists public.rates (
