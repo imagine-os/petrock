@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (44)
+## Tables (41)
 
 ### Core & locations
 
@@ -173,49 +173,6 @@ _Source: entities 20_
 | `working_hours` | json, null |  |
 | `date_started` | date, null |  |
 | `note` | text, null |  |
-
-#### `tasks` (per location)
-Management task list (F-68): to-dos per location with assignee, due date, priority and status; the "Tasks" and "Check List" items of the Figma sidebar.  
-_Source: extras-manual-website (F-68); education-1.jpg (Tasks shell), employees-1.jpg (Check List)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `title` | text |  |
-| `description` | text, null |  |
-| `assignee_id` | uuid, null | -> `employees`  |
-| `created_by` | uuid, null | -> `users`  |
-| `due_on` | date, null |  |
-| `priority` | enum (low \| normal \| high) |  |
-| `status` | enum (open \| in_progress \| done) |  |
-| `kind` | enum (task \| checklist) |  |
-| `completed_at` | timestamptz, null |  |
-
-**Access:** staff read/write; manager delete (PIN)
-
-#### `training_completions` (per location)
-Which ops-manual chapter each employee has completed (Education, F-66): one row per employee per chapter, with the lesson mode and who signed it off.  
-_Source: extras-manual-website (F-66, M-xx)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `employee_id` | uuid | -> `employees`  |
-| `user_id` | uuid, null | -> `users`  |
-| `chapter_slug` | text | File name of the chapter in docs/ops-manual/en |
-| `chapter_code` | text | Manual page code (M-xx) |
-| `mode` | enum (in_person \| online) |  |
-| `completed_at` | timestamptz |  |
-| `signed_off_by` | uuid, null | -> `employees`  |
-| `note` | text, null |  |
-
-**Access:** staff read own; manager write
 
 ### Pets & vaccines
 
@@ -537,28 +494,6 @@ _Source: R-F01..F05_
 | `threshold_hours` | numeric, null | Half day below, full day at/above |
 | `active` | bool |  |
 
-#### `walks` (per location)
-Walk log (Walking, F-67): which pet was walked by which handler, when, for how long, and how it went. Feeds the daycare "Walk" item later.  
-_Source: extras-manual-website (F-67); front desk-7.jpg (Walk $12)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `pet_id` | uuid | -> `pets`  |
-| `handler_id` | uuid, null | -> `employees`  |
-| `booking_id` | uuid, null | -> `bookings`  |
-| `daycare_booking_id` | uuid, null | -> `daycare_bookings`  |
-| `started_at` | timestamptz |  |
-| `duration_min` | int |  |
-| `status` | enum (planned \| in_progress \| done \| skipped) |  |
-| `potty` | bool, null |  |
-| `note` | text, null |  |
-
-**Access:** staff read/write; customer read own (later)
-
 ### Pricing, invoices & payments
 
 #### `discounts` (global)
@@ -768,44 +703,6 @@ _Source: entities 23_
 | `tags` | json, null |  |
 | `status` | enum (pending \| published \| archived) |  |
 
-#### `site_faqs` (global)
-Questions and answers shown on the public website (P-11) grouped by topic; owners edit them here instead of in code.  
-_Source: extras-manual-website (P-11)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `topic` | enum (hotel \| grooming \| daycare \| vaccines \| payments \| general) |  |
-| `question` | text |  |
-| `answer` | text |  |
-| `sort_order` | int |  |
-| `published` | bool |  |
-
-**Access:** everyone read; owner write
-
-#### `site_inquiries` (per location)
-Contact-form submissions from the public website (P-10): who wrote, about what, for which location, and whether staff replied.  
-_Source: extras-manual-website (P-10)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `name` | text |  |
-| `email` | text |  |
-| `phone` | text, null |  |
-| `topic` | enum (hotel \| grooming \| daycare \| in_home \| other) |  |
-| `message` | text |  |
-| `status` | enum (new \| seen \| replied \| closed) |  |
-| `replied_by` | uuid, null | -> `users`  |
-| `replied_at` | timestamptz, null |  |
-
-**Access:** public insert; staff read/write
-
 ### System
 
 #### `approvals` (per location)
@@ -845,6 +742,48 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
+
+#### `perf_budgets` (global)
+Limits the bundle and runtime checks compare against (D-16). Edit here, never in code.  
+_Source: dev-quality module (D-16)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `metric` | text | Key, e.g. js_total_kb, css_total_kb, largest_chunk_kb, route_count_max, localstorage_kb, ttfr_ms |
+| `label` | text |  |
+| `budget` | numeric |  |
+| `unit` | enum (kb \| ms \| count \| percent) |  |
+| `warn_at_percent` | int | Warn when usage passes this share of the budget (default 80) |
+| `description` | text, null |  |
+| `active` | bool |  |
+
+**Access:** super_admin: read/write; owner: read
+
+#### `qa_runs` (global)
+One row per quality pass (responsive matrix, a11y scan, bundle budget, screenshot pass): what ran, at which widths, how many issues, where the report lives.  
+_Source: dev-quality module (D-12, D-15, D-16)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (responsive \| a11y \| bundle \| screenshots \| smoke) |  |
+| `label` | text | Human label, e.g. "Responsive pass 2026-09-18" |
+| `started_at` | timestamptz |  |
+| `finished_at` | timestamptz, null |  |
+| `routes` | int | Routes covered |
+| `widths` | json, null | Widths checked, e.g. [360,390,768,1280,1920] |
+| `issues` | int | Issues found |
+| `result` | enum (pass \| warn \| fail) |  |
+| `report_path` | text, null | docs/qa/<file>.md the run wrote |
+| `triggered_by` | text, null | script | page | ci |
+| `summary` | json, null | Per-route counts |
+
+**Access:** super_admin: read/write; owner: read
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

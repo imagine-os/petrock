@@ -9,6 +9,7 @@ import { MarkdownViewer } from '../../components/organism/MarkdownViewer/Markdow
 import { Figure } from '../../components/molecule/Figure/Figure';
 import { EmptyState } from '../../components/molecule/EmptyState/EmptyState';
 import { PageHeader } from '../../components/molecule/PageHeader/PageHeader';
+import { Input } from '../../components/atom/Input/Input';
 import './docs.css';
 
 function Tree({ node, active, depth = 0 }: { node: DocTreeNode; active: string; depth?: number }) {
@@ -28,6 +29,8 @@ export function DocsBrowser() {
   const path = splat ? `docs/${splat}.md` : 'docs/README.md';
   const doc = docByPath(path) ?? (splat ? docByPath(`docs/${splat}/README.md`) : undefined) ?? null;
   const tree = useMemo(() => docTree(), []);
+  const [filter, setFilter] = useState('');
+  const filtered = useMemo(() => { const q = filter.trim().toLowerCase(); if (!q) return tree; const prune = (n: DocTreeNode): DocTreeNode | null => { if (n.doc && !n.children.length) return n.doc.title.toLowerCase().includes(q) || n.doc.path.toLowerCase().includes(q) ? n : null; const kids = n.children.map(prune).filter((x): x is DocTreeNode => !!x); return kids.length ? { ...n, children: kids } : null; }; return prune(tree) ?? { ...tree, children: [] }; }, [tree, filter]);
   const isGallery = splat === 'screenshots' || splat.startsWith('screenshots/');
   const dir = path.split('/').slice(0, -1).join('/');
   const resolveImage = (src: string) => { const clean = src.split('?')[0]; const abs = clean.startsWith('docs/') ? clean : clean.startsWith('/') ? clean.slice(1) : `${dir}/${clean}`.split('/').reduce<string[]>((acc, p) => { if (p === '..') acc.pop(); else if (p !== '.') acc.push(p); return acc; }, []).join('/'); return assetUrl(abs); };
@@ -37,7 +40,7 @@ export function DocsBrowser() {
 
   return (
     <div className="docs">
-      <aside className="docs-side"><div className="eyebrow" style={{ marginBottom: 6 }}>{docs.length} documents</div><div className="docs-tree"><ul><Tree node={tree} active={doc?.path ?? path} /></ul></div><div style={{ marginTop: 8 }}><Link to="/docs/screenshots" className="docs-leaf">Screenshots gallery</Link></div></aside>
+      <aside className="docs-side"><div className="eyebrow" style={{ marginBottom: 6 }}>{docs.length} documents</div><Input size="sm" icon="search" placeholder="Filter titles" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="Filter documents" /><div className="docs-tree" style={{ marginTop: 6 }}><ul><Tree key={filter} node={filtered} active={doc?.path ?? path} depth={filter ? -9 : 0} /></ul></div><div style={{ marginTop: 8 }}><Link to={`/dev/docs-search${filter ? `?q=${encodeURIComponent(filter)}` : ''}`} className="docs-leaf">Full-text search (D-18)</Link></div><div style={{ marginTop: 8 }}><Link to="/docs/screenshots" className="docs-leaf">Screenshots gallery</Link></div></aside>
       <main className="docs-main">
         {isGallery ? (
           <div className="stack">

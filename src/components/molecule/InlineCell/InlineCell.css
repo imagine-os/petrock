@@ -1,0 +1,5 @@
+.icell { display: inline-flex; align-items: center; min-height: 24px; max-width: 100%; }
+.icell.is-edit { border: 1px solid transparent; background: none; color: inherit; font: inherit; text-align: left; padding: 1px 4px; margin: -1px -4px; border-radius: var(--r-sm); cursor: text; }
+.icell.is-edit:hover { border-color: var(--color-border-strong); background: var(--color-surface-tint-2); } .icell.is-edit:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
+.icell-input { font: inherit; font-size: var(--fs-xs); height: 26px; padding: 0 6px; border: 1px solid var(--color-primary); border-radius: var(--r-sm); background: var(--color-surface); color: var(--color-text); min-width: 80px; max-width: 100%; }
+.icell.is-bool input { accent-color: var(--color-primary); width: 16px; height: 16px; }

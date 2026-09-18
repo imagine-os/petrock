@@ -1,0 +1,6 @@
+.bb { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.bb-head { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; } .bb-label { font-size: var(--fs-sm); font-weight: var(--fw-medium); flex: 1 1 auto; min-width: 0; } .bb-nums { white-space: nowrap; }
+.bb-track { position: relative; height: 6px; border-radius: 3px; background: var(--color-surface-2); overflow: hidden; }
+.bb-fill { height: 100%; border-radius: 3px; background: var(--color-primary); transition: width var(--dur-base) var(--ease-out); }
+.bb.is-warn .bb-fill { background: var(--color-warn); } .bb.is-fail .bb-fill { background: var(--color-danger); } .bb.is-pass .bb-fill { background: var(--color-success); }
+.bb-warn { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--color-border-strong); }

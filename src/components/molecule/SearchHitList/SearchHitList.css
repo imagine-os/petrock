@@ -1,0 +1,6 @@
+.shl { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.shl-hit { padding: var(--sp-3) 0; border-bottom: 1px solid var(--color-border-subtle); display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.shl-head { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; } .shl-title { font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
+.shl-path { font-size: var(--fs-2xs); color: var(--color-text-faint); word-break: break-all; }
+.shl-snippet { margin: 0; font-size: var(--fs-xs); color: var(--color-text-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.shl mark { background: var(--color-accent-soft); color: inherit; border-radius: 2px; padding: 0 1px; }

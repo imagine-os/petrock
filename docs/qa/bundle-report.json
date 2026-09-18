@@ -1,0 +1,313 @@
+{
+ "generatedAt": "2026-09-18T05:41:22.553Z",
+ "version": "0.1.0",
+ "assets": [
+  {
+   "file": "1280-dark-BiNhp5cv.jpg",
+   "bytes": 2057833,
+   "gzip": 2057833,
+   "kind": "other"
+  },
+  {
+   "file": "1280-N_OSi61b.jpg",
+   "bytes": 1986607,
+   "gzip": 1986607,
+   "kind": "other"
+  },
+  {
+   "file": "index-D23Ixjy8.js",
+   "bytes": 1369646,
+   "gzip": 415820,
+   "kind": "js"
+  },
+  {
+   "file": "1280-dark-B6bm7Szp.jpg",
+   "bytes": 389264,
+   "gzip": 389264,
+   "kind": "other"
+  },
+  {
+   "file": "1280-Hjp9hsm6.jpg",
+   "bytes": 370357,
+   "gzip": 370357,
+   "kind": "other"
+  },
+  {
+   "file": "1280-Bbjyx42_.jpg",
+   "bytes": 336252,
+   "gzip": 336252,
+   "kind": "other"
+  },
+  {
+   "file": "render-zoom-choose-room-pets-CEK6ISfr.png",
+   "bytes": 323601,
+   "gzip": 323601,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-bN8jgGjK.jpg",
+   "bytes": 230154,
+   "gzip": 230154,
+   "kind": "other"
+  },
+  {
+   "file": "1280-CDRdNdoT.jpg",
+   "bytes": 211592,
+   "gzip": 211592,
+   "kind": "other"
+  },
+  {
+   "file": "1280-BNKjWXDZ.jpg",
+   "bytes": 210715,
+   "gzip": 210715,
+   "kind": "other"
+  },
+  {
+   "file": "render-zoom-table-I774Yb1-.png",
+   "bytes": 149426,
+   "gzip": 149426,
+   "kind": "other"
+  },
+  {
+   "file": "render-zoom-estimate-checkout-DzDOBVUd.png",
+   "bytes": 141254,
+   "gzip": 141254,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-ixFhpkgk.jpg",
+   "bytes": 130259,
+   "gzip": 130259,
+   "kind": "other"
+  },
+  {
+   "file": "1280-Bcaes6xf.jpg",
+   "bytes": 129981,
+   "gzip": 129981,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-BWdgHEEG.jpg",
+   "bytes": 129143,
+   "gzip": 129143,
+   "kind": "other"
+  },
+  {
+   "file": "1280-CFtdmpPr.jpg",
+   "bytes": 125729,
+   "gzip": 125729,
+   "kind": "other"
+  },
+  {
+   "file": "1280-BcJlAsGn.jpg",
+   "bytes": 120800,
+   "gzip": 120800,
+   "kind": "other"
+  },
+  {
+   "file": "render-zoom-addpetdetails-DZ2FRNEh.png",
+   "bytes": 120226,
+   "gzip": 120226,
+   "kind": "other"
+  },
+  {
+   "file": "overview-boarding-flow-section20-Ci-LeW2L.png",
+   "bytes": 112551,
+   "gzip": 112551,
+   "kind": "other"
+  },
+  {
+   "file": "overview-boarding-table-view-section1-BHlKRsBa.png",
+   "bytes": 111542,
+   "gzip": 111542,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-CS2vWKB4.jpg",
+   "bytes": 101758,
+   "gzip": 101758,
+   "kind": "other"
+  },
+  {
+   "file": "1280-Biz0CYO7.jpg",
+   "bytes": 101637,
+   "gzip": 101637,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-8-XGIWyr.jpg",
+   "bytes": 94625,
+   "gzip": 94625,
+   "kind": "other"
+  },
+  {
+   "file": "1280-BDTEcSDS.jpg",
+   "bytes": 92179,
+   "gzip": 92179,
+   "kind": "other"
+  },
+  {
+   "file": "390-5d8nOpP1.jpg",
+   "bytes": 53709,
+   "gzip": 53709,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-ZBT0fbOg.jpg",
+   "bytes": 46813,
+   "gzip": 46813,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-YqC5AlcV.jpg",
+   "bytes": 42697,
+   "gzip": 42697,
+   "kind": "other"
+  },
+  {
+   "file": "390-C915qu1r.jpg",
+   "bytes": 42206,
+   "gzip": 42206,
+   "kind": "other"
+  },
+  {
+   "file": "390-CJPEEFUw.jpg",
+   "bytes": 40551,
+   "gzip": 40551,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-D9XSnloo.jpg",
+   "bytes": 40385,
+   "gzip": 40385,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-BtFB6-sa.jpg",
+   "bytes": 40090,
+   "gzip": 40090,
+   "kind": "other"
+  },
+  {
+   "file": "390-BlN8LfGp.jpg",
+   "bytes": 39992,
+   "gzip": 39992,
+   "kind": "other"
+  },
+  {
+   "file": "390-CnAXedDC.jpg",
+   "bytes": 37656,
+   "gzip": 37656,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-BtgSjHDR.jpg",
+   "bytes": 34818,
+   "gzip": 34818,
+   "kind": "other"
+  },
+  {
+   "file": "390-DdZMpkpp.jpg",
+   "bytes": 31397,
+   "gzip": 31397,
+   "kind": "other"
+  },
+  {
+   "file": "390-fsIEhv0d.jpg",
+   "bytes": 30970,
+   "gzip": 30970,
+   "kind": "other"
+  },
+  {
+   "file": "overview-onboarding-flow-section16-UVX6Ic7D.png",
+   "bytes": 25872,
+   "gzip": 25872,
+   "kind": "other"
+  },
+  {
+   "file": "1280-dark-Bxmiqv6m.jpg",
+   "bytes": 25444,
+   "gzip": 25444,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-ue-U1ELU.jpg",
+   "bytes": 25267,
+   "gzip": 25267,
+   "kind": "other"
+  },
+  {
+   "file": "1280-CNCihuNb.jpg",
+   "bytes": 24597,
+   "gzip": 24597,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-DuuRo79A.jpg",
+   "bytes": 24454,
+   "gzip": 24454,
+   "kind": "other"
+  },
+  {
+   "file": "390-DQ9jD0Po.jpg",
+   "bytes": 24439,
+   "gzip": 24439,
+   "kind": "other"
+  },
+  {
+   "file": "390-B0eVB9US.jpg",
+   "bytes": 23716,
+   "gzip": 23716,
+   "kind": "other"
+  },
+  {
+   "file": "390-LptgI3eH.jpg",
+   "bytes": 23113,
+   "gzip": 23113,
+   "kind": "other"
+  },
+  {
+   "file": "1280-CvU-15XU.jpg",
+   "bytes": 22494,
+   "gzip": 22494,
+   "kind": "other"
+  },
+  {
+   "file": "390-dark-CaXO0PTH.jpg",
+   "bytes": 19835,
+   "gzip": 19835,
+   "kind": "other"
+  },
+  {
+   "file": "390-DN6l5ta8.jpg",
+   "bytes": 19669,
+   "gzip": 19669,
+   "kind": "other"
+  },
+  {
+   "file": "390-CVoNwA-W.jpg",
+   "bytes": 17336,
+   "gzip": 17336,
+   "kind": "other"
+  },
+  {
+   "file": "index-Bvj6-0ub.css",
+   "bytes": 74886,
+   "gzip": 13314,
+   "kind": "css"
+  }
+ ],
+ "totals": {
+  "js": 1369646,
+  "css": 74886,
+  "other": 8535005,
+  "jsGzip": 415820,
+  "cssGzip": 13314,
+  "files": 49
+ },
+ "largest": {
+  "file": "index-D23Ixjy8.js",
+  "gzip": 415820
+ },
+ "docsBytes": 695472
+}

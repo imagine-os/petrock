@@ -1,0 +1,12 @@
+.mbc { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.mbc-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); } .mbc-title { font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+.mbc-toggle { border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text-muted); border-radius: var(--r-pill); padding: 2px 10px; cursor: pointer; } .mbc-toggle:hover { color: var(--color-primary-text); border-color: var(--color-border-primary); }
+.mbc-plot { display: flex; align-items: flex-end; gap: 2px; padding-bottom: 18px; border-bottom: 1px solid var(--color-border); position: relative; }
+.mbc-col { position: relative; flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; outline: none; border-radius: 3px; }
+.mbc-col:focus-visible { box-shadow: var(--shadow-focus); }
+.mbc-bar { width: 100%; max-width: 28px; background: var(--color-primary); border-radius: 4px 4px 0 0; min-height: 1px; opacity: .85; transition: opacity var(--dur-fast); }
+.mbc-col.is-hover .mbc-bar { opacity: 1; }
+.mbc-x { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: var(--fs-2xs); color: var(--color-text-faint); white-space: nowrap; font-family: var(--font-mono); } .mbc-x.is-hidden { visibility: hidden; }
+.mbc-tip { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); background: var(--color-heading); color: var(--color-bg); font-size: var(--fs-2xs); padding: 4px 8px; border-radius: var(--r-sm); display: flex; flex-direction: column; white-space: nowrap; z-index: 2; box-shadow: var(--shadow-md); }
+.mbc-tablewrap { overflow: auto; max-height: 220px; border: 1px solid var(--color-border); border-radius: var(--r-md); }
+.mbc-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); } .mbc-table th, .mbc-table td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--color-border-subtle); } .mbc-table th { color: var(--color-text-muted); font-weight: var(--fw-medium); }
