@@ -1,6 +1,6 @@
 # Figma fidelity audit - what the build must change to match the artwork
 
-date: 2026-09-18 · prompt: `docs/prompts/0009-figma-fidelity-audit.md` · status: audit (no code changed yet) · owner of the follow-up: the three implementation agents named in section 5
+date: 2026-09-18 · prompt: `docs/prompts/0009-figma-fidelity-audit.md` · status: part (a) implemented (prompt 0010), parts (b) / (c) open · **decision numbers**: the D-185..D-188 proposed below were logged as **D-188..D-191** (D-185..D-187 were taken by prompt 0011 while this audit was written): D-185 -> D-188 fonts, D-186 -> D-189 home, D-187 -> D-190 wizard stepper, D-188 -> D-191 hotel flow · owner of the follow-up: the three implementation agents named in section 5
 
 Justin (2026-09-18): "get the design to actually look closer to the artwork. From figma, the icons, the colors, especially the homepage on mobile, everything needs to match the exact styling from before. Please fix this at the design system level."
 
