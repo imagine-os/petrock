@@ -1,0 +1,48 @@
+/* Front desk reservations module (F-01..F-15). Tokens only. */
+.fdr-page { display: flex; flex-direction: column; gap: var(--sp-5); padding: var(--sp-4) 0 var(--sp-12); }
+.fdr-toolbar { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); align-items: center; }
+.fdr-toolbar .field { margin: 0; } .fdr-toolbar > .grow { flex: 1 1 200px; }
+.fdr-notes { display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.fdr-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-3); }
+.fdr-attn { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
+.fdr-attn-item { display: flex; gap: var(--sp-3); align-items: flex-start; padding: var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); }
+.fdr-attn-item.is-danger { border-color: var(--color-danger); } .fdr-attn-item.is-warn { border-color: var(--color-warn); }
+.fdr-attn-icon { flex: 0 0 auto; width: 32px; height: 32px; border-radius: var(--r-md); display: grid; place-items: center; background: var(--color-surface-3); color: var(--color-text-muted); }
+.is-danger .fdr-attn-icon { background: var(--color-danger-bg); color: var(--color-danger); } .is-warn .fdr-attn-icon { background: var(--color-warn-bg); color: var(--color-warn); }
+.fdr-group-empty { padding: var(--sp-3) 0; }
+.fdr-detail { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
+.fdr-detail-col { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+@media (max-width: 1000px) { .fdr-detail { grid-template-columns: 1fr; } }
+.fdr-customer { display: flex; gap: var(--sp-4); align-items: center; flex-wrap: wrap; }
+.fdr-customer-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 200px; }
+.fdr-customer-name { font-size: var(--fs-lg); font-weight: var(--fw-semibold); color: var(--color-heading); }
+.fdr-pet { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-3); padding: var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface-tint-2); }
+.fdr-pet.is-selectable { cursor: pointer; background: var(--color-surface); } .fdr-pet.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); background: var(--color-surface-tint); }
+.fdr-pet-name { font-weight: var(--fw-semibold); color: var(--color-heading); } .fdr-pet-meta { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.fdr-pets { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
+.fdr-activity { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.fdr-activity li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: var(--sp-3); padding: 8px 0; border-bottom: 1px solid var(--color-border-subtle); font-size: var(--fs-sm); }
+.fdr-activity li:last-child { border-bottom: 0; }
+.fdr-activity-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); margin-top: 6px; } .fdr-activity li.is-status .fdr-activity-dot { background: var(--color-info); } .fdr-activity li.is-approved .fdr-activity-dot { background: var(--color-warn); }
+.fdr-form { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--sp-4); align-items: start; }
+.fdr-form-main { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+.fdr-form-side { position: sticky; top: calc(var(--h-topbar) + var(--sp-3)); display: flex; flex-direction: column; gap: var(--sp-3); }
+@media (max-width: 1100px) { .fdr-form { grid-template-columns: 1fr; } .fdr-form-side { position: static; } }
+.fdr-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--sp-3); align-items: end; }
+.fdr-fields .field { margin: 0; }
+.fdr-roomtypes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-3); }
+.fdr-services { display: flex; flex-direction: column; gap: var(--sp-2); }
+.fdr-service { display: grid; grid-template-columns: minmax(0, 1.5fr) 80px 110px auto auto; gap: var(--sp-2); align-items: center; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); }
+.fdr-service .field { margin: 0; }
+@media (max-width: 700px) { .fdr-service { grid-template-columns: 1fr 1fr; } .fdr-service > :first-child { grid-column: 1 / -1; } }
+.fdr-mae { display: inline-flex; gap: 2px; } .fdr-mae button { width: 28px; height: 28px; border-radius: var(--r-sm); border: 1px solid var(--color-border); background: var(--color-surface); font-size: 11px; font-weight: var(--fw-semibold); color: var(--color-text-muted); }
+.fdr-mae button[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); }
+.fdr-legend { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
+.fdr-legend-swatch { display: inline-block; width: 14px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: middle; border-left: 3px solid var(--color-primary); }
+.fdr-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); }
+.fdr-avail-big { font-size: var(--fs-2xl); font-weight: var(--fw-bold); color: var(--color-heading); line-height: 1; white-space: nowrap; flex: 0 0 auto; }
+.fdr-detail .infogrid dd .row { flex-wrap: wrap; }
+.fdr-inline-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.fdr-pop-body { display: flex; flex-direction: column; gap: var(--sp-2); }
+.fdr-kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: var(--fs-xs); } .fdr-kv dt { color: var(--color-text-muted); } .fdr-kv dd { margin: 0; color: var(--color-heading); }
+.fdr-empty-card { padding: var(--sp-8) var(--sp-4); }

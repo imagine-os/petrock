@@ -106,6 +106,34 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
+-- hotel · Booking activity: Activity trail per hotel booking: creation, status changes (with the approval that allowed them), room moves, date changes, notes, payments. Replaces the legacy "Added / Last edited by" line (R-J08).
+-- access:
+--   · staff read
+--   · system write
+create table if not exists public.booking_events (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  kind text not null check (kind in ('created', 'status', 'room', 'dates', 'note', 'payment', 'edited')),
+  from_status text check (from_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
+  to_status text check (to_status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
+  summary text not null,
+  user_id uuid references public.users(id) on delete set null,
+  user_name text not null,
+  approval_id uuid references public.approvals(id) on delete set null,
+  details jsonb,
+  at timestamptz not null
+);
+create index if not exists booking_events_location_idx on public.booking_events(location_id);
+create index if not exists booking_events_booking_id_idx on public.booking_events(booking_id);
+create index if not exists booking_events_user_id_idx on public.booking_events(user_id);
+create index if not exists booking_events_approval_id_idx on public.booking_events(approval_id);
+create trigger booking_events_touch before update on public.booking_events for each row execute function public.touch_updated_at();
+
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
   -- Primary key
@@ -125,6 +153,32 @@ create index if not exists booking_pets_booking_id_idx on public.booking_pets(bo
 create index if not exists booking_pets_pet_id_idx on public.booking_pets(pet_id);
 create index if not exists booking_pets_room_id_idx on public.booking_pets(room_id);
 create trigger booking_pets_touch before update on public.booking_pets for each row execute function public.touch_updated_at();
+
+-- hotel · Booking additional services: Extra services attached to a hotel booking (Veterinary travel, Vaccination fee...): rate snapshot, quantity, occurrence and Morning / Afternoon / Evening flags (R-D16).
+-- access:
+--   · staff read/write
+create table if not exists public.booking_services (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete set null,
+  service_id uuid not null references public.services(id) on delete set null,
+  label text not null,
+  pet_id uuid references public.pets(id) on delete set null,
+  rate numeric(12,2) not null,
+  qty integer not null,
+  total numeric(12,2) not null,
+  occurs text not null check (occurs in ('once', 'daily', 'per_night')),
+  morning boolean not null default false,
+  afternoon boolean not null default false,
+  evening boolean not null default false,
+  note text
+);
+create index if not exists booking_services_booking_id_idx on public.booking_services(booking_id);
+create index if not exists booking_services_service_id_idx on public.booking_services(service_id);
+create index if not exists booking_services_pet_id_idx on public.booking_services(pet_id);
+create trigger booking_services_touch before update on public.booking_services for each row execute function public.touch_updated_at();
 
 -- hotel · Hotel bookings: A stay: customer, dates, room type, status (one lifecycle), totals and payment status.
 create table if not exists public.bookings (

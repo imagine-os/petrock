@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (41)
 
 ### Core & locations
 
@@ -263,6 +263,29 @@ _Source: entities 4_
 
 ### Hotel
 
+#### `booking_events` (per location)
+Activity trail per hotel booking: creation, status changes (with the approval that allowed them), room moves, date changes, notes, payments. Replaces the legacy "Added / Last edited by" line (R-J08).  
+_Source: F-12 booking detail; R-J08, R-I06_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `booking_id` | uuid | -> `bookings`  |
+| `kind` | enum (created \| status \| room \| dates \| note \| payment \| edited) |  |
+| `from_status` | enum (requested \| pending_vaccines \| confirmed \| checked_in \| checked_out \| cancelled \| no_show), null |  |
+| `to_status` | enum (requested \| pending_vaccines \| confirmed \| checked_in \| checked_out \| cancelled \| no_show), null |  |
+| `summary` | text |  |
+| `user_id` | uuid, null | -> `users`  |
+| `user_name` | text |  |
+| `approval_id` | uuid, null | -> `approvals`  |
+| `details` | json, null |  |
+| `at` | timestamptz |  |
+
+**Access:** staff read; system write
+
 #### `booking_pets` (global)
 Pets on a stay with the per-booking medical questionnaire.  
 _Source: entities 10-11_
@@ -280,6 +303,30 @@ _Source: entities 10-11_
 | `dosing` | text, null |  |
 | `flea_medication` | bool |  |
 | `medical_alert` | text, null |  |
+
+#### `booking_services` (global)
+Extra services attached to a hotel booking (Veterinary travel, Vaccination fee...): rate snapshot, quantity, occurrence and Morning / Afternoon / Evening flags (R-D16).  
+_Source: Board Booking.pdf; R-D16_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `booking_id` | uuid | -> `bookings`  |
+| `service_id` | uuid | -> `services`  |
+| `label` | text |  |
+| `pet_id` | uuid, null | -> `pets`  |
+| `rate` | money |  |
+| `qty` | int |  |
+| `total` | money |  |
+| `occurs` | enum (once \| daily \| per_night) |  |
+| `morning` | bool |  |
+| `afternoon` | bool |  |
+| `evening` | bool |  |
+| `note` | text, null |  |
+
+**Access:** staff read/write
 
 #### `bookings` (per location)
 A stay: customer, dates, room type, status (one lifecycle), totals and payment status.  
