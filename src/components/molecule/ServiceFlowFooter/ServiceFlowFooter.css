@@ -1,0 +1,8 @@
+.flowfooter { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3) var(--sp-4) var(--sp-4); background: var(--color-bg-phone); border-top: 1px solid var(--color-border); margin-top: var(--sp-4); }
+.flowfooter.is-sticky { position: sticky; bottom: calc(var(--h-bottomnav) + env(safe-area-inset-bottom)); z-index: 5; }
+.flowfooter-summary { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+.flowfooter-summary strong { color: var(--color-heading); font-size: var(--fs-md); }
+.flowfooter-actions { display: flex; gap: var(--sp-3); }
+.flowfooter-actions > * { flex: 1 1 0; min-width: 0; }
+.flowfooter-hint { text-align: center; }
+@media (max-width: 380px) { .flowfooter-actions { flex-direction: column; } }

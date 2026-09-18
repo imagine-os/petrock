@@ -291,6 +291,28 @@ create index if not exists customers_user_id_idx on public.customers(user_id);
 create index if not exists customers_home_location_id_idx on public.customers(home_location_id);
 create trigger customers_touch before update on public.customers for each row execute function public.touch_updated_at();
 
+-- daycare · Daycare booking pets: Per pet on a daycare day: the additional pet details questionnaire (vet-recommended flea medication with brand and date, medical alerts).
+-- access:
+--   · customer write own
+--   · front desk read
+create table if not exists public.daycare_booking_pets (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  daycare_booking_id uuid not null references public.daycare_bookings(id) on delete set null,
+  pet_id uuid not null references public.pets(id) on delete set null,
+  -- On a vet-recommended flea medication
+  flea_medication boolean not null default false,
+  flea_brand text,
+  -- Last application
+  flea_date date,
+  medical_alert text
+);
+create index if not exists daycare_booking_pets_daycare_booking_id_idx on public.daycare_booking_pets(daycare_booking_id);
+create index if not exists daycare_booking_pets_pet_id_idx on public.daycare_booking_pets(pet_id);
+create trigger daycare_booking_pets_touch before update on public.daycare_booking_pets for each row execute function public.touch_updated_at();
+
 -- daycare · Daycare bookings: A daycare day: pets, date, in/out times, computed item and price, status (same lifecycle).
 create table if not exists public.daycare_bookings (
   -- Primary key
@@ -422,6 +444,51 @@ create table if not exists public.fees (
   active boolean not null default false
 );
 create trigger fees_touch before update on public.fees for each row execute function public.touch_updated_at();
+
+-- grooming · Grooming & Spa orders: One customer booking of Grooming & Spa for one or more pets at one time: groups the per-pet appointments, carries the payment and the one booking lifecycle status. Past orders can be re-created (R-G16).
+-- access:
+--   · customer read own
+--   · front desk read/write
+--   · owner read
+create table if not exists public.grooming_orders (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  -- Human reference e.g. GS-1042
+  code text not null,
+  customer_id uuid not null references public.customers(id) on delete set null,
+  -- appointments.id per pet
+  appointment_ids jsonb not null,
+  -- pets.id in order
+  pet_ids jsonb not null,
+  starts_at timestamptz not null,
+  -- Longest chair time; pets are groomed in parallel up to the grooming capacity
+  duration_min integer not null,
+  groomer_id uuid references public.employees(id) on delete set null,
+  status text not null check (status in ('requested', 'pending_vaccines', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show')),
+  payment_method text check (payment_method in ('card', 'cash')),
+  payment_status text not null check (payment_status in ('pending', 'authorized', 'paid', 'refunded', 'failed')),
+  -- USD
+  subtotal numeric(12,2) not null,
+  -- USD
+  tax_total numeric(12,2) not null,
+  -- USD
+  fee_total numeric(12,2) not null,
+  -- USD
+  total numeric(12,2) not null,
+  invoice_id uuid references public.invoices(id) on delete set null,
+  notes text,
+  -- app | desk | recreate
+  source text
+);
+create index if not exists grooming_orders_location_idx on public.grooming_orders(location_id);
+create index if not exists grooming_orders_customer_id_idx on public.grooming_orders(customer_id);
+create index if not exists grooming_orders_groomer_id_idx on public.grooming_orders(groomer_id);
+create index if not exists grooming_orders_invoice_id_idx on public.grooming_orders(invoice_id);
+create trigger grooming_orders_touch before update on public.grooming_orders for each row execute function public.touch_updated_at();
 
 -- core · Holidays & closures: Dates marked holiday (excluded from long-stay discounts) or boarding closed.
 create table if not exists public.holidays (

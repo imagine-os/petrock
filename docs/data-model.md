@@ -490,6 +490,36 @@ _Source: entities 12_
 | `payment_status` | enum (pending \| authorized \| paid \| refunded \| failed) |  |
 | `notes` | text, null |  |
 
+#### `grooming_orders` (per location)
+One customer booking of Grooming & Spa for one or more pets at one time: groups the per-pet appointments, carries the payment and the one booking lifecycle status. Past orders can be re-created (R-G16).  
+_Source: Frame 1171276434/35.png, entities 12_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `code` | text | Human reference e.g. GS-1042 |
+| `customer_id` | uuid | -> `customers`  |
+| `appointment_ids` | json | appointments.id per pet |
+| `pet_ids` | json | pets.id in order |
+| `starts_at` | timestamptz |  |
+| `duration_min` | int | Longest chair time; pets are groomed in parallel up to the grooming capacity |
+| `groomer_id` | uuid, null | -> `employees`  |
+| `status` | enum (requested \| pending_vaccines \| confirmed \| checked_in \| checked_out \| cancelled \| no_show) |  |
+| `payment_method` | enum (card \| cash), null |  |
+| `payment_status` | enum (pending \| authorized \| paid \| refunded \| failed) |  |
+| `subtotal` | money | USD |
+| `tax_total` | money | USD |
+| `fee_total` | money | USD |
+| `total` | money | USD |
+| `invoice_id` | uuid, null | -> `invoices`  |
+| `notes` | text, null |  |
+| `source` | text, null | app | desk | recreate |
+
+**Access:** customer read own; front desk read/write; owner read
+
 #### `packages` (global)
 Gold / Platinum / Diamond priced by dog size S/M/L/XL/Giant with calendar minutes per size and inclusions.  
 _Source: R-G01..G07_
@@ -533,6 +563,24 @@ _Source: entities 10, 15_
 | `description` | text, null |  |
 
 ### Daycare
+
+#### `daycare_booking_pets` (global)
+Per pet on a daycare day: the additional pet details questionnaire (vet-recommended flea medication with brand and date, medical alerts).  
+_Source: DayCare-2.png, R-A10_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `daycare_booking_id` | uuid | -> `daycare_bookings`  |
+| `pet_id` | uuid | -> `pets`  |
+| `flea_medication` | bool | On a vet-recommended flea medication |
+| `flea_brand` | text, null |  |
+| `flea_date` | date, null | Last application |
+| `medical_alert` | text, null |  |
+
+**Access:** customer write own; front desk read
 
 #### `daycare_bookings` (per location)
 A daycare day: pets, date, in/out times, computed item and price, status (same lifecycle).  

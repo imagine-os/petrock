@@ -1,0 +1,7 @@
+.daycard { gap: var(--sp-2); }
+.daycard-head { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.daycard-when { display: inline-flex; align-items: center; gap: 6px; color: var(--color-heading); }
+.daycard-times { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-2); flex-wrap: wrap; font-size: var(--fs-sm); } .daycard-times span { display: inline-flex; align-items: center; gap: 4px; }
+.daycard-meta { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; } .daycard-meta span { display: inline-flex; align-items: center; gap: 3px; }
+.daycard-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--sp-2); border-top: 1px solid var(--color-border); font-size: var(--fs-sm); } .daycard-total strong { font-size: var(--fs-md); color: var(--color-heading); }
+.daycard-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; padding-top: var(--sp-1); } .daycard-actions > * { flex: 1 1 140px; }
