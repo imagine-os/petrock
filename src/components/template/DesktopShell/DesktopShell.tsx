@@ -7,6 +7,7 @@ import { Sidebar, type SidebarGroup } from '../../organism/Sidebar/Sidebar';
 import { TopBar } from '../../organism/TopBar/TopBar';
 import { FeedbackButton } from '../../organism/FeedbackButton/FeedbackButton';
 import { IconButton } from '../../atom/IconButton/IconButton';
+import { Button } from '../../atom/Button/Button';
 import type { IconName } from '../../atom/Icon/Icon';
 import './DesktopShell.css';
 
@@ -21,9 +22,9 @@ function useNarrow(bp = 900) {
   return narrow;
 }
 
-/** Staff / admin / dev / docs shell: per-role categorised Sidebar + TopBar + content + FeedbackButton. Sidebar becomes an overlay drawer under 900 px. */
+/** Staff / admin / dev / docs shell (Figma front desk.jpg): #F4F0FF canvas, 243 px white Sidebar with the 145x44 logo and a Logout button, 80 px TopBar (search, location, New booking, chat, Help, bell, user), content, FeedbackButton. Sidebar becomes an overlay drawer under 900 px; page-code pills show in dev mode only. */
 export function DesktopShell({ surfaces, routes, title: titleProp, children, feedback = true, titleByRole = false }: DesktopShellProps) {
-  const { role, hasRole } = useSession();
+  const { role, hasRole, devMode, signOut } = useSession();
   const title = titleByRole ? ROLE_SHELL_TITLE[role] ?? titleProp : titleProp;
   const { pathname } = useRouterLocation();
   const narrow = useNarrow();
@@ -46,8 +47,14 @@ export function DesktopShell({ surfaces, routes, title: titleProp, children, fee
   }, [routes, surfaces, hasRole]);
 
   const current = routes.find((r) => matchPath({ path: r.path, end: true }, pathname));
-  const header = <Link to="/" className="shell-brand" title="Testing hub"><img src="./brand/petrock-mark.svg" alt="" width={28} height={28} /><span className="shell-brand-text">Petrock <span className="faint">· {title}</span></span></Link>;
-  const sidebar = <Sidebar groups={groups} rail={rail && !narrow} onToggleRail={narrow ? undefined : () => setRail((r) => !r)} storageKey={`petrock.sidebar.${role}`} header={header} onNavigate={() => setDrawer(false)} />;
+  const has = (path: string) => routes.some((r) => r.path === path && hasRole(r.roles));
+  const firstWith = (prefix: string) => routes.find((r) => r.path.startsWith(prefix) && hasRole(r.roles))?.path;
+  const isDesk = surfaces.includes('frontdesk') || surfaces.includes('admin');
+  const header = rail && !narrow
+    ? <Link to="/" className="shell-brand" title="Testing hub"><img src="./brand/petrock-mark.svg" alt="Petrock" width={28} height={28} /></Link>
+    : <Link to="/" className="shell-brand" title={`Petrock · ${title} · testing hub`}><img src="./brand/petrock-logo.png" srcSet="./brand/petrock-logo.png 1x, ./brand/petrock-logo-2x.png 4x" alt="Petrock Hotel and Spa" width={145} height={44} /></Link>;
+  const footer = <Button variant="primary" block icon="logout" onClick={() => { signOut(); }} className="shell-logout" title="Sign out of the demo session">{rail && !narrow ? '' : 'Log Out'}</Button>;
+  const sidebar = <Sidebar groups={groups} rail={rail && !narrow} onToggleRail={narrow ? undefined : () => setRail((r) => !r)} storageKey={`petrock.sidebar.${role}`} header={header} footer={footer} showCodes={devMode} onNavigate={() => setDrawer(false)} />;
 
   return (
     <div className={`shell ${rail && !narrow ? 'is-rail' : ''}`}>
@@ -58,7 +65,7 @@ export function DesktopShell({ surfaces, routes, title: titleProp, children, fee
         </div>
       )}
       <div className="shell-main">
-        <TopBar title={title} onMenu={narrow ? () => setDrawer(true) : undefined} />
+        <TopBar title={narrow ? title : undefined} onMenu={narrow ? () => setDrawer(true) : undefined} searchTo={isDesk ? (has('/desk/customers') ? '/desk/customers' : undefined) : undefined} newBookingTo={isDesk && has('/desk/reservations') ? '/desk/reservations' : undefined} chatTo={isDesk && has('/desk/messages') ? '/desk/messages' : undefined} helpTo={firstWith('/manual')} />
         <main className="shell-content" id="main">{children}</main>
       </div>
       {feedback && current && <FeedbackButton pageCode={current.spec.code} route={current.path} />}

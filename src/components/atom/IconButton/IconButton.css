@@ -1,4 +1,4 @@
-.iconbtn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-md); border: 1px solid transparent; background: transparent; color: var(--color-text-muted); transition: background var(--dur-fast), color var(--dur-fast); }
+.iconbtn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-md); border: 1px solid transparent; background: transparent; color: var(--color-icon-header); transition: background var(--dur-fast), color var(--dur-fast); }
 .iconbtn-sm { width: 32px; height: 32px; }
 .iconbtn:hover { background: var(--color-surface-tint); color: var(--color-primary-text); }
 .iconbtn.is-active { background: var(--color-primary-soft); color: var(--color-primary-text); }

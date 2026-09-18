@@ -15,6 +15,8 @@ export interface DataTableColumn<T> {
   width?: number | string;
   align?: 'left' | 'right' | 'center';
   mono?: boolean;
+  /** Figma cell colour per column role (598:23546..23562): muted #7C7E93 (id / room / breed), heading #11104A (customer), date #181818, primary #552583 (times / counts / phones / money). */
+  tone?: 'muted' | 'heading' | 'date' | 'primary';
   /** Column group header (e.g. "Dates", "Money"). Adjacent columns with the same group share one header cell. */
   group?: string;
   /** Hide on the phone card layout. */
@@ -110,7 +112,7 @@ export function DataTable<T extends object>({ columns, rows, rowKey, onRowClick,
               const k = rowKey(r);
               return (
                 <tr key={k} className={`${onRowClick ? 'is-clickable' : ''} ${selectedKey === k ? 'is-selected' : ''}`} onClick={onRowClick ? () => onRowClick(r) : undefined} tabIndex={onRowClick ? 0 : undefined} onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter') onRowClick(r); } : undefined}>
-                  {columns.map((c) => <td key={c.key} data-label={typeof c.label === 'string' ? c.label : c.key} className={`${c.mono ? 'mono' : ''} ${c.hideOnCard ? 'hide-card' : ''}`} style={{ textAlign: c.align }}>{c.render ? c.render(r) : formatCell(get(r, c.key))}</td>)}
+                  {columns.map((c) => <td key={c.key} data-label={typeof c.label === 'string' ? c.label : c.key} className={`${c.mono ? 'mono' : ''} ${c.hideOnCard ? 'hide-card' : ''} ${c.tone ? `cell-${c.tone}` : ''}`} style={{ textAlign: c.align }}>{c.render ? c.render(r) : formatCell(get(r, c.key))}</td>)}
                   {rowActions && <td className="datatable-actions" onClick={(e) => e.stopPropagation()}>{rowActions(r)}</td>}
                 </tr>
               );

@@ -3,7 +3,7 @@ import { defineMeta } from '../../../design/meta';
 import { Input } from './Input';
 
 export default defineMeta({
-  tier: 'atom', name: 'Input', description: 'Text input with label, hint, error, leading icon, suffix and character counter. 44 px tall, 8 px radius (Figma Text Input).',
+  tier: 'atom', name: 'Input', description: 'Text input with label, hint, error, leading icon, suffix and character counter. Figma Text Input 443:17975: 12 px grey label, 48 tall; the shell sets the skin (PhoneShell r4 #F1F1F1 16/600, DesktopShell r8 #EDEDED 14/400).',
   props: [{ name: 'label', type: 'ReactNode', description: 'Label above' }, { name: 'hint', type: 'ReactNode', description: 'Helper text' }, { name: 'error', type: 'ReactNode', description: 'Error text (sets aria-invalid)' }, { name: 'icon', type: 'IconName', description: 'Leading icon' }, { name: 'suffix', type: 'ReactNode', description: 'Trailing text e.g. lbs' }, { name: 'showCount', type: 'boolean', description: 'Counter when maxLength set' }, { name: 'size', type: "'sm'|'md'", default: 'md', description: 'Height 36 / 44' }],
   states: ['default', 'focus', 'error', 'disabled', 'with icon', 'with counter'],
   usages: [

@@ -1,8 +1,7 @@
-.svctile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 92px; padding: var(--sp-3) var(--sp-2); border: 0; border-radius: var(--r-lg); background: var(--color-primary); color: var(--color-text-on-primary); box-shadow: var(--shadow-md); cursor: pointer; transition: transform var(--dur-fast), filter var(--dur-fast); min-width: 0; }
-.svctile:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.06); }
-.svctile:active:not(:disabled) { transform: translateY(0); }
-.svctile.is-disabled { background: var(--color-surface-3); color: var(--color-text-muted); box-shadow: none; cursor: not-allowed; }
+/* Figma Services tile (px Home Page.png 14..90 x 178..254): 75x76 #552583 r8, icon 36, label 700 12 white. */
+.svctile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 76px; padding: var(--sp-2) var(--sp-1); border: 0; border-radius: var(--r-md); background: var(--color-primary); color: var(--color-text-on-primary); cursor: pointer; transition: background var(--dur-fast); min-width: 0; }
+.svctile:hover:not(:disabled) { background: var(--color-primary-hover); }
+.svctile.is-disabled { opacity: .6; cursor: not-allowed; }
 .svctile-icon { display: inline-flex; }
-.svctile-label { font-size: var(--fs-xs); font-weight: var(--fw-semibold); line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
+.svctile-label { font-size: var(--fs-xs); font-weight: var(--fw-bold); line-height: 1.25; text-align: center; overflow-wrap: anywhere; }
 .svctile-hint { font-size: var(--fs-xs); opacity: .8; }
-:root[data-theme="dark"] .svctile { color: var(--color-bg); }

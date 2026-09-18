@@ -9,7 +9,7 @@ export function StatTile({ label, value, delta, icon, hint, tone = 'default', on
   const Tag = onClick ? 'button' : 'div';
   return (
     <Tag className={`stat stat-${tone}`} onClick={onClick} type={onClick ? 'button' : undefined}>
-      <div className="stat-top"><span className="stat-label">{label}</span>{icon && <span className="stat-icon"><Icon name={icon} size={18} /></span>}</div>
+      <div className="stat-top"><span className="stat-label">{label}</span>{icon && <span className="stat-icon"><Icon name={icon} size={20} /></span>}</div>
       <div className="stat-value">{value}</div>
       {(delta || hint) && <div className="stat-foot">{delta && <span className={`stat-delta ${delta.positive === false ? 'is-neg' : 'is-pos'}`}>{delta.value}</span>}{hint && <span className="stat-hint">{hint}</span>}</div>}
     </Tag>

@@ -1,12 +1,18 @@
-.shell { display: flex; min-height: 100vh; background: var(--color-bg); }
+.shell { display: flex; min-height: 100vh; background: var(--color-bg);
+  /* desk field / card skin (Figma search 593:16049, cards 593:15940): r8, #EDEDED borders, 14/400 values, two-layer shadow */
+  --r-field: var(--r-md); --color-border-field: var(--color-border-bar); --fs-field: var(--fs-sm); --fw-field: var(--fw-regular);
+  --shadow-card: var(--shadow-desk); --color-border-card-skin: var(--color-border-subtle); }
 .shell-side { position: sticky; top: 0; height: 100vh; flex: 0 0 auto; z-index: 60; }
 .shell-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
-.shell-content { flex: 1; padding: 0 var(--sp-4) calc(var(--sp-16) + 48px); min-width: 0; }
-@media (min-width: 900px) { .shell-content { padding: 0 var(--sp-6) var(--sp-16); } }
-.shell-brand { display: flex; align-items: center; gap: 10px; color: var(--color-heading); font-weight: var(--fw-semibold); text-decoration: none; min-width: 0; }
+.shell-content { flex: 1; padding: var(--sp-4) var(--sp-4) calc(var(--sp-16) + 48px); min-width: 0; }
+@media (min-width: 900px) { .shell-content { padding: var(--sp-5) 28px var(--sp-16) var(--sp-3); } }
+.shell-brand { display: inline-flex; align-items: center; color: var(--color-heading); text-decoration: none; min-width: 0; }
 .shell-brand:hover { text-decoration: none; }
-.shell-brand-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-sm); }
-.is-rail .shell-brand-text { display: none; }
+.shell-brand img { display: block; height: 44px; width: auto; max-width: 100%; }
+.is-rail .shell-brand img { height: 28px; }
+:root[data-theme="dark"] .shell-brand img { filter: brightness(0) invert(1); }
+.shell-logout { height: 52px; letter-spacing: var(--ls-button); }
+.is-rail .shell-logout { padding: 0; }
 .shell-overlay { position: fixed; inset: 0; z-index: 1000; background: var(--color-scrim); animation: modal-fade var(--dur-base) var(--ease-out); }
 .shell-overlay-panel { position: absolute; top: 0; bottom: 0; left: 0; width: min(300px, 86vw); background: var(--color-sidebar); box-shadow: var(--shadow-xl); animation: shell-slide var(--dur-base) var(--ease-out); }
 .shell-overlay-panel .sidebar { width: 100%; }

@@ -11,7 +11,7 @@ function Demo() { const [rail, setRail] = useState(false); return h('div', { sty
 
 export default defineMeta({
   tier: 'organism', name: 'Sidebar', description: 'Categorised side menu (D-014): collapsible categories with a per-category toggle, expand-all / collapse-all, active state, badges, page codes, and a rail mode. Categories come from routes with `nav` filtered by role, so each role has its own menu.',
-  props: [{ name: 'groups', type: 'SidebarGroup[]', required: true, description: '{ key, label, icon, items[] }' }, { name: 'rail', type: 'boolean', description: 'Icons only' }, { name: 'onToggleRail', type: '() => void', description: 'Rail toggle' }, { name: 'storageKey', type: 'string', description: 'Persist collapsed categories per role' }, { name: 'header/footer', type: 'ReactNode', description: 'Slots' }],
+  props: [{ name: 'groups', type: 'SidebarGroup[]', required: true, description: '{ key, label, icon, items[] }' }, { name: 'rail', type: 'boolean', description: 'Icons only' }, { name: 'showCodes', type: 'boolean', default: 'false', description: 'Page-code pills (dev mode only)' }, { name: 'footer', type: 'ReactNode', description: 'Bottom slot (DesktopShell puts the Log Out button here)' }, { name: 'onToggleRail', type: '() => void', description: 'Rail toggle' }, { name: 'storageKey', type: 'string', description: 'Persist collapsed categories per role' }, { name: 'header/footer', type: 'ReactNode', description: 'Slots' }],
   states: ['expanded', 'category collapsed', 'all collapsed', 'rail', 'active link'],
   usages: [{ title: 'Live (toggle rail with the chevron)', render: () => h(Demo) }],
   a11y: ['nav landmark; category buttons carry aria-expanded; NavLink sets aria-current.'],

@@ -16,6 +16,8 @@ export interface SidebarProps {
   header?: ReactNode;
   footer?: ReactNode;
   onNavigate?: () => void;
+  /** Show the page-code pills next to items (dev mode only; Figma has none). */
+  showCodes?: boolean;
 }
 
 function readSet(key?: string): Set<string> { if (!key) return new Set(); try { const raw = localStorage.getItem(key); return new Set(raw ? (JSON.parse(raw) as string[]) : []); } catch { return new Set(); } }
@@ -23,8 +25,10 @@ function readSet(key?: string): Set<string> { if (!key) return new Set(); try { 
 /**
  * Categorised side menu (D-014): every category collapses on its own, expand-all / collapse-all at the top, and a
  * rail mode for narrow desktops. Groups come from routes with a `nav` entry, filtered by the current role (per-role menus).
+ * Skin per Figma sidebar/Default (593:16048): 243 wide white, no right border, logo block 145x44, "MAIN" / "Other" style
+ * group labels in #7C7E93, items 44 tall with 22 px line icons, active = primary text + icon (no fill), Logout button footer.
  */
-export function Sidebar({ groups, rail = false, onToggleRail, storageKey, header, footer, onNavigate }: SidebarProps) {
+export function Sidebar({ groups, rail = false, onToggleRail, storageKey, header, footer, onNavigate, showCodes = false }: SidebarProps) {
   const [collapsed, setCollapsed] = useState<Set<string>>(() => readSet(storageKey));
   useEffect(() => { setCollapsed(readSet(storageKey)); }, [storageKey]);
   useEffect(() => { if (storageKey) try { localStorage.setItem(storageKey, JSON.stringify([...collapsed])); } catch { /* ignore */ } }, [collapsed, storageKey]);
@@ -45,19 +49,19 @@ export function Sidebar({ groups, rail = false, onToggleRail, storageKey, header
           return (
             <section key={g.key} className={`sidebar-group ${isCollapsed ? 'is-collapsed' : ''}`}>
               <button type="button" className="sidebar-cat" onClick={() => toggle(g.key)} aria-expanded={!isCollapsed} title={g.label}>
-                <Icon name={g.icon} size={16} className="sidebar-cat-icon" />
+                <Icon name={g.icon} size={14} className="sidebar-cat-icon" />
                 <span className="sidebar-cat-label">{g.label}</span>
-                <Icon name="chevron-down" size={14} className="sidebar-cat-chevron" />
+                <Icon name="chevron-down" size={14} strokeWidth={2} className="sidebar-cat-chevron" />
               </button>
               {!isCollapsed && (
                 <ul className="sidebar-items">
                   {g.items.map((it) => (
                     <li key={it.to}>
                       <NavLink to={it.to} end={it.end} className={({ isActive }) => `sidebar-link ${isActive ? 'is-active' : ''}`} title={rail ? it.label : undefined} onClick={onNavigate}>
-                        <Icon name={it.icon} size={18} />
+                        <Icon name={it.icon} size={22} strokeWidth={1.5} />
                         <span className="sidebar-link-label">{it.label}</span>
                         {it.badge ? <span className="sidebar-badge">{it.badge}</span> : null}
-                        {it.code && <code className="sidebar-code">{it.code}</code>}
+                        {showCodes && it.code && <code className="sidebar-code">{it.code}</code>}
                       </NavLink>
                     </li>
                   ))}

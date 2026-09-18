@@ -28,6 +28,8 @@ export interface PageSpec {
   figma?: string[];
   /** Widths the page has been checked at (D-016). */
   checkedAt?: number[];
+  /** Customer screen background tone from Figma: white home / auth (default), #F4F6FA lists, #EEF2F5 forms. PhoneShell applies it. */
+  tone?: 'home' | 'list' | 'form';
 }
 
 export interface NavDef {

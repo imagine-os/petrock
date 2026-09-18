@@ -1,9 +1,0 @@
-.phead { padding: var(--sp-2) var(--sp-2) var(--sp-2); background: var(--color-bg-phone); }
-.phead.is-sticky { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid transparent; }
-.phead-row { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; min-height: 48px; }
-.phead-title { font-size: var(--fs-lg); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.phead-side { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 44px; }
-.phead-side:first-child { justify-content: flex-start; }
-.phead-actions { gap: 2px; }
-.phead-actions:has(> :nth-child(2)) { justify-self: end; }
-.phead-sub { text-align: center; padding: 0 var(--sp-4) var(--sp-2); }

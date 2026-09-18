@@ -1,14 +1,14 @@
-.acctrow { display: flex; align-items: center; gap: var(--sp-3); width: 100%; min-height: 56px; padding: var(--sp-3) var(--sp-4); background: none; border: 0; border-bottom: 1px solid var(--color-border); color: var(--color-text); text-align: left; font-size: var(--fs-sm); text-decoration: none; }
+/* Figma settings list (730:56045 / setting.jpg): rows 68 tall, gutter 24, icon 20 filled, label Be Vietnam Pro 500 16 #11104A, 1 px #DFDFDF rule. */
+.acctrow { display: flex; align-items: center; gap: var(--sp-4); width: 100%; min-height: 68px; padding: var(--sp-3) var(--sp-6); background: none; border: 0; border-bottom: 1px solid var(--color-border); color: var(--color-text); text-align: left; font-size: var(--fs-md); text-decoration: none; }
 .acctrow:last-child { border-bottom: 0; }
 a.acctrow:hover, button.acctrow:hover:not(:disabled) { background: var(--color-surface-tint-2); text-decoration: none; }
 .acctrow.is-disabled { opacity: .55; cursor: not-allowed; }
-.acctrow-icon { display: inline-flex; flex: 0 0 auto; width: 36px; height: 36px; align-items: center; justify-content: center; border-radius: var(--r-md); background: var(--color-surface-tint); color: var(--color-primary-text); }
-.acctrow-icon-accent { background: var(--color-accent-soft); color: var(--color-accent); }
-.acctrow-icon-danger { background: var(--color-danger-bg); color: var(--color-danger); }
+.acctrow-icon { display: inline-flex; flex: 0 0 auto; width: 20px; height: 20px; align-items: center; justify-content: center; color: var(--color-icon-primary); }
+.acctrow-icon-accent, .acctrow-icon-danger { color: var(--color-accent-coral); }
 .acctrow-text { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
-.acctrow-label { font-weight: var(--fw-medium); color: var(--color-heading); }
-.acctrow-danger .acctrow-label { color: var(--color-danger); }
+.acctrow-label { font-family: var(--font-display); font-weight: var(--fw-medium); color: var(--color-heading); line-height: var(--lh-md); }
+.acctrow-danger .acctrow-label { color: var(--color-heading); }
 .acctrow-desc { font-size: var(--fs-xs); color: var(--color-text-muted); }
-.acctrow-value { font-size: var(--fs-xs); color: var(--color-text-muted); white-space: nowrap; }
+.acctrow-value { font-size: var(--fs-sm); color: var(--color-text-muted); white-space: nowrap; }
 .acctrow-trailing { display: inline-flex; align-items: center; flex: 0 0 auto; }
-.acctrow-chevron { color: var(--color-text-faint); flex: 0 0 auto; }
+.acctrow-chevron { color: var(--color-icon-muted); flex: 0 0 auto; }

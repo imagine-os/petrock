@@ -3,3 +3,5 @@
 .avatar-pet { background: hsl(var(--avatar-hue) 60% 90%); color: hsl(var(--avatar-hue) 45% 30%); }
 :root[data-theme="dark"] .avatar-pet { background: hsl(var(--avatar-hue) 35% 28%); color: hsl(var(--avatar-hue) 60% 85%); }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar.has-ring { overflow: visible; outline: 2px dashed var(--color-accent-coral); outline-offset: 5px; }
+.avatar.has-ring img, .avatar.has-ring > span { border-radius: inherit; overflow: hidden; }

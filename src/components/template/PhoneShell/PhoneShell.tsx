@@ -11,7 +11,11 @@ import './PhoneShell.css';
 
 export interface PhoneShellProps { surface: Surface; routes: RouteDef[]; children: ReactNode; homeTo: string }
 
-/** Customer app frame: full-bleed on phones, a centered 430 px column on larger screens, BottomNav from customer routes with nav. */
+/**
+ * Customer app frame: full-bleed on phones, a centered 430 px column on larger screens, BottomNav from customer routes
+ * with nav. The screen background follows the route's `spec.tone` (Figma: white home / auth, #F4F6FA lists, #EEF2F5
+ * forms) and the mobile field skin (4 px inputs, 16/600 values) is set here as custom properties.
+ */
 export function PhoneShell({ surface, routes, children, homeTo }: PhoneShellProps) {
   const { hasRole, user } = useSession();
   const { pathname } = useRouterLocation();
@@ -21,8 +25,9 @@ export function PhoneShell({ surface, routes, children, homeTo }: PhoneShellProp
   const current = routes.find((r) => matchPath({ path: r.path, end: true }, pathname));
   const hideNav = current?.layout === 'mobile' && !current?.nav && pathname.startsWith('/auth');
   const inFrame = typeof window !== 'undefined' && window.self !== window.top;
+  const tone = current?.spec.tone ?? 'home';
   return (
-    <div className={`phoneshell ${inFrame ? 'in-frame' : ''}`}>
+    <div className={`phoneshell ${inFrame ? 'in-frame' : ''}`} data-tone={tone}>
       {!inFrame && <Link to="/" className="phoneshell-hub" title="Back to the testing hub"><Icon name="arrow-left" size={14} /> Hub</Link>}
       <div className="phoneshell-col">
         <div className="phoneshell-content">{children}</div>

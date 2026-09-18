@@ -1,8 +1,12 @@
-.cshead { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: var(--sp-2); min-height: 56px; padding: var(--sp-2) var(--sp-3); background: var(--color-bg-phone); }
-.cshead.is-sticky { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid transparent; }
-.cshead-side { display: flex; align-items: center; min-width: 44px; }
-.cshead-actions { justify-content: flex-end; gap: var(--sp-1); }
-.cshead-text { min-width: 0; text-align: center; }
-.cshead-start .cshead-text { text-align: left; }
-.cshead-title { font-size: var(--fs-lg); font-weight: var(--fw-semibold); color: var(--color-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Figma mobile header: back 40x40 at x=10, title Open Sans 600 20 #000 centred, right action 600 14 primary, 1 px #B6B6B6 rule. */
+.cshead { display: grid; grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr); align-items: center; gap: var(--sp-2); min-height: 56px; padding: var(--sp-2) 10px; background: var(--color-bg-phone); }
+.cshead.has-rule { border-bottom: 1px solid var(--color-border-strong); }
+.cshead.is-sticky { position: sticky; top: 0; z-index: 20; }
+.cshead-side { display: flex; align-items: center; min-width: 40px; min-height: 40px; }
+.cshead-actions { justify-content: flex-end; gap: var(--sp-1); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-primary-text); white-space: nowrap; }
+.cshead-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; background: none; padding: 0; color: var(--color-icon-header); border-radius: var(--r-md); }
+.cshead-back:hover { background: var(--color-surface-tint); }
+.cshead-text { min-width: 0; text-align: center; padding: 0 var(--sp-1); }
+.cshead-start { grid-template-columns: auto minmax(0, 1fr) auto; } .cshead-start .cshead-text { text-align: left; }
+.cshead-title { font-size: var(--fs-lg); font-weight: var(--fw-semibold); line-height: var(--lh-title); color: var(--color-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cshead-sub { font-size: var(--fs-xs); color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

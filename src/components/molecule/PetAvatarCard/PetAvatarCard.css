@@ -1,11 +1,18 @@
-.petcard { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: var(--sp-4) var(--sp-3); min-width: 0; width: 100%; background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--r-lg); color: var(--color-text); box-shadow: var(--shadow-sm); font: inherit; }
+/* Figma Pets Card: 100x138 (home ~114x180) white r10, padding 7/20, gap 5, avatar 60, name 600 14 #181818, status 10 (12 floor) coloured. */
+.petcard { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: var(--sp-4) 7px var(--sp-3); min-width: 0; width: 100%; background: var(--color-surface); border: 2px solid transparent; border-radius: var(--r-card); color: var(--color-text); box-shadow: var(--shadow-pet); font: inherit; }
 .petcard-sm { padding: var(--sp-3) var(--sp-2); gap: 4px; }
-.petcard.is-interactive { cursor: pointer; transition: border-color var(--dur-fast), box-shadow var(--dur-fast), transform var(--dur-fast); }
-.petcard.is-interactive:hover { border-color: var(--color-border-primary); box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.petcard.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); background: var(--color-surface-tint-2); }
-.petcard.is-muted { opacity: .72; }
-.petcard-name { font-weight: var(--fw-semibold); color: var(--color-heading); font-size: var(--fs-sm); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.petcard-lg .petcard-name { font-size: var(--fs-md); }
+.petcard-lg { padding: var(--sp-5) var(--sp-3); gap: 6px; }
+.petcard.is-interactive { cursor: pointer; transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+.petcard.is-interactive:hover { border-color: var(--color-border-primary); }
+.petcard.is-selected { border-color: var(--color-border-primary); box-shadow: none; }
+.petcard.is-filled { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); box-shadow: none; }
+.petcard.is-filled .petcard-name, .petcard.is-filled .petcard-sub { color: inherit; }
+.petcard.is-muted { opacity: .8; }
+.petcard-name { font-weight: var(--fw-semibold); color: var(--color-text); font-size: var(--fs-sm); line-height: var(--lh-sm); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.petcard-lg .petcard-name { font-family: var(--font-display); font-size: var(--fs-lg-2); color: var(--color-heading); }
 .petcard-sub { font-size: var(--fs-xs); color: var(--color-text-muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.petcard-status { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
-.petcard-warn { color: var(--color-danger); flex: 0 0 auto; }
+.petcard-status { display: inline-flex; align-items: center; justify-content: center; gap: 4px; max-width: 100%; font-size: var(--fs-xs); line-height: var(--lh-xs); }
+.petcard-status.is-warning { color: var(--color-danger-soft); }
+.petcard-status-text { min-width: 0; }
+.petcard-warn { color: var(--color-danger-soft); flex: 0 0 auto; }
+:root[data-theme="dark"] .petcard { box-shadow: 0 0 5px rgba(177,138,224,.35); }

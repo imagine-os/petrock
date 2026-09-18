@@ -10,7 +10,7 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   error?: ReactNode;
   options: SelectOption[];
   placeholder?: string;
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
 }
 
 /** Native select styled like Input, with a chevron. Lookup lists (breed, colour, vet) use it. */
@@ -25,7 +25,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           {placeholder && <option value="">{placeholder}</option>}
           {options.map((o) => <option key={o.value} value={o.value} disabled={o.disabled}>{o.label}</option>)}
         </select>
-        <Icon name="chevron-down" size={16} className="select-chevron" />
+        <Icon name="chevron-down" size={size === 'xs' ? 14 : 18} strokeWidth={2} className="select-chevron" />
       </div>
       {(hint || error) && <div className="field-help"><span className={error ? 'field-error' : 'field-hint'}>{error ?? hint}</span></div>}
     </div>
