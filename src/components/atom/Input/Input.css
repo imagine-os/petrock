@@ -1,10 +1,11 @@
 /* Figma Text Input (443:17975): label Open Sans 400 10 #808080 (12 px floor), gap 2, field 48 white r4 1 px #F1F1F1, value 600 16 #181818.
-   The shells set the skin: PhoneShell -> r4 / #F1F1F1 / 16-600, DesktopShell -> r8 / #EDEDED / 14-400 (top-bar search 593:16049). */
+   The shells set the skin: PhoneShell -> r4 / #F1F1F1 / 16-600, DesktopShell top bar -> r8 / #EDEDED / 14-400 (search 593:16049),
+   DesktopShell content -> 40 px r4 #B6B6B6 fields under 14 px #181818 labels (Booking details*.png forms) via --h-field / --fs-field-label / --color-field-label. */
 .field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.field-label { font-size: var(--fs-xs); font-weight: var(--fw-regular); color: var(--color-label); line-height: var(--lh-xs); }
+.field-label { font-size: var(--fs-field-label, var(--fs-xs)); font-weight: var(--fw-regular); color: var(--color-field-label, var(--color-label)); line-height: var(--lh-field-label, var(--lh-xs)); }
 .field-req { color: var(--color-danger); }
 .input-wrap { position: relative; display: flex; align-items: center; }
-.input, .select, .textarea { width: 100%; height: var(--h-control); padding: 0 var(--sp-3); border: 1px solid var(--color-border-field, var(--color-border)); border-radius: var(--r-field, var(--r-md)); background: var(--color-surface); color: var(--color-text); font-size: var(--fs-field, var(--fs-sm)); font-weight: var(--fw-field, var(--fw-regular)); letter-spacing: var(--ls-body); transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+.input, .select, .textarea { width: 100%; height: var(--h-field, var(--h-control)); padding: 0 var(--sp-3); border: 1px solid var(--color-border-field, var(--color-border)); border-radius: var(--r-field, var(--r-md)); background: var(--color-surface); color: var(--color-text); font-size: var(--fs-field, var(--fs-sm)); font-weight: var(--fw-field, var(--fw-regular)); letter-spacing: var(--ls-body); transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
 .input-sm .input, .select-sm .select { height: var(--h-control-sm); font-size: var(--fs-sm); }
 .input-xs .input, .select-xs .select { height: var(--h-control-xs); padding: 0 var(--sp-3); font-size: var(--fs-xs); font-weight: var(--fw-regular); border-color: var(--color-border); }
 .input::placeholder, .textarea::placeholder { color: var(--color-text-faint); font-weight: var(--fw-regular); }

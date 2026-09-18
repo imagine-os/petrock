@@ -13145,10 +13145,8 @@
    "name": "Hotel & Daycare reservations (table)",
    "purpose": "The reservations table of the design (18 columns) grouped by Arriving / Departing / Staying / Daycare / Checked out for the selected day, with filters, search, a date navigator and the switch to the Timeline and Board views (D-008). Rows open the booking detail.",
    "layout": [
-    "PageHeader (view switch, day navigator, New booking)",
-    "FilterBar (status, kind, room type, search, show cancelled)",
-    "ModeTabs (By day / All)",
-    "GroupSections (collapsible, count) each with ReservationsTable",
+    "TopLine (view switch, + Hotel Reservation)",
+    "ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out group rows; head + row checkboxes)",
     "DaycareDrawer"
    ],
    "data": [
@@ -13176,20 +13174,20 @@
    ],
    "integrations": [],
    "components": [
-    "PageHeader",
     "SegmentedControl",
     "ReservationDayNav",
+    "FilterPopover",
     "Select",
     "Input",
     "Toggle",
-    "Tabs",
-    "Section",
     "DataTable",
+    "Checkbox",
     "StatusBadge",
     "PetVaccineStatus",
     "Drawer",
     "BookingInfoGrid",
     "Button",
+    "IconButton",
     "EmptyState"
    ],
    "rules": [
@@ -13207,9 +13205,12 @@
     "filtered",
     "group collapsed",
     "empty group",
+    "rows selected",
     "daycare drawer"
    ],
    "figma": [
+    "front desk.jpg",
+    "front desk-9.jpg",
     "Frame 1171276264-10.png",
     "front desk-10.jpg",
     "front desk-11.jpg"
@@ -13239,10 +13240,9 @@
    "name": "Room timeline",
    "purpose": "Rooms as rows, days as columns, stays as blocks coloured by status: see occupancy at a glance, spot vaccine and balance flags, move a stay to another room or day by dragging, and act on a stay from its popover.",
    "layout": [
-    "PageHeader (view switch, week navigator, 1 / 2 weeks, New booking)",
-    "FilterBar (room type, status, show daycare, show unassigned)",
-    "Legend",
-    "RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups)",
+    "TopLine (view switch, New Booking)",
+    "TimelineBar (range pill centred; 1 / 2 weeks + Filter popover right: room type, status, unassigned, daycare, cancelled)",
+    "RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; alternating day columns, TODAY pill, flat status blocks)",
     "BlockPopover (summary, Open, Set status, Assign room)",
     "MoveModal",
     "RoomModal",
@@ -13275,9 +13275,9 @@
    ],
    "integrations": [],
    "components": [
-    "PageHeader",
     "SegmentedControl",
     "ReservationDayNav",
+    "FilterPopover",
     "Select",
     "Toggle",
     "RoomTimeline",

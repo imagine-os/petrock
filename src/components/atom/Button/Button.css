@@ -9,6 +9,9 @@
 .btn-primary:hover:not(:disabled) { background: var(--color-primary-hover); }
 .btn-secondary { background: var(--color-surface); color: var(--color-primary-text); border-color: var(--color-primary); }
 .btn-secondary:hover:not(:disabled) { background: var(--color-surface-tint); }
+.btn-outline { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border); font-weight: var(--fw-regular); font-size: var(--fs-sm); }
+.btn-outline:hover:not(:disabled) { border-color: var(--color-border-strong); color: var(--color-primary-text); }
+.btn-outline.btn-sm { font-size: var(--fs-sm); font-weight: var(--fw-regular); padding: 0 var(--sp-3); }
 .btn-ghost { background: transparent; color: var(--color-text); border-color: transparent; }
 .btn-ghost:hover:not(:disabled) { background: var(--color-surface-tint); color: var(--color-primary-text); }
 .btn-danger { background: var(--color-danger); color: #fff; }

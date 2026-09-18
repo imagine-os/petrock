@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from '../../tenant/LocationProvider';
-import { PageHeader } from '../../components/molecule/PageHeader/PageHeader';
 import { ReservationDayNav } from '../../components/molecule/ReservationDayNav/ReservationDayNav';
 import { SegmentedControl } from '../../components/molecule/SegmentedControl/SegmentedControl';
 import { Select } from '../../components/atom/Select/Select';
 import { Toggle } from '../../components/atom/Toggle/Toggle';
 import { Button } from '../../components/atom/Button/Button';
+import { FilterPopover } from '../../components/molecule/FilterPopover/FilterPopover';
 import { Badge, StatusBadge } from '../../components/atom/Badge/Badge';
 import { Modal } from '../../components/organism/Modal/Modal';
 import { RoomTimeline, type TimelineBlock, type TimelineGroup } from '../../components/organism/RoomTimeline/RoomTimeline';
@@ -27,7 +27,7 @@ import './frontdesk-reservations.css';
 const UNASSIGNED = '__unassigned';
 const DC_ROWS = [{ id: 'dc_full_day', label: 'Full day' }, { id: 'dc_half_day', label: 'Half day' }, { id: 'dc_hour', label: 'Play hour' }];
 
-/** F-13 - rooms × days with stays as blocks (D-008). */
+/** F-13 - rooms × days with stays as blocks (D-008), laid out per `all reservation grooming.jpg`: New Booking top-right, range pill centred, span + Filter popover right, then the grid (legend removed; the status is in the block popover). */
 export function TimelinePage() {
   const nav = useNavigate();
   const { toast } = useToast();
@@ -90,20 +90,25 @@ export function TimelinePage() {
 
   return (
     <div className="fdr-page">
-      <PageHeader title="Room timeline" subtitle={`${location.name} · ${rooms.length} rooms · ${blocks.length} stays in the filter`} code="F-13"
-        actions={<div className="fdr-toolbar"><ViewSwitch value="timeline" /><ReservationDayNav value={start} onChange={setStart} step={7} rangeDays={days} /><SegmentedControl size="sm" ariaLabel="Span" value={span} onChange={setSpan} options={[{ value: '7', label: '1 week' }, { value: '14', label: '2 weeks' }]} /><Button icon="plus" onClick={() => nav('/desk/reservations/new')}>New booking</Button></div>}>
-        <div className="fdr-toolbar">
-          <Select size="sm" aria-label="Room type" placeholder="All room types" value={roomType} onChange={(e) => setRoomType(e.target.value)} options={roomTypes.map((t) => ({ value: t.id, label: t.name }))} />
-          <Select size="sm" aria-label="Status" placeholder="Any status" value={status} onChange={(e) => setStatus(e.target.value)} options={BOOKING_STATUSES.map((s) => ({ value: s, label: BOOKING_STATUS_LABEL[s] }))} />
-          <Toggle size="sm" checked={showUnassigned} onChange={setShowUnassigned} label="Unassigned row" />
-          <Toggle size="sm" checked={showDaycare} onChange={setShowDaycare} label="Daycare rows" />
-          <Toggle size="sm" checked={showClosed} onChange={setShowClosed} label="Cancelled / no show" />
+      <h1 className="sr-only">Room timeline · {location.name} · {rooms.length} rooms · {blocks.length} stays in the filter</h1>
+      <div className="fdr-topline">
+        <ViewSwitch value="timeline" />
+        <Button icon="plus" onClick={() => nav('/desk/reservations/new')} className="fdr-cta">New Booking</Button>
+      </div>
+      <div className="fdr-tl-bar">
+        <span />
+        <ReservationDayNav value={start} onChange={setStart} step={7} rangeDays={days} />
+        <div>
+          <SegmentedControl size="sm" ariaLabel="Span" value={span} onChange={setSpan} options={[{ value: '7', label: '1 week' }, { value: '14', label: '2 weeks' }]} />
+          <FilterPopover label="Filter" count={(roomType ? 1 : 0) + (status ? 1 : 0) + (showClosed ? 1 : 0) + (showDaycare ? 0 : 1) + (showUnassigned ? 0 : 1)} onClear={() => { setRoomType(''); setStatus(''); setShowClosed(false); setShowDaycare(true); setShowUnassigned(true); }}>
+            <Select size="sm" label="Room type" placeholder="All room types" value={roomType} onChange={(e) => setRoomType(e.target.value)} options={roomTypes.map((t) => ({ value: t.id, label: t.name }))} />
+            <Select size="sm" label="Status" placeholder="Any status" value={status} onChange={(e) => setStatus(e.target.value)} options={BOOKING_STATUSES.map((s) => ({ value: s, label: BOOKING_STATUS_LABEL[s] }))} />
+            <Toggle size="sm" checked={showUnassigned} onChange={setShowUnassigned} label="Unassigned row" />
+            <Toggle size="sm" checked={showDaycare} onChange={setShowDaycare} label="Daycare rows" />
+            <Toggle size="sm" checked={showClosed} onChange={setShowClosed} label="Cancelled / no show" />
+            <p className="xs muted" style={{ margin: 0 }}>Block flags: vaccine, balance due, notes. Drag a block to move it; click an empty cell to book that room.</p>
+          </FilterPopover>
         </div>
-      </PageHeader>
-
-      <div className="fdr-legend">
-        <span>Status:</span>{BOOKING_STATUSES.map((s) => <span key={s}><span className="fdr-legend-swatch" style={{ background: `var(--status-${s}-bg)` }} />{BOOKING_STATUS_LABEL[s]}</span>)}
-        <span className="faint">· flags: vaccine, balance due, notes · drag a block to move it · click an empty cell to book that room</span>
       </div>
 
       <RoomTimeline groups={groups} blocks={blocks} startDay={start} days={days} today={today} onBlockMove={onMove}

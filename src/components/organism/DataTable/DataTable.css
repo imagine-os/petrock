@@ -1,5 +1,12 @@
 .datatable { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
-.datatable-toolbar { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: flex-end; }
+.datatable-toolbar { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.datatable-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--color-title); line-height: 1; margin-right: auto; }
+/* framed (598:23508): title + toolbar + table in one white card, padding 10, gap 11, square purple head */
+.datatable.is-framed { background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--r-sm); box-shadow: var(--shadow-desk); padding: 10px; gap: 11px; }
+.datatable.is-framed .datatable-toolbar { padding: 12px 10px 8px; }
+.datatable.is-framed .datatable-scroll { border: 0; border-radius: 0; box-shadow: none; }
+.datatable.is-framed thead tr:last-child th:first-child, .datatable.is-framed thead tr:last-child th:last-child { border-radius: 0; }
+.datatable.is-framed .datatable-foot { padding: 0 10px 4px; }
 .datatable-search { flex: 1 1 220px; max-width: 360px; } .datatable-filter { flex: 0 1 180px; } .datatable-toolbar-extra { margin-left: auto; display: flex; gap: var(--sp-2); flex-wrap: wrap; }
 /* Figma table (598:23508..23564): container white with the two-layer shadow, head 49 tall #552583 with white 10 px labels (12 floor), rows 44 tall with a #D4D4D4 rule, cell colours per column role, status badge #E9FBF7 / #25D9AB r4. */
 .datatable-scroll { overflow: auto; border: 1px solid var(--color-border-subtle); border-radius: var(--r-card); background: var(--color-surface); box-shadow: var(--shadow-desk); max-height: 70vh; }
@@ -15,7 +22,15 @@
 .datatable-groups th { height: 32px; text-align: center; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-label); background: var(--color-surface-2); border-radius: 0; }
 .datatable-groups th.has-group { border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); }
 .datatable-sort { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 0; color: inherit; font: inherit; }
-.datatable-sorticon { color: inherit; opacity: .55; } th[aria-sort] .datatable-sorticon { opacity: 1; }
+.datatable-sorticon { color: inherit; opacity: 0; transition: opacity var(--dur-fast); } th:hover .datatable-sorticon, .datatable-sort:focus-visible .datatable-sorticon { opacity: .55; } th[aria-sort] .datatable-sorticon { opacity: 1; }
+.datatable-cbcell { width: 36px; padding-right: 0 !important; } .datatable-cbcell .checkbox { gap: 0; } .datatable-cbcell .checkbox-box { width: 14px; height: 14px; border-width: 1.5px; border-radius: var(--r-cb); border-color: var(--color-border-strong); } .datatable-cbcell .checkbox-box svg { width: 11px; height: 11px; }
+.datatable th.datatable-cbcell .checkbox-box { border-color: var(--color-border-card); background: transparent; } .datatable th.datatable-cbcell .checkbox-input:checked + .checkbox-box, .datatable th.datatable-cbcell .checkbox-input:indeterminate + .checkbox-box { background: var(--color-table-head-text); color: var(--color-table-head); border-color: var(--color-table-head-text); }
+/* group rows (598:23540): "ARRIVING (34) ▾" Open Sans 600 14 #808080, 40 tall, no rule */
+.datatable-grouprow td { height: 44px; border-bottom: 0; padding-top: 6px; }
+.datatable-groupbtn { display: inline-flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-label); text-transform: uppercase; letter-spacing: .02em; }
+.datatable-groupbtn:hover { color: var(--color-primary-text); }
+.datatable-groupcaret { color: var(--color-primary-text); transition: transform var(--dur-fast); } .datatable-groupcaret.is-collapsed { transform: rotate(-90deg); }
+.datatable-groupempty td { color: var(--color-text-faint); font-size: var(--fs-xs); height: 36px; }
 .datatable tbody tr:last-child td { border-bottom: 0; }
 .datatable tbody tr.is-clickable { cursor: pointer; } .datatable tbody tr.is-clickable:hover td { background: var(--color-surface-tint-2); }
 .datatable.is-zebra tbody tr:nth-child(even) td { background: var(--color-table-zebra); }
@@ -34,6 +49,10 @@
   .cards-md td { height: auto; border: 0; padding: 6px 0; white-space: normal; display: flex; justify-content: space-between; gap: var(--sp-3); align-items: baseline; text-align: right !important; font-size: var(--fs-sm); }
   .cards-md td::before { content: attr(data-label); color: var(--color-text-muted); font-size: var(--fs-xs); font-weight: var(--fw-medium); text-align: left; flex: 0 0 40%; }
   .cards-md td.hide-card { display: none; }
+  .cards-md .datatable-grouprow td, .cards-md .datatable-groupempty td { display: block; text-align: left !important; } .cards-md .datatable-grouprow td::before, .cards-md .datatable-groupempty td::before, .cards-md .datatable-cbcell::before { content: none; }
+  .cards-md .datatable-grouprow, .cards-md .datatable-groupempty { background: none; border: 0; padding: 0; }
+  .cards-md td.datatable-cbcell { justify-content: flex-start; }
+  .datatable.is-framed { padding: 0; background: none; border: 0; box-shadow: none; } .datatable.is-framed .datatable-toolbar { padding: 0; }
   .cards-md td.datatable-actions { justify-content: flex-end; } .cards-md td.datatable-actions::before { content: ''; }
   .cards-md .datatable-emptyrow td::before { content: none; } .cards-md .datatable-emptyrow td { display: block; }
   .datatable-toolbar-extra { margin-left: 0; width: 100%; }

@@ -14,7 +14,6 @@ import { DataTable } from '../../components/organism/DataTable/DataTable';
 import { Button } from '../../components/atom/Button/Button';
 import { IconButton } from '../../components/atom/IconButton/IconButton';
 import { Icon } from '../../components/atom/Icon/Icon';
-import { StatusBadge } from '../../components/atom/Badge/Badge';
 import { EmptyState } from '../../components/molecule/EmptyState/EmptyState';
 import { useReservationRows, bucketOf, type Bucket, type ReservationRow } from './lib/reservations';
 import { TODAY_COLUMNS } from './lib/columns';
@@ -106,12 +105,11 @@ export function TodayPage() {
         <Tabs items={tabs} value={tab} onChange={setTab} ariaLabel="Day groups" />
         <div style={{ marginTop: 12 }}>
           {visible.length === 0 ? <EmptyState icon="paw" title="Nothing here for this day" body="No reservations in this group. Try another day or create a booking." action={<Button size="sm" onClick={() => nav('/desk/reservations/new')}>New booking</Button>} /> : (
-            <DataTable<ReservationRow> columns={TODAY_COLUMNS} rows={visible} rowKey={(r) => r.id} dense searchable onRowClick={(r) => (r.kind === 'hotel' ? nav(`/desk/reservations/${r.id}`) : nav('/desk/reservations'))}
+            <DataTable<ReservationRow> framed columns={TODAY_COLUMNS} rows={visible} rowKey={(r) => r.id} searchable onRowClick={(r) => (r.kind === 'hotel' ? nav(`/desk/reservations/${r.id}`) : nav('/desk/reservations'))}
               rowActions={(r) => <span>{quick(r)}<IconButton icon="eye" label="Open" size="sm" onClick={() => (r.kind === 'hotel' ? nav(`/desk/reservations/${r.id}`) : nav('/desk/reservations'))} /></span>} emptyText="No reservations" />
           )}
         </div>
       </Section>
-      <p className="xs faint">Status colours: {(['confirmed', 'checked_in', 'checked_out', 'pending_vaccines'] as const).map((s) => <span key={s} style={{ marginRight: 6 }}><StatusBadge status={s} size="sm" /></span>)}</p>
 
       {roomFor?.booking && <RoomPickModal booking={roomFor.booking} rooms={rooms} roomTypes={roomTypes} bookings={bookings} heaviestLbs={roomFor.heaviestLbs} title={`Check in ${roomFor.code}: pick a room first`} confirmLabel="Assign & check in" onClose={() => setRoomFor(null)} onPick={(roomId) => { const b = roomFor.booking!; setRoomFor(null); actions.changeStatus(b, 'checked_in', { roomId }); }} />}
       {actions.modal}
