@@ -106,6 +106,27 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
+-- system · Backups & exports: Log of JSON exports of the mock database (A-43). Each row records who exported, how many tables / rows and the file size.
+-- access:
+--   · owner read/write
+--   · super_admin read/write
+create table if not exists public.backups (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  kind text not null check (kind in ('manual', 'scheduled')),
+  file_name text not null,
+  table_count integer not null,
+  row_count integer not null,
+  size_bytes integer not null,
+  created_by uuid references public.users(id) on delete set null,
+  created_by_name text,
+  note text
+);
+create index if not exists backups_created_by_idx on public.backups(created_by);
+create trigger backups_touch before update on public.backups for each row execute function public.touch_updated_at();
+
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
   -- Primary key
@@ -601,6 +622,32 @@ create table if not exists public.pets (
 create index if not exists pets_customer_id_idx on public.pets(customer_id);
 create index if not exists pets_vet_id_idx on public.pets(vet_id);
 create trigger pets_touch before update on public.pets for each row execute function public.touch_updated_at();
+
+-- system · Providers: Outbound channel configuration: email (None / Gmail / SMTP), SMS (None / Twilio / Petlinx), push (None / FCM / APNs). Secrets are masked; test-send is a stub until an integration exists.
+-- access:
+--   · owner write
+--   · super_admin write
+create table if not exists public.providers (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  kind text not null check (kind in ('email', 'sms', 'push')),
+  -- Display name (email From name, SMS sender name)
+  name text not null,
+  -- none | gmail | smtp | twilio | petlinx | fcm | apns
+  provider text not null,
+  from_address text,
+  -- Non-secret settings (host, port, sender id)
+  config jsonb,
+  -- Last 4 of the API key; the real secret never lives in the mock
+  secret_masked text,
+  status text not null check (status in ('not_configured', 'configured', 'test_ok', 'error')),
+  last_test_at timestamptz,
+  last_test_result text,
+  enabled boolean not null default false
+);
+create trigger providers_touch before update on public.providers for each row execute function public.touch_updated_at();
 
 -- commerce · Room rates: Nightly rate per room type, day kind (Mon-Thu / Fri-Sun) and season (null = base).
 create table if not exists public.rates (

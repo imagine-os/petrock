@@ -1,0 +1,17 @@
+.achart { --achart-1: #7a3fb5; --achart-2: #eb6834; --achart-3: #1baf7a; --achart-4: #eda100; --achart-grid: var(--color-border); --achart-text: var(--color-text-muted); position: relative; display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+:root[data-theme="dark"] .achart { --achart-1: #9d7bd8; --achart-2: #d95926; --achart-3: #199e70; --achart-4: #c98500; }
+.achart-svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--font-sans); }
+.achart-grid line { stroke: var(--achart-grid); stroke-width: 1; }
+.achart-axis text { fill: var(--achart-text); font-size: 11px; }
+.achart-bar { transition: opacity var(--dur-fast); }
+.achart-band:hover .achart-bar, .achart-band.is-active .achart-bar { opacity: .85; }
+.achart-band rect.achart-hit { fill: transparent; }
+.achart-label { fill: var(--color-heading); font-size: 11px; font-weight: 600; }
+.achart-legend { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
+.achart-key { display: inline-flex; align-items: center; gap: 6px; } .achart-swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.achart-tip { position: absolute; pointer-events: none; background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: var(--r-md); box-shadow: var(--shadow-md); padding: 6px 10px; font-size: var(--fs-xs); color: var(--color-text); z-index: 2; min-width: 120px; transform: translate(-50%, -100%); white-space: nowrap; }
+.achart-tip strong { display: block; color: var(--color-heading); margin-bottom: 2px; }
+.achart-tip-row { display: flex; justify-content: space-between; gap: 12px; }
+.achart-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); } .achart-table th, .achart-table td { text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--color-border); } .achart-table th:first-child, .achart-table td:first-child { text-align: left; }
+.achart-toggle { align-self: flex-end; background: none; border: 0; color: var(--color-primary-text); font-size: var(--fs-xs); padding: 2px 4px; }
+.achart-empty { color: var(--color-text-faint); font-size: var(--fs-xs); padding: var(--sp-4); text-align: center; }

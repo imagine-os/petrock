@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (41)
 
 ### Core & locations
 
@@ -742,6 +742,48 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
+
+#### `backups` (global)
+Log of JSON exports of the mock database (A-43). Each row records who exported, how many tables / rows and the file size.  
+_Source: project brief (backups / export)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (manual \| scheduled) |  |
+| `file_name` | text |  |
+| `table_count` | int |  |
+| `row_count` | int |  |
+| `size_bytes` | int |  |
+| `created_by` | uuid, null | -> `users`  |
+| `created_by_name` | text, null |  |
+| `note` | text, null |  |
+
+**Access:** owner read/write; super_admin read/write
+
+#### `providers` (global)
+Outbound channel configuration: email (None / Gmail / SMTP), SMS (None / Twilio / Petlinx), push (None / FCM / APNs). Secrets are masked; test-send is a stub until an integration exists.  
+_Source: 5.pdf, R-M13_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (email \| sms \| push) |  |
+| `name` | text | Display name (email From name, SMS sender name) |
+| `provider` | text | none | gmail | smtp | twilio | petlinx | fcm | apns |
+| `from_address` | text, null |  |
+| `config` | json, null | Non-secret settings (host, port, sender id) |
+| `secret_masked` | text, null | Last 4 of the API key; the real secret never lives in the mock |
+| `status` | enum (not_configured \| configured \| test_ok \| error) |  |
+| `last_test_at` | timestamptz, null |  |
+| `last_test_result` | text, null |  |
+| `enabled` | bool |  |
+
+**Access:** owner write; super_admin write
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  
