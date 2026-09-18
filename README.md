@@ -2,7 +2,9 @@
 
 Software for **Petrock Hotel** (dog hotel and spa, two locations: Encino and Westwood, Los Angeles; [petrockhotel.com](https://petrockhotel.com)).
 
-**Live:** https://imagine-os.github.io/petrock/ (GitHub Pages, deployed from `main`; enable Pages > Source "GitHub Actions" once). The hub at `/#/` opens every surface with demo users per role.
+**Status:** release **0.1.0** (2026-09-18, changelog 0020): 182 routes across customer app, front desk, owner / admin, public site, ops manual and dev tools; 137 components, 74 tables, 238 rules; build, typecheck, responsive matrix and e2e green. Mock data only (Company-OS and Stripe are seams).
+
+**Live:** https://imagine-os.github.io/petrock/ - deployed from `main` by `.github/workflows/pages.yml` **once Pages is enabled** (Settings > Pages > Source = "GitHub Actions"; the workflow token cannot create the site, runs #7 / #8 stopped at `configure-pages`). The hub at `/#/` opens every surface with demo users per role. Until then `npm run build && npm run preview` serves the same build at `http://localhost:4173/#/`.
 
 ## Run
 
