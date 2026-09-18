@@ -1,0 +1,19 @@
+.docup { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.docup-zone { display: flex; }
+.docup-pick { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); width: 100%; min-height: var(--h-control); padding: 0 0 0 var(--sp-3); border: 1.5px dashed var(--color-border-strong); border-radius: var(--r-md); background: var(--color-surface); color: var(--color-text-faint); font: inherit; text-align: left; cursor: pointer; transition: border-color var(--dur-fast), background var(--dur-fast); }
+.docup-pick:hover:not(:disabled), .docup-zone.is-drag .docup-pick { border-color: var(--color-primary); background: var(--color-surface-tint-2); }
+.docup-zone.has-error .docup-pick { border-color: var(--color-danger); }
+.docup-ph { font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.docup-cta { display: inline-flex; align-items: center; gap: 6px; height: var(--h-control); padding: 0 var(--sp-3); border-left: 1.5px dashed var(--color-border-strong); color: var(--color-primary-text); font-weight: var(--fw-semibold); font-size: var(--fs-xs); }
+.docup-card { padding: var(--sp-3) var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px; }
+.docup-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.docup-name { display: inline-flex; align-items: center; gap: 6px; font-weight: var(--fw-medium); color: var(--color-heading); font-size: var(--fs-sm); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.docup-cancel { color: var(--color-danger); }
+.docup-ok { display: inline-flex; width: 22px; height: 22px; border-radius: 50%; align-items: center; justify-content: center; background: var(--color-success); color: #fff; flex: 0 0 auto; }
+.docup-bar { height: 5px; border-radius: var(--r-full); background: var(--color-surface-3); overflow: hidden; }
+.docup-bar > span { display: block; height: 100%; background: var(--color-primary); border-radius: var(--r-full); transition: width var(--dur-fast) linear; }
+.docup-meta { display: flex; justify-content: space-between; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.docup-actions { display: flex; gap: var(--sp-3); }
+.docup-link { border: 0; background: none; padding: 0; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-primary-text); cursor: pointer; }
+.docup-link.is-danger { color: var(--color-danger); }
+.docup.is-disabled .docup-pick { cursor: not-allowed; opacity: .6; }

@@ -18,51 +18,9 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (42)
+## Tables (41)
 
 ### Core & locations
-
-#### `auth_codes` (global)
-Six-digit codes for email verification, password reset and sign-in confirmation. 10 minute expiry, 5 attempts, one live code per email + purpose.  
-_Source: C-04, C-06 (D-010 OTP modal)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `user_id` | uuid, null | -> `users`  |
-| `email` | text |  |
-| `purpose` | enum (verify_email \| reset_password \| sign_in) |  |
-| `channel` | enum (email \| sms) |  |
-| `code` | text | Plain in the mock so the demo can show it; hashed server-side later |
-| `expires_at` | timestamptz |  |
-| `consumed_at` | timestamptz, null |  |
-| `attempts` | int |  |
-
-#### `auth_credentials` (global)
-Customer email + password login (mock hash today; a real auth provider later). Tracks verification, failed attempts and lockout.  
-_Source: C-02, C-03 (D-018)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `user_id` | uuid | -> `users`  |
-| `email` | text | Lower-cased; unique |
-| `password_hash` | text | Mock FNV-1a today; bcrypt/argon2 server-side later |
-| `email_verified` | bool |  |
-| `email_verified_at` | timestamptz, null |  |
-| `phone` | text, null |  |
-| `failed_attempts` | int |  |
-| `locked_until` | timestamptz, null |  |
-| `last_sign_in_at` | timestamptz, null |  |
-| `password_changed_at` | timestamptz, null |  |
-| `terms_accepted_at` | timestamptz |  |
-| `remember_me` | bool | Last "remember me" choice (30 days vs session) |
-
-**Access:** customer read own; system write
 
 #### `capacities` (per location)
 Max simultaneous bookings per location per kind (penthouse, suite, daycare, grooming).  
@@ -190,6 +148,24 @@ _Source: entities 1_
 | `note` | text, null |  |
 | `balance` | money | Outstanding balance, USD |
 
+#### `emergency_contacts` (global)
+Who to call about a pet when the parent is unreachable (customer-level, optionally pinned to one pet). Captured on the Add / Edit pet wizard step "Vet & emergency".  
+_Source: customer-home-pets (R-X22)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `customer_id` | uuid | -> `customers`  |
+| `pet_id` | uuid, null | -> `pets`  |
+| `name` | text |  |
+| `phone` | text |  |
+| `relationship` | text, null | e.g. Partner, Neighbour, Dog walker |
+| `note` | text, null |  |
+
+**Access:** customer read/write own; staff read
+
 #### `employees` (per location)
 Staff records with job, status, calendar colour, working hours and hashed PIN.  
 _Source: entities 20_
@@ -217,6 +193,23 @@ _Source: entities 20_
 | `note` | text, null |  |
 
 ### Pets & vaccines
+
+#### `pet_lookups` (global)
+Extendable option lists for pet forms: breeds and colours (entities 5: "extendable inline via +"). Customers and staff can add a value from the form.  
+_Source: entities 5, Pet Edit.png_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (breed \| color) |  |
+| `value` | text |  |
+| `sort_order` | int |  |
+| `active` | bool |  |
+| `added_by` | text, null | user id when added from a form |
+
+**Access:** everyone read; signed-in add
 
 #### `pets` (global)
 Dogs (and other pets) with profile, care instructions and approval status.  
@@ -784,21 +777,6 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
-
-#### `auth_events` (global)
-Sign-up, sign-in, failed attempts, lockouts, code sends, password resets. Feeds the security audit and the owner reports.  
-_Source: best practice (D-018)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `user_id` | uuid, null | -> `users`  |
-| `email` | text, null |  |
-| `kind` | enum (sign_up \| email_verified \| sign_in \| sign_in_failed \| locked \| sign_out \| otp_sent \| otp_failed \| password_reset_requested \| password_reset) |  |
-| `page_code` | text, null |  |
-| `details` | json, null |  |
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

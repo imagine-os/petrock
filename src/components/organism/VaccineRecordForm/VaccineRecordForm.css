@@ -1,0 +1,5 @@
+.vrf { display: flex; flex-direction: column; gap: var(--sp-4); }
+.vrf-intro { display: flex; align-items: center; gap: 6px; }
+.vrf-dates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+@media (max-width: 420px) { .vrf-dates { grid-template-columns: 1fr; } }
+.vrf-remove { margin-right: auto; color: var(--color-danger); }
