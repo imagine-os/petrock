@@ -1,0 +1,4 @@
+.chatmark { display: flex; justify-content: center; padding: var(--sp-2) 0; }
+.chatmark-pill { font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: .02em; color: var(--color-text-muted); background: var(--color-surface-3); padding: 4px 12px; border-radius: var(--r-pill); }
+.chatmark-primary .chatmark-pill { background: var(--color-primary-soft); color: var(--color-primary-text); }
+.chatmark-system .chatmark-pill { background: var(--color-warn-bg); color: var(--color-warn); }

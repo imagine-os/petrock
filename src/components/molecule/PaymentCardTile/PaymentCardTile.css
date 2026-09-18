@@ -1,0 +1,16 @@
+.paycard { display: flex; flex-direction: column; border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); box-shadow: var(--shadow-sm); overflow: hidden; }
+.paycard.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); }
+.paycard.is-expired { opacity: .8; }
+.paycard-main { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); background: none; border: 0; text-align: left; color: var(--color-text); width: 100%; }
+button.paycard-main:hover { background: var(--color-surface-tint-2); }
+.paycard-brand { flex: 0 0 48px; width: 48px; height: 34px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover)); }
+.paycard-visa .paycard-brand { background: linear-gradient(135deg, #1A1F71, #2E4BC6); }
+.paycard-mastercard .paycard-brand { background: linear-gradient(135deg, #EB001B, #F79E1B); }
+.paycard-amex .paycard-brand { background: linear-gradient(135deg, #006FCF, #2EC4F1); }
+.paycard-discover .paycard-brand { background: linear-gradient(135deg, #F76F20, #FFB347); }
+.paycard-text { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; gap: 2px; }
+.paycard-title { font-weight: var(--fw-medium); color: var(--color-heading); font-size: var(--fs-sm); }
+.paycard-num { font-family: var(--font-mono); font-size: var(--fs-sm); letter-spacing: .04em; }
+.paycard-sub { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.paycard-badges { display: inline-flex; gap: 4px; flex: 0 0 auto; }
+.paycard-actions { display: flex; gap: var(--sp-2); justify-content: flex-end; padding: var(--sp-2) var(--sp-3); border-top: 1px solid var(--color-border); background: var(--color-surface-2); flex-wrap: wrap; }

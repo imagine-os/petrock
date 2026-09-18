@@ -1,0 +1,14 @@
+.convrow { display: flex; align-items: center; gap: var(--sp-3); width: 100%; padding: var(--sp-3) var(--sp-4); background: none; border: 0; border-bottom: 1px solid var(--color-border); text-align: left; color: var(--color-text); text-decoration: none; }
+.convrow:last-child { border-bottom: 0; }
+.convrow:hover { background: var(--color-surface-tint-2); text-decoration: none; }
+.convrow-mark { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; background: var(--color-primary-soft); color: var(--color-primary-text); display: inline-flex; align-items: center; justify-content: center; overflow: hidden; }
+.convrow-mark img { width: 100%; height: 100%; object-fit: cover; }
+.convrow-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
+.convrow-top, .convrow-bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); min-width: 0; }
+.convrow-title { font-weight: var(--fw-medium); color: var(--color-heading); font-size: var(--fs-md); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.convrow-title.is-unread { font-weight: var(--fw-semibold); }
+.convrow-time { font-size: var(--fs-xs); color: var(--color-text-faint); flex: 0 0 auto; }
+.convrow-preview { font-size: var(--fs-sm); color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.convrow-preview.is-unread { color: var(--color-text); }
+.convrow-prefix { color: var(--color-text-faint); }
+.convrow-unread { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-full); background: var(--color-primary); color: var(--color-text-on-primary); font-size: 11px; font-weight: var(--fw-bold); line-height: 20px; text-align: center; }

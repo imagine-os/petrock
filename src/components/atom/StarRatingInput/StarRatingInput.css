@@ -1,0 +1,7 @@
+.stars { display: inline-flex; gap: 2px; }
+.stars-star { border: 0; background: none; padding: 0; display: inline-flex; align-items: center; justify-content: center; color: var(--color-border-strong); border-radius: var(--r-md); transition: color var(--dur-fast), transform var(--dur-fast); }
+.stars-star svg { fill: transparent; transition: fill var(--dur-fast); }
+.stars-star.is-on { color: var(--color-warn); } .stars-star.is-on svg { fill: currentColor; }
+.stars:not(.is-readonly) .stars-star:hover { transform: scale(1.1); }
+.stars-star:disabled { cursor: default; }
+.stars-star:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }

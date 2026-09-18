@@ -1,0 +1,6 @@
+.acchero { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); padding: var(--sp-4) var(--sp-4) var(--sp-5); text-align: center; }
+.acchero-avatar { position: relative; display: inline-flex; align-items: center; justify-content: center; border: 2px dashed var(--color-accent); border-radius: 50%; margin-bottom: var(--sp-2); }
+.acchero-camera { position: absolute; right: -2px; bottom: 4px; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--color-bg-phone); background: var(--color-primary); color: var(--color-text-on-primary); display: inline-flex; align-items: center; justify-content: center; }
+.acchero-camera:hover { background: var(--color-primary-hover); }
+.acchero-name { font-size: var(--fs-xl); font-weight: var(--fw-semibold); color: var(--color-heading); }
+.acchero-email { font-size: var(--fs-sm); color: var(--color-text-muted); }
