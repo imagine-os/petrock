@@ -5,6 +5,7 @@
 - Answer the open questions with Justin (`docs/figma/open-questions.md`, 118 questions, build-blocking ones first: two-up approved sides, dark mode, Add Pet wizard, vaccine list, hotel step order and estimate maths, daycare scope, status vocabulary, manager PIN)
 - Responsive QA checklist per page (D-016): breakpoints, no fixed 390/1440 assumptions, kanban/timeline phone fallback
 - Decide Company-OS integration (REST API direct vs thin Petrock BFF); define new entities (customer auth, service catalog, invoices/payments, spa add-ons, vaccination records, audit log, availability)
+- Company-OS integration Phase 0: generate entity template (`npm run companyos:template`), `.env.example`, provider chooser (blocked on Justin's answers to prompt 0011)
 - Component library growth per module; a11y and visual QA of the 42 foundation components
 - Rules: confirm statuses with Justin; wire R-X01 (55 lb Suite) and R-X02 (daycare vs spa duration) into the booking flows
 - Vaccine flow design (customer + front desk) (D-003): expiry, proof storage, front-desk verification, booking gating; vaccination records entity
