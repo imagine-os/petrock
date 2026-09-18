@@ -11,7 +11,7 @@
 .sidebar-tool { color: var(--color-text-faint); }
 .sidebar-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding: var(--sp-5) var(--sp-5) var(--sp-4); display: flex; flex-direction: column; gap: 0; }
 .sidebar-group { display: flex; flex-direction: column; padding: 6px 0 var(--sp-4); }
-.sidebar-group + .sidebar-group { border-top: 1px solid var(--color-border-card); padding-top: var(--sp-4); margin-top: var(--sp-1); }
+.sidebar-group + .sidebar-group { border-top: 1px solid var(--color-border-grid); padding-top: var(--sp-4); margin-top: var(--sp-1); }
 .sidebar-cat { display: flex; align-items: center; gap: 8px; width: 100%; border: 0; background: none; padding: 10px 8px 14px; color: var(--color-text-muted); font-size: var(--fs-xs); font-weight: var(--fw-regular); text-transform: uppercase; letter-spacing: .1em; border-radius: var(--r-md); text-align: left; line-height: var(--lh-xs); }
 .sidebar-cat:hover { color: var(--color-primary-text); }
 .sidebar-cat-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

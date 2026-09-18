@@ -3,7 +3,7 @@
   --r-field: var(--r-md); --color-border-field: var(--color-border-bar); --fs-field: var(--fs-sm); --fw-field: var(--fw-regular);
   --shadow-card: var(--shadow-desk); --color-border-card-skin: var(--color-border-subtle); }
 /* desk forms (Booking details*.png, Frame*.png): label 14/400 #181818 above a 40 px white field, r4, #B6B6B6 hairline */
-.shell-content { --r-field: var(--r-input); --color-border-field: var(--color-border-strong); --fs-field-label: var(--fs-sm); --color-field-label: var(--color-text); --lh-field-label: var(--lh-sm); --h-field: var(--h-control-sm); }
+.shell-content { --r-field: var(--r-input); --color-border-field: var(--color-border-strong); --fs-field-label: var(--fs-sm); --color-field-label: var(--color-text); --lh-field-label: var(--lh-sm); --h-field: var(--h-control-field); }
 .shell-side { position: sticky; top: 0; height: 100vh; flex: 0 0 auto; z-index: 60; }
 .shell-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
 .shell-content { flex: 1; padding: var(--sp-4) var(--sp-4) calc(var(--sp-16) + 48px); min-width: 0; }

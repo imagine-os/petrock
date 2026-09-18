@@ -11,6 +11,7 @@
   --n-175: #DFDFDF;
   --n-200: #E0E0E0;
   --n-300: #D8DADE;
+  --n-340: #D9D9D9;
   --n-350: #D4D4D4;
   --n-375: #D0D5DD;
   --n-400: #B6B6B6;
@@ -98,6 +99,7 @@
   --h-thead: 49px;
   --h-control: 48px;
   --h-control-sm: 40px;
+  --h-control-field: 40px;
   --h-control-xs: 28px;
   --bp-phone: 600px;
   --bp-tablet: 900px;
@@ -171,6 +173,7 @@
   --color-border-input: #F1F1F1;
   --color-border-bar: #EDEDED;
   --color-border-row: #D4D4D4;
+  --color-border-grid: #D9D9D9;
   --color-border-track: #D0D5DD;
   --color-border-strong: #B6B6B6;
   --color-border-subtle: #F3F3F3;
@@ -198,6 +201,14 @@
   --color-badge: #BF0000;
   --color-completed: #25D9AB;
   --color-completed-bg: #E9FBF7;
+  --timeline-requested-fill: #D18ACF;
+  --timeline-pending_vaccines-fill: #C9A6E9;
+  --timeline-confirmed-fill: #B4F0A0;
+  --timeline-checked_in-fill: #7A7CE3;
+  --timeline-checked_out-fill: #FFF0B3;
+  --timeline-cancelled-fill: #F5D5D5;
+  --timeline-no_show-fill: #E3B5B5;
+  --timeline-daycare-fill: #00D8D8;
   color-scheme: light;
 }
 :root[data-theme="dark"], :root[data-brand="petrock"][data-theme="dark"] {
@@ -237,6 +248,7 @@
   --color-border-input: rgba(255,255,255,.14);
   --color-border-bar: rgba(255,255,255,.10);
   --color-border-row: rgba(255,255,255,.12);
+  --color-border-grid: rgba(255,255,255,.14);
   --color-border-track: rgba(255,255,255,.18);
   --color-border-strong: rgba(255,255,255,.28);
   --color-border-subtle: rgba(255,255,255,.08);
@@ -264,6 +276,14 @@
   --color-badge: #FF5C5C;
   --color-completed: #4EE3BC;
   --color-completed-bg: rgba(37,217,171,.16);
+  --timeline-requested-fill: #8E4E8C;
+  --timeline-pending_vaccines-fill: #7B5C9F;
+  --timeline-confirmed-fill: #4E8C3C;
+  --timeline-checked_in-fill: #4C4FA8;
+  --timeline-checked_out-fill: #A8945A;
+  --timeline-cancelled-fill: #8C4C4C;
+  --timeline-no_show-fill: #7A4444;
+  --timeline-daycare-fill: #0E8F8F;
   color-scheme: dark;
 }
 :root[data-brand="sunset"] {
@@ -313,6 +333,7 @@
   --color-border-input: #F1F1F1;
   --color-border-bar: #EDEDED;
   --color-border-row: #D4D4D4;
+  --color-border-grid: #D9D9D9;
   --color-border-track: #D0D5DD;
   --color-border-strong: #B6B6B6;
   --color-border-subtle: #F3F3F3;
@@ -340,6 +361,14 @@
   --color-badge: #BF0000;
   --color-completed: #25D9AB;
   --color-completed-bg: #E9FBF7;
+  --timeline-requested-fill: #D18ACF;
+  --timeline-pending_vaccines-fill: #C9A6E9;
+  --timeline-confirmed-fill: #B4F0A0;
+  --timeline-checked_in-fill: #7A7CE3;
+  --timeline-checked_out-fill: #FFF0B3;
+  --timeline-cancelled-fill: #F5D5D5;
+  --timeline-no_show-fill: #E3B5B5;
+  --timeline-daycare-fill: #00D8D8;
   color-scheme: light;
 }
 :root[data-brand="sunset"][data-theme="dark"] {
@@ -379,6 +408,7 @@
   --color-border-input: rgba(255,255,255,.14);
   --color-border-bar: rgba(255,255,255,.10);
   --color-border-row: rgba(255,255,255,.12);
+  --color-border-grid: rgba(255,255,255,.14);
   --color-border-track: rgba(255,255,255,.18);
   --color-border-strong: rgba(255,255,255,.28);
   --color-border-subtle: rgba(255,255,255,.08);
@@ -406,6 +436,14 @@
   --color-badge: #FF5C5C;
   --color-completed: #4EE3BC;
   --color-completed-bg: rgba(37,217,171,.16);
+  --timeline-requested-fill: #8E4E8C;
+  --timeline-pending_vaccines-fill: #7B5C9F;
+  --timeline-confirmed-fill: #4E8C3C;
+  --timeline-checked_in-fill: #4C4FA8;
+  --timeline-checked_out-fill: #A8945A;
+  --timeline-cancelled-fill: #8C4C4C;
+  --timeline-no_show-fill: #7A4444;
+  --timeline-daycare-fill: #0E8F8F;
   color-scheme: dark;
 }
 :root[data-skin="wireframe"] { --color-primary: #3A3A3A; --color-primary-hover: #232323; --color-primary-text: #3A3A3A; --color-surface-tint: #F2F1ED; --color-sidebar-active: #F2F1ED; --shadow-md: none; --shadow-desk: none; --shadow-lg: none; --shadow-xl: none; }

@@ -2,17 +2,17 @@
    day head 54 tall (DOW 12/600 + number 14/600, weekends #148F00, TODAY black pill), alternating white / #EEF2F5 day columns,
    dashed today line, grey group rows, 54 px room rows with a 32 px grey disc, flat square blocks (status hue, black 12 px text). */
 .rtl { --rtl-label-w: 135px; --rtl-lane-h: 46px; --rtl-lane-gap: 4px; position: relative; min-width: 0; }
-.rtl-scroll { overflow: auto; border: 1px solid var(--color-border-row); background: var(--color-surface); max-height: 75vh; }
+.rtl-scroll { overflow: auto; border: 1px solid var(--color-border-grid); background: var(--color-surface); max-height: 75vh; }
 .rtl-grid { min-width: calc(var(--rtl-label-w) + var(--rtl-days) * var(--rtl-day-min)); position: relative; }
 .rtl-head, .rtl-row, .rtl-grouphead { display: flex; min-width: 0; }
-.rtl-corner, .rtl-label { flex: 0 0 var(--rtl-label-w); width: var(--rtl-label-w); position: sticky; left: 0; z-index: 3; background: var(--color-surface); border-right: 1px solid var(--color-border-row); border-bottom: 1px solid var(--color-border-row); }
+.rtl-corner, .rtl-label { flex: 0 0 var(--rtl-label-w); width: var(--rtl-label-w); position: sticky; left: 0; z-index: 3; background: var(--color-surface); border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); }
 .rtl-head { position: sticky; z-index: 4; background: var(--color-surface); }
 .rtl-weeks { top: 0; } .rtl-dayhead { top: 28px; }
 .rtl-track { flex: 1 1 auto; display: flex; position: relative; min-width: 0; }
-.rtl-weektrack .rtl-week { border-right: 1px solid var(--color-border-row); border-bottom: 1px solid var(--color-border-row); font-size: var(--fs-xs); color: var(--color-text); text-align: center; height: 28px; line-height: 28px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px; background: var(--color-surface); }
+.rtl-weektrack .rtl-week { border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); font-size: var(--fs-xs); color: var(--color-text); text-align: center; height: 28px; line-height: 28px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px; background: var(--color-surface); }
 .rtl-corner-label { display: flex; align-items: center; padding: 0 var(--sp-6); font-weight: var(--fw-semibold); font-size: var(--fs-md); color: var(--color-title); }
 .rtl-corner { height: 28px; } .rtl-dayhead .rtl-corner { height: 54px; }
-.rtl-day { flex: 1 1 0; min-width: var(--rtl-day-min); height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid var(--color-border-row); border-bottom: 1px solid var(--color-border-row); font-size: var(--fs-xs); gap: 2px; position: relative; background: var(--color-surface); }
+.rtl-day { flex: 1 1 0; min-width: var(--rtl-day-min); height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); font-size: var(--fs-xs); gap: 2px; position: relative; background: var(--color-surface); }
 .rtl-day.is-alt { background: var(--color-surface-3); }
 .rtl-dow { font-size: var(--fs-xs); font-weight: var(--fw-semibold); letter-spacing: .02em; color: var(--color-text); line-height: 1; } .rtl-dnum { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-text); line-height: 1; }
 .rtl-day.is-weekend .rtl-dow, .rtl-day.is-weekend .rtl-dnum { color: var(--color-success-strong); }
@@ -27,13 +27,13 @@
 .rtl-labeltext { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rtl-labelsub { display: none; }
 /* dashed today line at the middle of the today column */
 .rtl-cells { background-image: repeating-linear-gradient(to bottom, var(--color-text-muted) 0 4px, transparent 4px 8px); background-size: 1px 100%; background-repeat: no-repeat; background-position: var(--rtl-today) 0; }
-.rtl-cell { flex: 1 1 0; min-width: var(--rtl-day-min); border-right: 1px solid var(--color-border-row); border-bottom: 1px solid var(--color-border-row); min-height: 100%; background: var(--color-surface); }
+.rtl-cell { flex: 1 1 0; min-width: var(--rtl-day-min); border-right: 1px solid var(--color-border-grid); border-bottom: 1px solid var(--color-border-grid); min-height: 100%; background: var(--color-surface); }
 .rtl-cell.is-alt { background: var(--color-surface-3); }
 .rtl-cell.is-over { outline: 2px dashed var(--color-primary); outline-offset: -2px; background: var(--color-primary-soft); }
-.rtl-block { position: absolute; height: var(--rtl-lane-h); border: 0; border-radius: 0; padding: 0 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--fs-xs); font-weight: var(--fw-regular); text-align: center; cursor: pointer; overflow: hidden; white-space: nowrap; z-index: 2; background: var(--status-confirmed-bg); color: var(--color-title); }
-.rtl-block[data-status="requested"] { background: var(--status-requested-bg); } .rtl-block[data-status="pending_vaccines"] { background: var(--status-pending_vaccines-bg); }
-.rtl-block[data-status="confirmed"] { background: var(--status-confirmed-bg); } .rtl-block[data-status="checked_in"] { background: var(--status-checked_in-bg); }
-.rtl-block[data-status="checked_out"] { background: var(--status-checked_out-bg); } .rtl-block[data-status="cancelled"] { background: var(--status-cancelled-bg); } .rtl-block[data-status="no_show"] { background: var(--status-no_show-bg); }
+.rtl-block { position: absolute; height: var(--rtl-lane-h); border: 0; border-radius: 0; padding: 0 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--fs-xs); font-weight: var(--fw-regular); text-align: center; cursor: pointer; overflow: hidden; white-space: nowrap; z-index: 2; background: var(--timeline-confirmed-fill); color: var(--color-title); }
+.rtl-block[data-status="requested"] { background: var(--timeline-requested-fill); } .rtl-block[data-status="pending_vaccines"] { background: var(--timeline-pending_vaccines-fill); }
+.rtl-block[data-status="confirmed"] { background: var(--timeline-confirmed-fill); } .rtl-block[data-status="checked_in"] { background: var(--timeline-checked_in-fill); }
+.rtl-block[data-status="checked_out"] { background: var(--timeline-checked_out-fill); } .rtl-block[data-status="cancelled"] { background: var(--timeline-cancelled-fill); } .rtl-block[data-status="no_show"] { background: var(--timeline-no_show-fill); }
 .rtl-block.clip-start { border-left: 2px dashed var(--color-text-muted); } .rtl-block.clip-end { border-right: 2px dashed var(--color-text-muted); }
 .rtl-block:hover, .rtl-block.is-selected { box-shadow: inset 0 0 0 2px var(--color-primary); z-index: 3; }
 .rtl-block[draggable="true"] { cursor: grab; } .rtl-block[draggable="true"]:active { cursor: grabbing; }

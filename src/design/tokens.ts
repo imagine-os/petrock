@@ -48,7 +48,7 @@ export const brands: Record<BrandName, BrandPalette> = {
  */
 export const neutrals = {
   'n-0': '#FFFFFF', 'n-25': '#FBFBFC', 'n-50': '#F7F7F7', 'n-60': '#F3F3F3', 'n-75': '#F4F6FA', 'n-100': '#EEF2F5', 'n-125': '#F1F1F1',
-  'n-150': '#EDEDED', 'n-175': '#DFDFDF', 'n-200': '#E0E0E0', 'n-300': '#D8DADE', 'n-350': '#D4D4D4', 'n-375': '#D0D5DD',
+  'n-150': '#EDEDED', 'n-175': '#DFDFDF', 'n-200': '#E0E0E0', 'n-300': '#D8DADE', 'n-340': '#D9D9D9', 'n-350': '#D4D4D4', 'n-375': '#D0D5DD',
   'n-400': '#B6B6B6', 'n-450': '#A1A1A1', 'n-500': '#93939C', 'n-550': '#808080', 'n-600': '#7C7E93',
   'n-650': '#5E6A6C', 'n-700': '#4B4D5E', 'n-750': '#33363F', 'n-800': '#2A2933', 'n-850': '#1C1C24', 'n-900': '#14131A',
   'n-925': '#181818', 'n-950': '#0E0C11', 'n-1000': '#000000',
@@ -84,6 +84,12 @@ export const bookingHues = {
   checked_out: { fg: '#25D9AB', bg: '#E9FBF7' },
   cancelled: { fg: '#F04336', bg: '#FDECEA' },
   no_show: { fg: '#8A1C1C', bg: '#F5D5D5' },
+} as const;
+
+/** Front desk timeline block fills (all reservation grooming.jpg / front desk-9.jpg: flat fills, black 12 px text). Dark values are the same hues darkened so black-on-fill text stays readable on a dark grid. */
+export const timelineFills = {
+  light: { requested: '#D18ACF', pending_vaccines: '#C9A6E9', confirmed: '#B4F0A0', checked_in: '#7A7CE3', checked_out: '#FFF0B3', cancelled: '#F5D5D5', no_show: '#E3B5B5', daycare: '#00D8D8' },
+  dark: { requested: '#8E4E8C', pending_vaccines: '#7B5C9F', confirmed: '#4E8C3C', checked_in: '#4C4FA8', checked_out: '#A8945A', cancelled: '#8C4C4C', no_show: '#7A4444', daycare: '#0E8F8F' },
 } as const;
 
 /** Semantic roles per theme. `{p}` placeholders are replaced with the brand palette / neutrals at generation time. */
@@ -125,6 +131,7 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-border-input': '{n-125}',      // #F1F1F1 mobile text input
     'color-border-bar': '{n-150}',        // #EDEDED desk top bar / search
     'color-border-row': '{n-350}',        // #D4D4D4 table row rule
+    'color-border-grid': '{n-340}',       // #D9D9D9 timeline hairlines / sidebar group divider (#D8D9D9)
     'color-border-track': '{n-375}',      // #D0D5DD stepper remaining track
     'color-border-strong': '{n-400}',     // #B6B6B6 mobile header rule
     'color-border-subtle': '{n-60}',      // #F3F3F3 desk card stroke
@@ -174,6 +181,7 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-border-input': 'rgba(255,255,255,.14)',
     'color-border-bar': 'rgba(255,255,255,.10)',
     'color-border-row': 'rgba(255,255,255,.12)',
+    'color-border-grid': 'rgba(255,255,255,.14)',
     'color-border-track': 'rgba(255,255,255,.18)',
     'color-border-strong': 'rgba(255,255,255,.28)',
     'color-border-subtle': 'rgba(255,255,255,.08)',
@@ -235,11 +243,11 @@ export const motion = {
 /** Layout sizes from the designs: sidebar 243, top bar 80, bottom nav 71, table row 44 / head 49, controls 48 / 40 / 28, phone 390. */
 export const layoutTokens = {
   'w-phone': '390px', 'w-phone-max': '430px', 'w-content': '1280px', 'w-sidebar': '243px', 'w-rail': '72px',
-  'h-topbar': '80px', 'h-bottomnav': '71px', 'h-row': '44px', 'h-thead': '49px', 'h-control': '48px', 'h-control-sm': '40px', 'h-control-xs': '28px',
+  'h-topbar': '80px', 'h-bottomnav': '71px', 'h-row': '44px', 'h-thead': '49px', 'h-control': '48px', 'h-control-sm': '40px', 'h-control-field': '40px', 'h-control-xs': '28px',
   'bp-phone': '600px', 'bp-tablet': '900px', 'bp-desktop': '1280px',
 } as const;
 
-export const tokens = { brands, neutrals, status, bookingHues, semantic, type, spacing, radii, shadows, motion, layout: layoutTokens };
+export const tokens = { brands, neutrals, status, bookingHues, timelineFills, semantic, type, spacing, radii, shadows, motion, layout: layoutTokens };
 
 function vars(obj: Record<string, string>): string {
   return Object.entries(obj).map(([k, v]) => `  --${k}: ${v};`).join('\n');
@@ -262,7 +270,8 @@ function themeBlock(theme: ThemeName, brand: BrandPalette): string {
     'color-info': st.info, 'color-info-bg': st.infoBg, 'color-accent-coral': st.coral, 'color-accent-coral-soft': st.coralSoft, 'color-badge': st.badge,
     'color-completed': st.completed, 'color-completed-bg': st.completedBg,
   };
-  return `${vars(sem)}\n${vars(stVars)}\n  color-scheme: ${theme};`;
+  const tl = Object.fromEntries(Object.entries(timelineFills[theme]).map(([k, v]) => [`timeline-${k}-fill`, v]));
+  return `${vars(sem)}\n${vars(stVars)}\n${vars(tl)}\n  color-scheme: ${theme};`;
 }
 
 /** Builds the full tokens stylesheet: static scales on :root, then one block per brand x theme. */
