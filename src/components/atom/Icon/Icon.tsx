@@ -1,10 +1,17 @@
 import type { CSSProperties } from 'react';
+import { ICON_SVGS, type FigmaIconName } from './figmaIcons';
 import './Icon.css';
 
+export { ICON_SVGS } from './figmaIcons';
+export type { FigmaIconName, IconPath, IconSvg } from './figmaIcons';
+
 /**
- * Inline SVG icon set (24x24, 1.75 stroke, Lucide-style outlines) standardised per tokens-draft. Names mirror the
- * Figma export icons where they exist (Calendar, Message, Moon, Setting, Shield-Done, Lock, Logout, User, Users,
- * Info-Circle, Question-Circle, Trash Bin, Arrow-Right) plus the ones the app needs.
+ * Icon atom. Two registries resolve behind one `<Icon name>`:
+ * - `ICONS`: single-path 24-box outlines (Hugeicons / Lucide weight, 1.5 px default stroke) for everything generic;
+ * - `ICON_SVGS` (figmaIcons.ts): the Figma exports (filled two-tone settings-row icons, Iconly Category, vet / clipper /
+ *   medal notes icons, row chevron, filled calendar) and the glyphs redrawn from the Figma vectors (bottom nav home /
+ *   ticket / paw disc / gear, services tiles, chat-notification, clock-filled). Multi-path, own viewBox, currentColor
+ *   unless a layer has a fixed colour. See docs/design/fidelity-audit.md section 2.
  */
 export const ICONS = {
   home: 'M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2z',
@@ -74,16 +81,36 @@ export const ICONS = {
   more: 'M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
   image: 'M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 15l-5-5L5 21',
 } as const;
-export type IconName = keyof typeof ICONS;
-export const ICON_NAMES = Object.keys(ICONS) as IconName[];
+export type IconName = keyof typeof ICONS | FigmaIconName;
+export const ICON_NAMES = [...Object.keys(ICONS), ...Object.keys(ICON_SVGS)] as IconName[];
+/** Names that come from the Figma exports / vectors (for the gallery). */
+export const FIGMA_ICON_NAMES = Object.keys(ICON_SVGS) as FigmaIconName[];
 
 export interface IconProps { name: IconName; size?: number; className?: string; title?: string; style?: CSSProperties; strokeWidth?: number }
 
-export function Icon({ name, size = 20, className = '', title, style, strokeWidth = 1.75 }: IconProps) {
+/** Default stroke 1.5 (Hugeicons weight); bottom nav / header glyphs pass 2 (MingCute weight at 34..40 px). */
+export function Icon({ name, size = 20, className = '', title, style, strokeWidth = 1.5 }: IconProps) {
+  const figma = (ICON_SVGS as Record<string, (typeof ICON_SVGS)[FigmaIconName] | undefined>)[name];
+  const a11y = { 'aria-hidden': title ? undefined : true, role: title ? ('img' as const) : undefined };
+  if (figma) {
+    const box = Number(figma.viewBox.split(' ')[2]) || 24;
+    const sw = (strokeWidth * box) / 24;
+    return (
+      <svg className={`icon icon-figma ${className}`} width={size} height={size} viewBox={figma.viewBox} fill="none" {...a11y} style={style}>
+        {title && <title>{title}</title>}
+        {figma.paths.map((p, i) => {
+          const q = p as { d: string; stroke?: boolean; sw?: number; evenodd?: boolean; opacity?: number; fill?: string; dash?: string };
+          return q.stroke
+            ? <path key={i} d={q.d} fill="none" stroke={q.fill ?? 'currentColor'} strokeWidth={q.sw ?? sw} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={q.dash} opacity={q.opacity} />
+            : <path key={i} d={q.d} fill={q.fill ?? 'currentColor'} fillRule={q.evenodd ? 'evenodd' : undefined} clipRule={q.evenodd ? 'evenodd' : undefined} opacity={q.opacity} />;
+        })}
+      </svg>
+    );
+  }
   return (
-    <svg className={`icon ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden={title ? undefined : true} role={title ? 'img' : undefined} style={style}>
+    <svg className={`icon ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...a11y} style={style}>
       {title && <title>{title}</title>}
-      <path d={ICONS[name] ?? ICONS.question} />
+      <path d={(ICONS as Record<string, string>)[name] ?? ICONS.question} />
     </svg>
   );
 }
