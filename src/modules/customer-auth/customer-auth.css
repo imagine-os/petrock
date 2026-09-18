@@ -1,0 +1,39 @@
+/* Customer auth screens (C-01..C-09). The PhoneShell gives the 430 px column; these fill it edge to edge. */
+.cauth { display: flex; flex-direction: column; gap: var(--sp-6); padding: var(--sp-5) var(--sp-4) var(--sp-8); min-height: 100vh; }
+.cauth-form { display: flex; flex-direction: column; gap: var(--sp-4); }
+.cauth-form .row-between { gap: var(--sp-2); flex-wrap: wrap; }
+.cauth-actions { display: flex; flex-direction: column; gap: var(--sp-3); }
+.cauth-footer { text-align: center; color: var(--color-text-muted); font-size: var(--fs-sm); display: flex; flex-direction: column; gap: var(--sp-3); align-items: center; }
+.cauth-footer p { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.cauth-spacer { flex: 1 1 auto; }
+.cauth-demo { font-size: var(--fs-xs); }
+.cauth-demo code { background: var(--color-surface-2); padding: .1em .35em; border-radius: var(--r-sm); }
+.cauth-names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+@media (max-width: 360px) { .cauth-names { grid-template-columns: 1fr; } }
+.cauth-checks { display: flex; flex-direction: column; gap: var(--sp-2); }
+.cauth-checks .checkbox-label a { text-decoration: underline; }
+/* welcome */
+.cauth-welcome { text-align: center; }
+.cauth-services { display: flex; gap: var(--sp-2); justify-content: center; flex-wrap: wrap; }
+.cauth-locations { display: flex; gap: 6px; align-items: center; justify-content: center; color: var(--color-text-muted); font-size: var(--fs-xs); flex-wrap: wrap; }
+.cauth-cta { display: flex; flex-direction: column; gap: var(--sp-4); align-items: center; }
+.cauth-cta .btn-block { max-width: 360px; }
+.cauth-cta-title { color: var(--color-primary-text); font-size: var(--fs-lg); font-weight: var(--fw-semibold); }
+/* success / locked */
+.cauth-mark { width: 84px; height: 84px; border-radius: var(--r-round); display: inline-flex; align-items: center; justify-content: center; margin: 0 auto; }
+.cauth-mark-success { background: var(--color-success-bg); color: var(--color-success); }
+.cauth-mark-lock { background: var(--color-warn-bg); color: var(--color-warn); }
+.cauth-center { text-align: center; display: flex; flex-direction: column; gap: var(--sp-3); align-items: center; }
+.cauth-center h1 { font-size: var(--fs-2xl); }
+.cauth-center p { color: var(--color-text-muted); max-width: 36ch; }
+.cauth-countdown { font-size: var(--fs-3xl); font-weight: var(--fw-bold); color: var(--color-heading); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.cauth-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); counter-reset: step; }
+.cauth-step { display: flex; gap: var(--sp-3); align-items: flex-start; }
+.cauth-step-n { flex: 0 0 auto; width: 32px; height: 32px; border-radius: var(--r-round); background: var(--color-primary-soft); color: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; }
+.cauth-step h3 { font-size: var(--fs-sm); } .cauth-step p { font-size: var(--fs-xs); color: var(--color-text-muted); }
+.cauth-phones { display: flex; flex-direction: column; gap: var(--sp-2); }
+.cauth-phone { display: flex; justify-content: space-between; gap: var(--sp-3); align-items: center; font-size: var(--fs-sm); }
+.cauth-phone a { font-weight: var(--fw-semibold); white-space: nowrap; }
+.cauth-user { display: flex; gap: var(--sp-3); align-items: center; }
+.cauth-user-text { display: flex; flex-direction: column; min-width: 0; } .cauth-user-text strong { color: var(--color-heading); }
+@media (min-width: 600px) { .cauth { padding: var(--sp-8) var(--sp-6) var(--sp-10); } }

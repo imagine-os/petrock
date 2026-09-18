@@ -106,6 +106,68 @@ create index if not exists audit_log_location_idx on public.audit_log(location_i
 create index if not exists audit_log_user_id_idx on public.audit_log(user_id);
 create trigger audit_log_touch before update on public.audit_log for each row execute function public.touch_updated_at();
 
+-- core · Auth one-time codes: Six-digit codes for email verification, password reset and sign-in confirmation. 10 minute expiry, 5 attempts, one live code per email + purpose.
+create table if not exists public.auth_codes (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  user_id uuid references public.users(id) on delete set null,
+  email text not null,
+  purpose text not null check (purpose in ('verify_email', 'reset_password', 'sign_in')),
+  channel text not null check (channel in ('email', 'sms')),
+  -- Plain in the mock so the demo can show it; hashed server-side later
+  code text not null,
+  expires_at timestamptz not null,
+  consumed_at timestamptz,
+  attempts integer not null
+);
+create index if not exists auth_codes_user_id_idx on public.auth_codes(user_id);
+create trigger auth_codes_touch before update on public.auth_codes for each row execute function public.touch_updated_at();
+
+-- core · Auth credentials: Customer email + password login (mock hash today; a real auth provider later). Tracks verification, failed attempts and lockout.
+-- access:
+--   · customer read own
+--   · system write
+create table if not exists public.auth_credentials (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  user_id uuid not null references public.users(id) on delete set null,
+  -- Lower-cased; unique
+  email text not null,
+  -- Mock FNV-1a today; bcrypt/argon2 server-side later
+  password_hash text not null,
+  email_verified boolean not null default false,
+  email_verified_at timestamptz,
+  phone text,
+  failed_attempts integer not null,
+  locked_until timestamptz,
+  last_sign_in_at timestamptz,
+  password_changed_at timestamptz,
+  terms_accepted_at timestamptz not null,
+  -- Last "remember me" choice (30 days vs session)
+  remember_me boolean not null default false
+);
+create index if not exists auth_credentials_user_id_idx on public.auth_credentials(user_id);
+create trigger auth_credentials_touch before update on public.auth_credentials for each row execute function public.touch_updated_at();
+
+-- system · Auth events: Sign-up, sign-in, failed attempts, lockouts, code sends, password resets. Feeds the security audit and the owner reports.
+create table if not exists public.auth_events (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  user_id uuid references public.users(id) on delete set null,
+  email text,
+  kind text not null check (kind in ('sign_up', 'email_verified', 'sign_in', 'sign_in_failed', 'locked', 'sign_out', 'otp_sent', 'otp_failed', 'password_reset_requested', 'password_reset')),
+  page_code text,
+  details jsonb
+);
+create index if not exists auth_events_user_id_idx on public.auth_events(user_id);
+create trigger auth_events_touch before update on public.auth_events for each row execute function public.touch_updated_at();
+
 -- hotel · Booking pets: Pets on a stay with the per-booking medical questionnaire.
 create table if not exists public.booking_pets (
   -- Primary key
