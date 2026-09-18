@@ -39,7 +39,8 @@ export function buildSpecReport(routes: RouteDef[]): SpecReportRow[] {
     const { score, missing } = specCompleteness(s);
     const stub = isStubElement(route.element);
     if (!/^(C|F|A|P|M|D|HUB)-\d{2}[a-z]?$/.test(s.code)) issues.push({ kind: 'bad_code', severity: 'error', text: `Code "${s.code}" does not match <PREFIX>-<nn>` });
-    for (const m of missing) issues.push({ kind: 'missing', severity: m === 'states' || m === 'rules' ? 'warn' : 'error', text: `spec.${m} is empty` });
+    const tooling = ['dev', 'docs', 'public'].includes(route.surface);
+    for (const m of missing) issues.push({ kind: 'missing', severity: m === 'states' || m === 'rules' || (m === 'data' && tooling) ? 'warn' : 'error', text: `spec.${m} is empty${m === 'data' && tooling ? ' (tooling / static page: acceptable when it reads no table)' : ''}` });
     for (const t of s.data) if (!tableRegistry[t] && !t.includes(' ')) issues.push({ kind: 'unknown_table', severity: 'error', text: `data "${t}" is not a table in src/data/schema` });
     for (const c of s.components) if (!componentByName(c)) issues.push({ kind: 'unknown_component', severity: 'error', text: `component "${c}" has no meta in src/components` });
     for (const id of s.rules ?? []) if (!ruleById(id)) issues.push({ kind: 'unknown_rule', severity: 'warn', text: `rule ${id} is not in the registry (requested?)` });
