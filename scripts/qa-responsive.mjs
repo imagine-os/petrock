@@ -1,0 +1,73 @@
+// Responsive + a11y QA (D-016, R-X82, R-X87): every manifest route at 360/390/768/1280/1920 in light and dark.
+// Reports horizontal scroll, elements past the viewport edge, console errors and the same a11y checks D-15 runs
+// (src/modules/dev-quality/a11yScan.ts, compiled on the fly with esbuild) into docs/qa/responsive-report.{md,json}.
+// Usage: npm run build && npm run qa:responsive [-- --only=/dev,/desk] [-- --codes=D-08,D-09] [-- --widths=360,1280] [-- --themes=light] [-- --port=4174]
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { transformSync } from 'esbuild';
+import { arg, list, startPreview, launch, fetchManifest, fillParams, routeFilter, NOISE, initScript } from './qa-lib.mjs';
+
+const args = process.argv.slice(2);
+const PORT = Number(arg(args, 'port', process.env.QA_PORT ?? '4174'));
+const WIDTHS = list(arg(args, 'widths', '360,390,768,1280,1920')).map(Number);
+const THEMES = list(arg(args, 'themes', 'light,dark'));
+const ONLY = list(arg(args, 'only')); const CODES = list(arg(args, 'codes'));
+const BASE = `http://localhost:${PORT}/#`;
+const OUT = new URL('../docs/qa/', import.meta.url);
+
+const a11ySrc = transformSync(readFileSync(new URL('../src/modules/dev-quality/a11yScan.ts', import.meta.url), 'utf8'), { loader: 'ts', format: 'iife', globalName: 'PetrockA11y' }).code;
+
+async function main() {
+  const server = await startPreview(PORT);
+  const browser = await launch();
+  let manifest;
+  try { manifest = await fetchManifest(browser, BASE); } catch (e) { console.error(e.message); await browser.close(); server.kill(); process.exit(1); }
+  const routes = manifest.filter(routeFilter(ONLY, CODES)).filter((r) => !r.path.includes('*'));
+  console.log(`${routes.length} routes x ${WIDTHS.join('/')} x ${THEMES.join('+')}`);
+  const report = { generatedAt: new Date().toISOString(), widths: WIDTHS, themes: THEMES, routes: [] };
+  for (const r of routes) {
+    const entry = { code: r.code, path: r.path, name: r.spec?.name ?? r.code, surface: r.surface, status: r.status, cells: {} };
+    const url = fillParams(r.path);
+    for (const width of WIDTHS) for (const theme of THEMES) {
+      const ctx = await browser.newContext({ viewport: { width, height: width < 600 ? 844 : 900 }, deviceScaleFactor: 1 });
+      await ctx.addInitScript(...initScript(theme));
+      const page = await ctx.newPage();
+      await page.route(/^https?:\/\/(?!localhost)/, (x) => x.abort());
+      const errors = [];
+      page.on('pageerror', (e) => errors.push(e.message));
+      page.on('console', (m) => { if (m.type() === 'error' && !NOISE.test(m.text())) errors.push(m.text()); });
+      const t0 = Date.now();
+      let cell = { hscroll: false, scrollWidth: 0, offenders: [], a11y: [], errors: [], ms: 0 };
+      try {
+        await page.goto(`${BASE}${url}`, { waitUntil: 'load', timeout: 20000 });
+        await page.waitForSelector('#root > *', { timeout: 10000 });
+        await page.waitForTimeout(500);
+        await page.addScriptTag({ content: a11ySrc });
+        const res = await page.evaluate((w) => { const o = PetrockA11y.overflowScan(document, w); const a = PetrockA11y.scanA11y(document); return { ...o, a11y: a }; }, width);
+        cell = { ...res, errors: [...new Set(errors)].slice(0, 5), ms: Date.now() - t0 };
+      } catch (e) { cell.errors = [String(e.message).split('\n')[0]]; cell.ms = Date.now() - t0; }
+      entry.cells[`${width}-${theme}`] = cell;
+      await ctx.close();
+    }
+    const fails = Object.values(entry.cells).filter((c) => c.hscroll || c.errors.length).length;
+    process.stdout.write(`${r.code.padEnd(8)} ${r.path.padEnd(32)} ${fails ? `FAIL x${fails}` : 'ok'}\n`);
+    report.routes.push(entry);
+  }
+  await browser.close(); server.kill();
+  mkdirSync(OUT, { recursive: true });
+  writeFileSync(new URL('responsive-report.json', OUT), JSON.stringify(report));
+  const cells = report.routes.flatMap((r) => Object.entries(r.cells));
+  const failing = cells.filter(([, c]) => c.hscroll || c.errors.length);
+  const a11yTotal = cells.reduce((s, [, c]) => s + c.a11y.length, 0);
+  let md = `# Responsive QA report\n\ngenerated: ${report.generatedAt}\nroutes: ${report.routes.length}\nwidths: ${WIDTHS.join(', ')}\nthemes: ${THEMES.join(', ')}\ncells: ${cells.length}\nfailing_cells: ${failing.length}\na11y_findings: ${a11yTotal}\n\n_Written by \`npm run qa:responsive\` (scripts/qa-responsive.mjs). Fail = horizontal scroll (documentElement.scrollWidth > viewport) or a console error. A11y findings come from the same checks D-15 runs live. Open \`/#/dev/qa/responsive\` for the interactive matrix._\n\n## Matrix (${THEMES.join(' / ')})\n\n| Code | Route | ${WIDTHS.join(' | ')} |\n| --- | --- | ${WIDTHS.map(() => '---').join(' | ')} |\n`;
+  const mark = (c) => (!c ? '·' : c.hscroll || c.errors.length ? `FAIL${c.hscroll ? ` ${c.scrollWidth}px` : ''}${c.errors.length ? ' err' : ''}` : c.a11y.some((a) => a.severity === 'error') ? `warn ${c.a11y.filter((a) => a.severity === 'error').length}` : 'ok');
+  for (const r of report.routes) md += `| \`${r.code}\` | \`${r.path}\` | ${WIDTHS.map((w) => THEMES.map((t) => mark(r.cells[`${w}-${t}`])).join(' / ')).join(' | ')} |\n`;
+  if (failing.length) { md += `\n## Failing cells\n\n`; for (const r of report.routes) for (const [k, c] of Object.entries(r.cells)) if (c.hscroll || c.errors.length) md += `- \`${r.code}\` ${r.path} @ ${k}: ${c.hscroll ? `scrollWidth ${c.scrollWidth}; offenders: ${c.offenders.map((o) => `${o.selector} (${o.right}px)`).join(', ') || 'none found'}` : ''}${c.errors.length ? ` errors: ${c.errors.join(' | ')}` : ''}\n`; }
+  const byRule = {}; for (const [, c] of cells) for (const a of c.a11y) byRule[a.rule] = (byRule[a.rule] ?? 0) + 1;
+  md += `\n## A11y findings by rule\n\n| Rule | Findings |\n| --- | --- |\n${Object.entries(byRule).sort((a, b) => b[1] - a[1]).map(([k, v]) => `| ${k} | ${v} |`).join('\n') || '| — | 0 |'}\n`;
+  const uniq = new Map(); for (const r of report.routes) for (const [k, c] of Object.entries(r.cells)) for (const a of c.a11y) { const key = `${r.code}|${a.rule}|${a.text}`; if (!uniq.has(key)) uniq.set(key, { code: r.code, path: r.path, ...a, at: [k] }); else uniq.get(key).at.push(k); }
+  if (uniq.size) { md += `\n## A11y findings (unique per route)\n\n| Code | Rule | Sev | Finding | Element | Cells |\n| --- | --- | --- | --- | --- | --- |\n`; for (const f of [...uniq.values()].slice(0, 400)) md += `| \`${f.code}\` | ${f.rule} | ${f.severity} | ${f.text.replace(/\|/g, '/')} | \`${f.selector.replace(/\|/g, '/')}\` | ${f.at.length} |\n`; }
+  writeFileSync(new URL('responsive-report.md', OUT), md);
+  console.log(`\nwrote docs/qa/responsive-report.{md,json}: ${cells.length} cells, ${failing.length} failing, ${a11yTotal} a11y findings`);
+  process.exit(failing.length ? 1 : 0);
+}
+main().catch((e) => { console.error(e); process.exit(1); });

@@ -111,7 +111,7 @@ export function TableManagerPage() {
   return (
     <div className="page stack">
       <PageHeader code="D-04" backTo="/dev/tables" title={def.label} subtitle={def.description} eyebrow={<code>{table}</code>}
-        actions={<>{can('tables.write') && <Button icon="plus" onClick={() => setEditing({ row: Object.fromEntries(def.columns.map((c) => [c.name, c.type === 'bool' ? false : null])), isNew: true })}>Add row</Button>}<Link to="/dev/tables"><Button variant="ghost" icon="table">All tables</Button></Link></>}>
+        actions={<>{can('tables.write') && <Button icon="plus" onClick={() => setEditing({ row: Object.fromEntries(def.columns.map((c) => [c.name, c.type === 'bool' ? false : null])), isNew: true })}>Add row</Button>}<Link to={`/dev/data/${table}`}><Button variant="ghost" icon="edit">Workbench (D-10)</Button></Link><Link to="/dev/tables"><Button variant="ghost" icon="table">All tables</Button></Link></>}>
         <div className="row wrap xs"><Badge size="sm" tone={def.scope === 'location' ? 'primary' : 'neutral'}>{def.scope === 'location' ? 'per location' : 'global'}</Badge><Badge size="sm">{def.group}</Badge>{def.source && <span className="muted">source: {def.source}</span>}{def.access?.map((a) => <span key={a} className="muted">· {a}</span>)}</div>
       </PageHeader>
       <DataTable rows={rows} rowKey={(r) => r.id} searchable dense pageSize={50} onRowClick={(r) => setEditing({ row: r, isNew: false })}
