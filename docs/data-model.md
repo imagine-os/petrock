@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (39)
+## Tables (41)
 
 ### Core & locations
 
@@ -742,6 +742,48 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
+
+#### `perf_budgets` (global)
+Limits the bundle and runtime checks compare against (D-16). Edit here, never in code.  
+_Source: dev-quality module (D-16)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `metric` | text | Key, e.g. js_total_kb, css_total_kb, largest_chunk_kb, route_count_max, localstorage_kb, ttfr_ms |
+| `label` | text |  |
+| `budget` | numeric |  |
+| `unit` | enum (kb \| ms \| count \| percent) |  |
+| `warn_at_percent` | int | Warn when usage passes this share of the budget (default 80) |
+| `description` | text, null |  |
+| `active` | bool |  |
+
+**Access:** super_admin: read/write; owner: read
+
+#### `qa_runs` (global)
+One row per quality pass (responsive matrix, a11y scan, bundle budget, screenshot pass): what ran, at which widths, how many issues, where the report lives.  
+_Source: dev-quality module (D-12, D-15, D-16)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `kind` | enum (responsive \| a11y \| bundle \| screenshots \| smoke) |  |
+| `label` | text | Human label, e.g. "Responsive pass 2026-09-18" |
+| `started_at` | timestamptz |  |
+| `finished_at` | timestamptz, null |  |
+| `routes` | int | Routes covered |
+| `widths` | json, null | Widths checked, e.g. [360,390,768,1280,1920] |
+| `issues` | int | Issues found |
+| `result` | enum (pass \| warn \| fail) |  |
+| `report_path` | text, null | docs/qa/<file>.md the run wrote |
+| `triggered_by` | text, null | script | page | ci |
+| `summary` | json, null | Per-route counts |
+
+**Access:** super_admin: read/write; owner: read
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

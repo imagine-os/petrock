@@ -1,0 +1,17 @@
+.qam { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.qam-scroll { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); }
+.qam table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--fs-xs); }
+.qam th { text-align: left; font-weight: var(--fw-medium); color: var(--color-text-muted); padding: 8px 10px; border-bottom: 1px solid var(--color-border); white-space: nowrap; background: var(--color-surface); }
+.qam thead th:not(.qam-rowhead) { text-align: center; }
+.qam td { padding: 4px 6px; border-bottom: 1px solid var(--color-border-subtle); text-align: center; }
+.qam tbody tr:last-child td, .qam tbody tr:last-child th { border-bottom: 0; }
+.qam-rowhead { position: sticky; left: 0; z-index: 1; min-width: 160px; max-width: 260px; background: var(--color-surface); box-shadow: 1px 0 0 var(--color-border); }
+.qam-label { display: block; color: var(--color-text); font-weight: var(--fw-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qam-sub { display: block; color: var(--color-text-faint); font-family: var(--font-mono); font-size: var(--fs-2xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qam-cell > button, .qam-cell > span { display: inline-flex; align-items: center; justify-content: center; gap: 3px; min-width: 32px; height: 26px; padding: 0 6px; border-radius: var(--r-sm); border: 1px solid transparent; background: transparent; color: inherit; font: inherit; }
+.qam-cell > button { cursor: pointer; } .qam-cell > button:hover { border-color: var(--color-border-strong); }
+.qam .is-pass { color: var(--color-success); } .qam .is-warn { color: var(--color-warn); } .qam .is-fail { color: var(--color-danger); } .qam .is-none { color: var(--color-text-faint); }
+.qam-cell.is-pass > * { background: var(--color-success-bg); } .qam-cell.is-warn > * { background: var(--color-warn-bg); } .qam-cell.is-fail > * { background: var(--color-danger-bg); }
+.qam-count { font-family: var(--font-mono); font-size: var(--fs-2xs); }
+.qam-legend { display: flex; gap: var(--sp-4); flex-wrap: wrap; } .qam-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.qam.is-dense td { padding: 2px 4px; } .qam.is-dense .qam-cell > * { height: 22px; min-width: 26px; }

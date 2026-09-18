@@ -551,6 +551,27 @@ create index if not exists payments_customer_id_idx on public.payments(customer_
 create index if not exists payments_refund_of_idx on public.payments(refund_of);
 create trigger payments_touch before update on public.payments for each row execute function public.touch_updated_at();
 
+-- system · Performance budgets: Limits the bundle and runtime checks compare against (D-16). Edit here, never in code.
+-- access:
+--   · super_admin: read/write
+--   · owner: read
+create table if not exists public.perf_budgets (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  -- Key, e.g. js_total_kb, css_total_kb, largest_chunk_kb, route_count_max, localstorage_kb, ttfr_ms
+  metric text not null,
+  label text not null,
+  budget numeric(12,2) not null,
+  unit text not null check (unit in ('kb', 'ms', 'count', 'percent')),
+  -- Warn when usage passes this share of the budget (default 80)
+  warn_at_percent integer not null,
+  description text,
+  active boolean not null default false
+);
+create trigger perf_budgets_touch before update on public.perf_budgets for each row execute function public.touch_updated_at();
+
 -- core · Permissions: Role -> permission string grants (see src/auth/permissions.ts).
 create table if not exists public.permissions (
   -- Primary key
@@ -601,6 +622,36 @@ create table if not exists public.pets (
 create index if not exists pets_customer_id_idx on public.pets(customer_id);
 create index if not exists pets_vet_id_idx on public.pets(vet_id);
 create trigger pets_touch before update on public.pets for each row execute function public.touch_updated_at();
+
+-- system · QA runs: One row per quality pass (responsive matrix, a11y scan, bundle budget, screenshot pass): what ran, at which widths, how many issues, where the report lives.
+-- access:
+--   · super_admin: read/write
+--   · owner: read
+create table if not exists public.qa_runs (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  kind text not null check (kind in ('responsive', 'a11y', 'bundle', 'screenshots', 'smoke')),
+  -- Human label, e.g. "Responsive pass 2026-09-18"
+  label text not null,
+  started_at timestamptz not null,
+  finished_at timestamptz,
+  -- Routes covered
+  routes integer not null,
+  -- Widths checked, e.g. [360,390,768,1280,1920]
+  widths jsonb,
+  -- Issues found
+  issues integer not null,
+  result text not null check (result in ('pass', 'warn', 'fail')),
+  -- docs/qa/<file>.md the run wrote
+  report_path text,
+  -- script | page | ci
+  triggered_by text,
+  -- Per-route counts
+  summary jsonb
+);
+create trigger qa_runs_touch before update on public.qa_runs for each row execute function public.touch_updated_at();
 
 -- commerce · Room rates: Nightly rate per room type, day kind (Mon-Thu / Fri-Sun) and season (null = base).
 create table if not exists public.rates (
