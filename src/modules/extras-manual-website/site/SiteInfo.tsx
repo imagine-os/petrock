@@ -77,7 +77,7 @@ export function SiteBook() {
 
 const TOPICS = [{ value: 'hotel', label: 'Hotel stay' }, { value: 'grooming', label: 'Grooming & Spa' }, { value: 'daycare', label: 'Daycare' }, { value: 'in_home', label: 'In-home care (inquiry)' }, { value: 'other', label: 'Something else' }];
 
-/** P-10 Contact: phones and addresses per location plus a form that writes a site_inquiries row for the chosen location (R-X42). */
+/** P-10 Contact: phones and addresses per location plus a form that writes a site_inquiries row for the chosen location (R-X72). */
 export function SiteContact() {
   const data = useData();
   const { toast } = useToast();

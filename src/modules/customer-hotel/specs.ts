@@ -10,9 +10,9 @@ export const petsDatesSpec = defineSpec({
   purpose: 'First step of a hotel stay: pick the location, the pets that are coming, whether they share a room, and the check-in / check-out days and times on a range calendar bounded by opening hours.',
   layout: ['HotelBookingFrame (back, title, Stepper 1/7)', 'Location Select', 'Pet cards (BookingPetCard, multi-select, approval + vaccine chips)', 'Share-a-room Select (2+ pets)', 'StayDatesCard (check-in / check-out + inline range calendar)', 'Sticky footer: Next'],
   data: ['customers', 'pets', 'vaccine_records', 'vaccine_types', 'locations', 'settings'], roles: ROLES,
-  logic: ['R-A01: no pets -> EmptyState with Add a pet.', 'Share-room question only for 2+ pets; more than settings.max_pets_per_room forces separate rooms (R-X33).', 'validateStay(): check-out after check-in, min nights, times inside location hours for that weekday, closed days disabled (R-X34).', 'Vaccine chip per pet from vaccine_records vs required vaccine_types (R-A05).', 'Draft persists in localStorage (petrock.hotelDraft.v1) across steps and refreshes.'],
+  logic: ['R-A01: no pets -> EmptyState with Add a pet.', 'Share-room question only for 2+ pets; more than settings.max_pets_per_room forces separate rooms (R-X53).', 'validateStay(): check-out after check-in, min nights, times inside location hours for that weekday, closed days disabled (R-X54).', 'Vaccine chip per pet from vaccine_records vs required vaccine_types (R-A05).', 'Draft persists in localStorage (petrock.hotelDraft.v1) across steps and refreshes.'],
   integrations: [], components: [...FRAME, 'Select', 'BookingPetCard', 'StayDatesCard', 'DatePicker', 'TimePicker', 'EmptyState', 'Badge'],
-  rules: ['R-A01', 'R-A04', 'R-A05', 'R-A07', 'R-K02', 'R-X33', 'R-X34'], states: ['no pets', 'one pet', 'multi-pet with share question', 'date error', 'valid'],
+  rules: ['R-A01', 'R-A04', 'R-A05', 'R-A07', 'R-K02', 'R-X53', 'R-X54'], states: ['no pets', 'one pet', 'multi-pet with share question', 'date error', 'valid'],
   figma: ['Choose Pets-3.png', 'Choose Pets-2.png', 'Hotel Reservation.png', 'Frame 1171276425.png'], checkedAt: W,
   notes: ['Chosen over the text-input variant: the room-share question is a Yes/No select (open question 39).', 'Grooming is its own step (C-33) instead of the Yes/No dropdown on this screen.'],
 });
@@ -22,9 +22,9 @@ export const roomTypeSpec = defineSpec({
   purpose: 'Pick Penthouse or Suite for the chosen pets and dates. Cards show the inclusions copy, the average nightly rate per pet from the pricing engine, rooms left, and are disabled by the fit rules (55 lb Suite only, 30 lb bottom rooms) or when the location is full.',
   layout: ['HotelBookingFrame (Stepper 2/7)', 'Stay summary line (pets, nights, location)', 'HotelRoomTypeCard per room_types row', 'Fit / capacity explanations', 'Sticky footer: Next'],
   data: ['room_types', 'rates', 'seasons', 'rooms', 'capacities', 'bookings', 'booking_pets', 'pets'], roles: ROLES,
-  logic: ['avgNightly(): quoteHotel for 1 dog over the dates / nights (R-X39, weekday / weekend / seasonal rates R-D05, R-D06).', 'roomFit(): any pet >= 55 lb blocks Penthouse (R-X01); pets >= 30 lb need a bottom penthouse room (R-E09, R-X37).', 'availability(): capacities.max_simultaneous minus overlapping active stays; rooms needed = 1 when sharing else pets count (R-X36, R-E11, R-E12).'],
+  logic: ['avgNightly(): quoteHotel for 1 dog over the dates / nights (R-X59, weekday / weekend / seasonal rates R-D05, R-D06).', 'roomFit(): any pet >= 55 lb blocks Penthouse (R-X01); pets >= 30 lb need a bottom penthouse room (R-E09, R-X57).', 'availability(): capacities.max_simultaneous minus overlapping active stays; rooms needed = 1 when sharing else pets count (R-X56, R-E11, R-E12).'],
   integrations: [], components: [...FRAME, 'HotelRoomTypeCard', 'Badge', 'Card'],
-  rules: ['R-D01', 'R-D05', 'R-D06', 'R-E09', 'R-E11', 'R-E12', 'R-X01', 'R-X36', 'R-X37', 'R-X39'], states: ['both available', 'Penthouse blocked (55 lb)', 'bottom rooms full', 'location full'],
+  rules: ['R-D01', 'R-D05', 'R-D06', 'R-E09', 'R-E11', 'R-E12', 'R-X01', 'R-X56', 'R-X57', 'R-X59'], states: ['both available', 'Penthouse blocked (55 lb)', 'bottom rooms full', 'location full'],
   figma: ['Choose Your Room.png', 'Choose Your Room-1.png'], checkedAt: W,
   notes: ['Suite description is its own copy (the Figma card repeats the Penthouse text).', 'Prices are never hardcoded: $150 / $105 / $115 in the exports were conflicting placeholders (open question 48).'],
 });
@@ -46,9 +46,9 @@ export const groomingSpec = defineSpec({
   purpose: 'Optionally add one Grooming & Spa package (Gold / Platinum / Diamond priced by the pet size) plus add-ons per pet, scheduled at the end of the stay. Skippable.',
   layout: ['HotelBookingFrame (Stepper 4/7)', 'Info band (grooms at the end of stays)', 'Per pet: package RadioGroup cards with size price, add-on Chips', 'Running grooming total (HotelEstimateCard compact)', 'Sticky footer: Skip / Continue'],
   data: ['packages', 'addons', 'pets', 'taxes', 'fees'], roles: ROLES,
-  logic: ['packagePrice(pkg, pet.size) from packages.price_<size> (R-G01, R-G02); add-ons from addons with starting-at flag (R-G10, R-G11).', 'quoteGrooming() per pet (service tax); appointments are created at payment with booking_id and 09:00 on check-out day (R-X35, R-A09).'],
+  logic: ['packagePrice(pkg, pet.size) from packages.price_<size> (R-G01, R-G02); add-ons from addons with starting-at flag (R-G10, R-G11).', 'quoteGrooming() per pet (service tax); appointments are created at payment with booking_id and 09:00 on check-out day (R-X55, R-A09).'],
   integrations: [], components: [...FRAME, 'RadioGroup', 'Chip', 'HotelEstimateCard', 'BookingPetCard', 'Card'],
-  rules: ['R-A08', 'R-A09', 'R-G01', 'R-G02', 'R-G10', 'R-G11', 'R-X35'], states: ['nothing selected', 'package per pet', 'skipped'],
+  rules: ['R-A08', 'R-A09', 'R-G01', 'R-G02', 'R-G10', 'R-G11', 'R-X55'], states: ['nothing selected', 'package per pet', 'skipped'],
   figma: ['Frame 1171276430.png', 'Frame 1171276428.png', 'Booking Detail.jpg'], checkedAt: W,
 });
 
@@ -68,9 +68,9 @@ export const estimateSpec = defineSpec({
   purpose: 'Pre-payment estimate: room line items by night kind and season, multi-dog and long-stay discounts, tax, grooming, then the two payment paths (deposit or full) with the card fee shown for the amount charged now.',
   layout: ['HotelBookingFrame (Stepper 6/7)', 'Pay plan SegmentedControl (deposit / full)', 'Payment method RadioGroup (card / cash at location)', 'HotelEstimateCard per stay (lines, total)', 'StayDatesCard read-only', 'Grooming HotelEstimateCard or Add grooming band', 'Payment details card (hotel, grooming, total, due now, fee, balance)', 'Sticky footer: Pay deposit / Pay in full'],
   data: ['rates', 'seasons', 'discounts', 'fees', 'taxes', 'packages', 'addons', 'room_types', 'settings'], roles: ROLES,
-  logic: ['buildHotelQuote(): one room with N dogs when sharing, else one room per pet (R-X33); quoteHotel per room (R-D05, R-E01..E06).', 'Long-stay discount only when paid in full and no holiday nights; the engine note explains why it did not apply (R-E04..E06, R-E08, R-E15).', 'Tax: boarding rate on stays, service rate on grooming (R-H04, R-H05).', 'depositFor(): settings.hotel_booking.deposit_percent of the pre-fee total (R-X30).', 'chargeFor(): card fee percent from fees on the amount charged now (R-H03, R-X38).'],
+  logic: ['buildHotelQuote(): one room with N dogs when sharing, else one room per pet (R-X53); quoteHotel per room (R-D05, R-E01..E06).', 'Long-stay discount only when paid in full and no holiday nights; the engine note explains why it did not apply (R-E04..E06, R-E08, R-E15).', 'Tax: boarding rate on stays, service rate on grooming (R-H04, R-H05).', 'depositFor(): settings.hotel_booking.deposit_percent of the pre-fee total (R-X50).', 'chargeFor(): card fee percent from fees on the amount charged now (R-H03, R-X58).'],
   integrations: [], components: [...FRAME, 'SegmentedControl', 'RadioGroup', 'HotelEstimateCard', 'StayDatesCard', 'Card'],
-  rules: ['R-D05', 'R-D06', 'R-E01', 'R-E02', 'R-E03', 'R-E04', 'R-E05', 'R-E06', 'R-E08', 'R-E15', 'R-H02', 'R-H03', 'R-H04', 'R-A08', 'R-A09', 'R-X30', 'R-X33', 'R-X38'], states: ['deposit by card', 'full by cash', 'with grooming', 'discount not applied note'],
+  rules: ['R-D05', 'R-D06', 'R-E01', 'R-E02', 'R-E03', 'R-E04', 'R-E05', 'R-E06', 'R-E08', 'R-E15', 'R-H02', 'R-H03', 'R-H04', 'R-A08', 'R-A09', 'R-X50', 'R-X53', 'R-X58'], states: ['deposit by card', 'full by cash', 'with grooming', 'discount not applied note'],
   figma: ['Booking Detail.jpg', 'Booking Detail-3.jpg', 'Frame 1171276427.png', 'Frame 1171276430.png'], checkedAt: W,
   notes: ['Merges the two Estimate variants: Payment Details card AND the card-fee footnote (open question 46).'],
 });
@@ -80,9 +80,9 @@ export const paymentSpec = defineSpec({
   purpose: 'Charge the deposit or the full amount with a Stripe-shaped card form through the PaymentProvider (mock today), or record cash at location; then create the booking, its pets, care notes, grooming appointments, invoice, payment and notification.',
   layout: ['HotelBookingFrame (Stepper 7/7)', 'Amount due card (due now, fee, balance)', 'Payment method RadioGroup', 'HotelCardPaymentForm (card) or cash notice', 'Terms line', 'Sticky footer: Pay $X / Confirm booking'],
   data: ['bookings', 'booking_pets', 'booking_pet_care', 'appointments', 'invoices', 'payments', 'notifications', 'customers', 'fees', 'settings', 'vaccine_records', 'vaccine_types'], roles: ROLES,
-  logic: ['validateCard(): Luhn, expiry, CVC, name, ZIP; last4 0002 declines in the mock.', 'createPaymentIntent(amountCents, method) then confirm; failure shows the provider error and keeps the draft.', 'initialStatusFor(): requested, or pending_vaccines when any pet is not verified (R-X31, R-A05).', 'Booking code PR-<next>, invoice INV-<next> from existing rows / settings.invoice.next_number (R-H09); invoice balance = total - charged.', 'Grooming appointments: one per pet with booking_id, 09:00 on check-out day, requested (R-X35).', 'Customer row updated with the details from C-34; draft cleared on success.'],
+  logic: ['validateCard(): Luhn, expiry, CVC, name, ZIP; last4 0002 declines in the mock.', 'createPaymentIntent(amountCents, method) then confirm; failure shows the provider error and keeps the draft.', 'initialStatusFor(): requested, or pending_vaccines when any pet is not verified (R-X51, R-A05).', 'Booking code PR-<next>, invoice INV-<next> from existing rows / settings.invoice.next_number (R-H09); invoice balance = total - charged.', 'Grooming appointments: one per pet with booking_id, 09:00 on check-out day, requested (R-X55).', 'Customer row updated with the details from C-34; draft cleared on success.'],
   integrations: ['PaymentProvider (MockPaymentProvider now; StripePaymentProvider + PaymentElement later, no keys)'], components: [...FRAME, 'RadioGroup', 'HotelCardPaymentForm', 'HotelEstimateCard', 'Card', 'Toast'],
-  rules: ['R-H01', 'R-H02', 'R-H03', 'R-H09', 'R-X30', 'R-X31', 'R-X35', 'R-X38'], states: ['card', 'cash', 'declined', 'processing'],
+  rules: ['R-H01', 'R-H02', 'R-H03', 'R-H09', 'R-X50', 'R-X51', 'R-X55', 'R-X58'], states: ['card', 'cash', 'declined', 'processing'],
   figma: ['Payment-1.png', 'Frame 1171276435.png', 'Frame 1171276427.png'], checkedAt: W,
 });
 
@@ -93,7 +93,7 @@ export const confirmationSpec = defineSpec({
   data: ['bookings', 'booking_pets', 'pets', 'room_types', 'locations'], roles: ROLES,
   logic: ['pending_vaccines -> call-out to upload proofs (R-A05); requested -> desk confirms (R-I04 Pending verification / Upcoming).'],
   integrations: [], components: [...FRAME, 'BookingStatusTimeline', 'Card', 'Icon'],
-  rules: ['R-A05', 'R-I04', 'R-X31'], states: ['requested', 'pending vaccines', 'not found'],
+  rules: ['R-A05', 'R-I04', 'R-X51'], states: ['requested', 'pending vaccines', 'not found'],
   figma: ['notification.png (Your Hotel Booking is confirmed)'], checkedAt: W,
 });
 
@@ -114,9 +114,9 @@ export const reservationDetailSpec = defineSpec({
   purpose: 'One stay in full: status timeline, dates, pets with vaccine state and care notes, linked grooming, payment summary with balance, open change requests, and the actions to request a change or cancel.',
   layout: ['HotelBookingFrame (code, status chip, invoice button)', 'StayDatesCard read-only + location', 'BookingStatusTimeline', 'Pets Section (BookingPetCard compact, vaccine chip, care notes)', 'Grooming Section', 'Payment HotelEstimateCard (paid, balance)', 'Change requests Section', 'Sticky footer: Request change / Cancel stay', 'Cancel Modal'],
   data: ['bookings', 'booking_pets', 'booking_pet_care', 'pets', 'vaccine_records', 'vaccine_types', 'room_types', 'locations', 'appointments', 'packages', 'invoices', 'payments', 'booking_change_requests'], roles: ROLES,
-  logic: ['Customer may cancel requested / pending_vaccines stays directly (status -> cancelled, approved change request logged); confirmed stays file an open cancel request for the desk (manager PIN there, R-I06); checked_in and later cannot be cancelled here (R-X32).', 'Free-cancellation window from settings.hotel_booking.free_cancellation_hours shown in the modal.', 'Balance = invoice.balance; without an invoice, total - deposit.'],
+  logic: ['Customer may cancel requested / pending_vaccines stays directly (status -> cancelled, approved change request logged); confirmed stays file an open cancel request for the desk (manager PIN there, R-I06); checked_in and later cannot be cancelled here (R-X52).', 'Free-cancellation window from settings.hotel_booking.free_cancellation_hours shown in the modal.', 'Balance = invoice.balance; without an invoice, total - deposit.'],
   integrations: [], components: [...FRAME, 'StayDatesCard', 'BookingStatusTimeline', 'BookingPetCard', 'HotelEstimateCard', 'Section', 'Badge', 'StatusBadge', 'Modal', 'IconButton', 'EmptyState'],
-  rules: ['R-A05', 'R-I04', 'R-I06', 'R-X30', 'R-X31', 'R-X32'], states: ['upcoming', 'pending vaccines', 'staying now', 'completed', 'cancelled', 'not found'],
+  rules: ['R-A05', 'R-I04', 'R-I06', 'R-X50', 'R-X51', 'R-X52'], states: ['upcoming', 'pending vaccines', 'staying now', 'completed', 'cancelled', 'not found'],
   figma: ['Booking Detail.jpg', 'front desk-5.jpg (booking detail, ported per D-010)'], checkedAt: W,
 });
 
@@ -136,8 +136,8 @@ export const changeRequestSpec = defineSpec({
   purpose: 'Ask the front desk to modify a stay: new dates, add or remove a pet, add grooming, or something else, with a message. Creates a booking_change_requests row and notifies the desk at that location.',
   layout: ['HotelBookingFrame (back)', 'Kind RadioGroup', 'Conditional: StayDatesCard (dates) / pet Checkboxes', 'Message Textarea', 'Sticky footer: Send request'],
   data: ['bookings', 'booking_pets', 'pets', 'booking_change_requests', 'notifications', 'users', 'locations', 'settings'], roles: ROLES,
-  logic: ['Only for stays that are requested, pending_vaccines or confirmed (R-X32).', 'Modify dates validates like C-30 (R-X34).', 'Staff notification to front_desk users of the booking location.'],
+  logic: ['Only for stays that are requested, pending_vaccines or confirmed (R-X52).', 'Modify dates validates like C-30 (R-X54).', 'Staff notification to front_desk users of the booking location.'],
   integrations: [], components: [...FRAME, 'RadioGroup', 'StayDatesCard', 'Checkbox', 'Textarea', 'Card', 'Toast'],
-  rules: ['R-X32', 'R-X34'], states: ['modify dates', 'add pet', 'other', 'not allowed'],
+  rules: ['R-X52', 'R-X54'], states: ['modify dates', 'add pet', 'other', 'not allowed'],
   checkedAt: W,
 });

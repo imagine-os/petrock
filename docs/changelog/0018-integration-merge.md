@@ -1,0 +1,33 @@
+# 0018 - Integration: ten module branches merged into main (v0.2.0)
+
+version: 0.2.0
+date: 2026-09-18
+prompt: 0005
+intent: Bring the ten parallel module builds (changelogs 0008..0017) into one green main: merge in dependency order, resolve the route / rule / component collisions the builders flagged in their notes, fold the pending docs (changelogs, decisions, manual chapters, prompt log) into the numbered records, regenerate the generated artefacts, refresh counts, and push.
+decision: D-020..D-174 (module build decisions appended from the `_pending` drafts; rows the builders marked "needs Justin" carry status `proposed (needs Justin)`). Integration choices in this entry: /app/notifications is C-80 (C-15 retired), /desk/notifications is F-60 (F-58 retired), /desk/messages is F-57 and F-61 becomes Website inquiries at /desk/inquiries, /site is P-01 (P-00 placeholder module removed), duplicate catalog rule ids are merged at runtime instead of being edited per module.
+rejected: keeping two notification pages per surface (one path, one page); hand-resolving the generated supabase/schema.sql / docs/data-model.md / docs/specs.md / routes.json conflicts (regenerated once after the last merge instead); deleting the `_pending` READMEs (the module contract in CLAUDE.md still points new modules at them).
+files: merge commits for module/customer-auth, customer-home-pets, customer-hotel, customer-grooming-daycare, customer-settings-chat, frontdesk-reservations, frontdesk-grooming-people, admin-control-panel, extras-manual-website, dev-quality; src/rules/index.ts (merge duplicates), src/rules/operations.ts + vaccines.ts (status flips), src/rules/{customer-hotel,frontdesk-grooming-people,extras-manual-website,customer-grooming-daycare}.ts + their specs / pages / page docs (renumbered ids), src/modules/customer-home-pets (C-15 removed), src/modules/frontdesk-grooming-people (F-58 removed), src/modules/extras-manual-website (F-61 inquiries, /site), src/modules/public (removed), src/data/MockProvider.ts (SEED_VERSION 2), scripts/screenshots.mjs (P-01 key page), docs/changelog/0008..0018, docs/decisions.md, docs/ops-manual/en/28..33-*.md, docs/prompts/0006-*, docs/kanban.md, docs/build-plan.md, README.md, CLAUDE.md, supabase/schema.sql, docs/data-model.md, docs/specs.md, docs/screenshots/**
+codes: C-01..C-14, C-20, C-21, C-30..C-41, C-50..C-56, C-60..C-65, C-70..C-84, F-01, F-10..F-15, F-30..F-34, F-50..F-57, F-59..F-68, A-01, A-10..A-12, A-20..A-28, A-30..A-32, A-35..A-38, A-41..A-44, P-01..P-12, M-01..M-03, M-10..M-33, D-08..D-19
+
+## Merge order and conflicts
+
+Merged with `--no-ff` in this order: customer-auth (clean), customer-home-pets, customer-hotel, customer-grooming-daycare (clean), customer-settings-chat, frontdesk-reservations, frontdesk-grooming-people, admin-control-panel, extras-manual-website, dev-quality. Every conflict except one was in a generated file (`supabase/schema.sql`, `docs/data-model.md`, `docs/specs.md`, `docs/screenshots/routes.json`), taken from the incoming side and regenerated once at the end (`npm run sql`, `npm run screenshots`, `npm run specs`). The one source conflict was an add/add on `src/components/organism/DeskChatThread/*` (frontdesk-grooming-people and extras-manual-website both built one); the frontdesk-grooming-people version stays (header, back button, attach, system bubbles) and the extras page that used the other one no longer renders a thread.
+
+## Collisions resolved
+
+- **Rule ids.** Three modules had picked R-X30..R-X39 and two had picked R-X40..R-X49; frontdesk-reservations and customer-grooming-daycare overlapped on R-X04..R-X07. customer-auth keeps R-X30..R-X39, admin-control-panel keeps R-X40..R-X49, frontdesk-reservations keeps R-X03..R-X07; customer-hotel is now R-X50..R-X59, frontdesk-grooming-people R-X60..R-X68, extras-manual-website R-X70..R-X78, customer-grooming-daycare R-X14..R-X17 (rule files, specs, pages, component metas, page docs, changelogs, decisions and manual chapters all renumbered).
+- **Catalog ids declared twice** (R-A11, R-B08, R-G16, R-G18, R-G21, R-I11, R-J05, R-J06, R-J08, R-M07, R-M08, R-M11, R-M13): `src/rules/index.ts` now merges duplicates into one row (first declaration wins for title / description, `pages` is the union, status is the most advanced reported) and logs an info line in dev. 231 declarations become 214 rules.
+- **Paths.** `/app/notifications`: customer-settings-chat C-80 kept (preferences, kind icons), customer-home-pets C-15 and `AppNotificationRow` removed. `/desk/notifications`: extras F-60 kept (foundation stub code, kind filter), frontdesk-grooming-people F-58 and `StaffNotificationItem` removed. `/desk/messages`: frontdesk-grooming-people F-57 kept (assignment, filters, close); extras F-61 is now **Website inquiries** at `/desk/inquiries` (site_inquiries only). `/site`: served by P-01 (extras SiteHome); the P-00 placeholder module, its page doc and screenshots are gone; hub, rules and the screenshot key pages point at P-01.
+- **Shared-file requests from the builders**: R-A01 (+C-50, C-60), R-E09 (+C-31), R-X01 (+C-31), R-X02 (+C-61), R-M03 (C-72, C-73), R-M05 (+C-72, C-76), R-B05, R-B07, R-B11 flipped to implemented; R-M09 lists C-81, C-82, F-57; R-K02 lists P-01, P-06. `SEED_VERSION` bumped to 2 so existing browsers reseed (customer-auth adds users / customers rows to core tables).
+
+## Docs folded
+
+Changelogs 0008..0017 (one per module, content unchanged, `_pending` drafts deleted, README kept). 155 decisions appended as D-020..D-174 with their draft ids in the source column; the draft ids were replaced wherever docs or specs referenced them. Manual chapters 28..33 created from the module drafts (front matter, lesson sections added; the extras draft was already folded into chapters 19 / 23 / 27). Prompt log 0006 moved from `docs/prompts/_pending`. Kanban Done lines per module, build-plan status column and integration table, README counts and surfaces, CLAUDE.md decision range, dev-quality CODE_RANGES (M-01..M-39).
+
+## Totals
+
+182 routes (customer 56, front desk 34, admin 25, dev 22, manual 27, public 16, docs 2), 135 components with metas, 74 tables, 214 rules (231 declarations merged), 172 page docs, 462 screenshots (full `npm run screenshots` pass: no console errors after removing the nested MemoryRouter from three component metas that broke D-02).
+
+## Known gaps for the QA phase
+
+See the RETURN block of the integration run and the `gaps` sections of changelogs 0008..0017; the kanban "Doing" line lists the follow-ups (remember-me expiry, roles.menu wiring, permissions-table wiring, StatTile dark hint, PhonePageHeader / CustomerScreenHeader dedupe, core seed chat times, F-40..F-49 daycare day, F-20..F-29 invoices at the desk).

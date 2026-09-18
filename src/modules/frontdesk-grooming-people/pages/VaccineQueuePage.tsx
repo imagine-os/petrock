@@ -57,7 +57,7 @@ export function VaccineQueuePage() {
   const tabs = [{ key: 'verify' as Tab, label: 'To verify', count: lists.verify.length }, { key: 'upcoming' as Tab, label: 'Blocking a booking', count: lists.upcoming.length }, { key: 'expired' as Tab, label: 'Expired', count: lists.expired.length }, { key: 'rejected' as Tab, label: 'Rejected', count: lists.rejected.length }, { key: 'all' as Tab, label: 'All records', count: lists.all.length }];
   return (
     <div className="page stack">
-      <PageHeader code="F-56" title="Vaccine verification" subtitle={`${allLocations ? 'All locations' : location.short_name} · verify uploads so pending bookings can confirm (R-X30)`} />
+      <PageHeader code="F-56" title="Vaccine verification" subtitle={`${allLocations ? 'All locations' : location.short_name} · verify uploads so pending bookings can confirm (R-X60)`} />
       <div className="fgp-stats">
         <StatTile label="Proofs to verify" value={lists.verify.length} icon="shield" tone={lists.verify.length ? 'primary' : 'default'} onClick={() => setTab('verify')} />
         <StatTile label="Bookings pending vaccines" value={bookings.length} icon="bed" hint={`${lists.upcoming.length} records to clear`} onClick={() => setTab('upcoming')} />

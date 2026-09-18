@@ -7,8 +7,8 @@ Started 2026-09-18 on Justin's "Please build the whole thing" (prompt 0005). Fou
 | Phase | What | Status |
 | --- | --- | --- |
 | 1. Foundation | Stack, tokens + themes, component library (42), app plumbing (registry, shells, session, location, PIN, feedback), schema (39 tables) + seed, rules registry (76), pricing engine + tests, payments seam, hub, PIN login, dev pages D-01..D-07, docs viewer, public placeholder, CI to GitHub Pages | done (v0.1.0) |
-| 2. Modules in parallel | Ten module agents build their page ranges against the contract; each replaces stubs, adds schema/seed/rules/specs files, page docs, screenshots, `_pending` changelog | next |
-| 3. Integration | Merge pending changelogs into numbered entries, full screenshot pass, responsive QA on every page (D-016), spec completeness to 100 %, data-model + specs regenerated, kanban | after 2 |
+| 2. Modules in parallel | Ten module agents build their page ranges against the contract; each replaces stubs, adds schema/seed/rules/specs files, page docs, screenshots, `_pending` changelog | done 2026-09-18 (ten branches merged, changelogs 0008..0017) |
+| 3. Integration | Merge pending changelogs into numbered entries, full screenshot pass, responsive QA on every page (D-016), spec completeness to 100 %, data-model + specs regenerated, kanban | in progress: merge done 2026-09-18 (route / rule / component collisions resolved, docs folded, data-model + specs regenerated); QA pass next |
 | 4. Data layer | Wire `CompanyOsProvider` (or the Petrock BFF) behind the same `DataProvider`; Stripe Elements behind `StripePaymentProvider`; real PIN check | when the API exists |
 | 5. Apps | Capacitor wrap of the customer surface; store settings (legal, privacy, account deletion) | after 3 |
 
@@ -24,7 +24,7 @@ Started 2026-09-18 on Justin's "Please build the whole thing" (prompt 0005). Fou
 | `frontdesk-reservations` | F-01..F-29 | Today dashboard, reservations table (day buckets), booking detail, new booking wizard, room assignment (30 lb rule), check-in / check-out, status changes with PIN, timeline (rooms x days), invoices & payments at the desk (F-20..F-29) | `/desk` (F-01) |
 | `frontdesk-grooming-people` | F-30..F-59 | Grooming day view (groomer columns), board (kanban by status), agenda list, appointment form (F-30..F-39); daycare day (F-40..F-49); customers, pets, vaccine verification queue, employees list (F-50..F-59) | `/desk/grooming` (F-30) |
 | `admin-control-panel` | A-01..A-49 | Owner dashboard / KPIs / reports, locations + hours + capacities (A-10..A-19), pricing setup: rates, seasons, discounts, fees, taxes, packages, add-ons, daycare pricing (A-20..A-29), staff, roles & permissions, per-role menus (A-30..A-34), reviews (A-35), feedback inbox (A-36), approvals audit (A-37), settings incl. Settings › Rules (A-40 exists), add location flow (A-41) | `/admin` (A-01) |
-| `extras-manual-website` | P-01..P-19, M-01..M-30, F-60..F-79 | Public website pages; ops manual chapters per role with screenshots; extras: staff notifications (F-60), messages inbox (F-61), reports (F-62..), education, walking, management | `/manual` (M-01), `/desk/notifications` (F-60) |
+| `extras-manual-website` | P-01..P-19, M-01..M-39, F-60..F-79 | Public website pages; ops manual chapters per role with screenshots; extras: staff notifications (F-60), messages inbox (F-61), reports (F-62..), education, walking, management | `/manual` (M-01), `/desk/notifications` (F-60) |
 | `dev-quality` | D-08..D-19 | Responsive QA page, spec completeness report, seed inspector, layout editor, a11y checks, performance budget, screenshot diff | - |
 
 Reserved by the foundation: HUB-01, HUB-02, A-00, A-40, D-01..D-07, P-00, and the stub specs C-02, C-10, F-01, F-30, F-60, A-01, M-01 (modules replace them; keep the codes).
@@ -46,3 +46,20 @@ Reserved by the foundation: HUB-01, HUB-02, A-00, A-40, D-01..D-07, P-00, and th
 - Platinum prices from the Spa card, Diamond prices are placeholders (R-G04, R-G06).
 - Weight unit lbs; size bands S <20, M <40, L <70, XL <100, Giant 100+ lb (working assumption).
 - Room fit: 30 lb bottom-penthouse rule (R-E09) and 55 lb Suite rule (R-X01) both registered; R-X01 requested.
+
+## Integration outcome (2026-09-18)
+
+| Module | Codes built | Notes |
+| --- | --- | --- |
+| customer-auth | C-01..C-09 | keeps R-X30..R-X39 |
+| customer-home-pets | C-10..C-14, C-20, C-21 | C-15 retired: `/app/notifications` is C-80 |
+| customer-hotel | C-30..C-41 | rules renumbered R-X50..R-X59 |
+| customer-grooming-daycare | C-50..C-56, C-60..C-65 | rules renumbered R-X14..R-X17 |
+| customer-settings-chat | C-70..C-84 | owns `/app/notifications` (C-80) |
+| frontdesk-reservations | F-01, F-10..F-15 | keeps R-X03..R-X07 |
+| frontdesk-grooming-people | F-30..F-34, F-50..F-57, F-59 | F-58 retired (F-60 owns `/desk/notifications`); rules R-X60..R-X68; F-40..F-49 daycare day not built |
+| admin-control-panel | A-01, A-10..A-12, A-20..A-28, A-30..A-32, A-35..A-38, A-41..A-44 | keeps R-X40..R-X49 |
+| extras-manual-website | P-01..P-12, M-01..M-03, M-10..M-27, F-60..F-68 | F-61 became Website inquiries at `/desk/inquiries`; `/site` now P-01 (P-00 removed); rules R-X70..R-X78; chapters M-28..M-33 folded from module drafts |
+| dev-quality | D-08..D-19 | keeps R-X80..R-X87 |
+
+Totals after the merge: 182 routes (customer 56, front desk 34, admin 25, dev 22, manual 27, public 16, docs 2), 135 components, 74 tables, 214 rules (231 declarations), 172 page docs, 462 screenshots.

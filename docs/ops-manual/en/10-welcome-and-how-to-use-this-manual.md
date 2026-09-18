@@ -6,7 +6,7 @@ part: I
 version: 0.2.0
 updated: 2026-09-18
 summary: What Petrock is, how a lesson works (in person, then online), where the live numbers come from, how to practise safely as a demo user.
-rules: R-X43, R-X44, R-K01
+rules: R-X73, R-X74, R-K01
 ---
 
 # Welcome and how to use this manual

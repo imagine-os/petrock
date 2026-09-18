@@ -6,7 +6,7 @@ part: VI
 version: 0.2.0
 updated: 2026-09-18
 summary: The Feedback button, what the owner does with it, the rules registry, rule statuses, requesting a rule, how rules show on every page.
-rules: R-S01, R-X43
+rules: R-S01, R-X73
 ---
 
 # Staff feedback and the rules registry

@@ -187,7 +187,7 @@ function DemoUsersBlock() {
   return <Frame title="Demo people you can practise as" eyebrow="src/auth/demoUsers.ts (all fictional)" source={<Link to="/">Testing hub</Link>}><ul className="live-list">{demoUsers.filter((u) => u.role !== 'public').map((u) => <li key={u.id}><Badge size="sm" tone="neutral">{ROLE_LABEL[u.role]}</Badge><strong>{u.name}</strong><span className="muted xs">{u.blurb}</span></li>)}</ul></Frame>;
 }
 
-/** Renders one `{{kind:arg}}` directive of an ops-manual chapter with data read from the system (R-X43). */
+/** Renders one `{{kind:arg}}` directive of an ops-manual chapter with data read from the system (R-X73). */
 export function LiveBlock({ kind, arg }: LiveBlockProps) {
   switch (kind) {
     case 'table': return <TableBlock name={arg ?? ''} />;

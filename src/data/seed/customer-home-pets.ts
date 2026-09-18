@@ -1,6 +1,6 @@
 /**
  * customer-home-pets seed: breed and colour lookups, emergency contacts for the demo pet parent, and a few more
- * customer notifications so the notification list (C-15) shows every kind. Runs after core (order 10).
+ * customer notifications so the notification list (C-80, customer-settings-chat) shows every kind. Runs after core (order 10).
  */
 import type { SeedCtx } from './index';
 import { addDays, at } from './rng';

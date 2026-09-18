@@ -67,17 +67,6 @@ export const editPetSpec = defineSpec({
   notes: ['The Figma "Pet Profile (edit)" mixed owner fields into the pet form; here the form is pet-only (open question 27).'],
 });
 
-export const notificationsSpec = defineSpec({
-  code: 'C-15', name: 'Notifications',
-  purpose: 'The customer\'s in-app notifications (bookings, payments, vaccines, pets, messages) with unread emphasis, All / Unread tabs, mark-all-read and deep links.',
-  layout: ['PhonePageHeader (back, title, mark all read)', 'Tabs (All / Unread)', 'NotificationList (AppNotificationRow x n)', 'EmptyState'],
-  data: ['notifications'], roles: CUSTOMER_ROLES,
-  logic: ['Rows: notifications.user_id = session user, newest first (sent_at desc).', 'Tap marks the row read and follows notifications.link when that route exists in the registry; otherwise only marks read.', 'Relative time via relativeTime() (R-M08).'],
-  integrations: ['Push notifications (Capacitor, later)'], components: ['PhonePageHeader', 'Tabs', 'AppNotificationRow', 'EmptyState', 'Button', 'IconButton'],
-  rules: ['R-M07', 'R-M08'], states: ['unread present', 'all read', 'empty'], figma: ['notification.png'], checkedAt: W,
-  notes: ['The Figma "Front Desk Chat" tab lives in the chat module (C-80); this page links to it from the header.'],
-});
-
 export const vaccinesHubSpec = defineSpec({
   code: 'C-20', name: 'Vaccines',
   purpose: 'Choose a pet, see each vaccine\'s status and upload proofs: the customer side of the vaccine flow that gates bookings (pending_vaccines until the front desk verifies).',

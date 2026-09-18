@@ -14,7 +14,7 @@ import { EmptyState } from '../../components/molecule/EmptyState/EmptyState';
 import { Icon } from '../../components/atom/Icon/Icon';
 import './dev-quality.css';
 
-const KEY_PAGES = new Set(['HUB-01', 'A-00', 'D-01', 'D-02', 'D-04', 'D-05', 'P-00', 'C-10', 'F-01', 'A-01']);
+const KEY_PAGES = new Set(['HUB-01', 'A-00', 'D-01', 'D-02', 'D-04', 'D-05', 'P-01', 'C-10', 'F-01', 'A-01']);
 const yes = (v: boolean) => (v ? <Icon name="check" size={14} className="tone-success" /> : <span className="faint">—</span>);
 
 /** D-17 */

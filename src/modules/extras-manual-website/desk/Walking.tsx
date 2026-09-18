@@ -22,7 +22,7 @@ import './extras.css';
 
 const fmtT = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-/** F-67 Dog walking: the day's walk log per pet with handler, start, minutes and status; plan, start, finish, skip (R-X45). */
+/** F-67 Dog walking: the day's walk log per pet with handler, start, minutes and status; plan, start, finish, skip (R-X75). */
 export function WalkingPage() {
   const data = useData();
   const { user } = useSession();

@@ -6,7 +6,7 @@ part: III
 version: 0.2.0
 updated: 2026-09-18
 summary: Logging walks per pet, the task list and the opening and closing checklists, tracking your own training.
-rules: R-X45, R-L07, R-X44, R-X47
+rules: R-X75, R-L07, R-X74, R-X77
 ---
 
 # Walks, tasks and education

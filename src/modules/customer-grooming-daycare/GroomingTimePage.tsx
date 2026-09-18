@@ -18,7 +18,7 @@ import { computeSlots, hoursFor, isClosed } from './slots';
 import { addDaysIso, fmtDateLong, todayIso } from './format';
 import { CgdPage, GROOMING_STEPS, Notice } from './layout';
 
-/** C-53 Choose location, date, groomer and start time. Slots respect hours, capacity and groomer availability (R-X05, R-G21). */
+/** C-53 Choose location, date, groomer and start time. Slots respect hours, capacity and groomer availability (R-X15, R-G21). */
 export function GroomingTimePage() {
   const t = useT();
   const nav = useNavigate();

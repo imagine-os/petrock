@@ -18,7 +18,6 @@ import { PetFormPage } from './pages/PetFormPage';
 import { PetDetailPage } from './pages/PetDetailPage';
 import { VaccineQueuePage } from './pages/VaccineQueuePage';
 import { MessagesPage } from './pages/MessagesPage';
-import { NotificationsPage } from './pages/NotificationsPage';
 import { InvoicePage } from './pages/InvoicePage';
 import * as S from './specs';
 
@@ -53,6 +52,5 @@ export const routes: RouteDef[] = [
   fd({ path: '/desk/pets/:id', element: h(PetDetailPage), spec: S.petDetailSpec, roles: S.petDetailSpec.roles }),
   fd({ path: '/desk/vaccines', element: h(VaccineQueuePage), spec: S.vaccineQueueSpec, roles: S.vaccineQueueSpec.roles, nav: { label: 'Verification queue', icon: 'shield', order: 0, group: 'vaccines' } }),
   fd({ path: '/desk/messages', element: h(MessagesPage), spec: S.messagesSpec, roles: S.messagesSpec.roles, nav: { label: 'Inbox', icon: 'message', order: 0, group: 'messages' } }),
-  fd({ path: '/desk/notifications', element: h(NotificationsPage), spec: S.notificationsSpec, roles: S.notificationsSpec.roles, nav: { label: 'Notifications', icon: 'bell', order: 1, group: 'messages' } }),
   fd({ path: '/desk/invoices/:id', element: h(InvoicePage), spec: S.invoiceSpec, roles: S.invoiceSpec.roles }),
 ];

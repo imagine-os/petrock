@@ -8,9 +8,8 @@ import { HomePage } from './HomePage';
 import { MyPetsPage } from './MyPetsPage';
 import { PetWizardPage } from './PetWizardPage';
 import { PetProfilePage } from './PetProfilePage';
-import { NotificationsPage } from './NotificationsPage';
 import { VaccinesHubPage, PetVaccinesPage } from './VaccinesPages';
-import { homeSpec, myPetsSpec, addPetSpec, petProfileSpec, editPetSpec, notificationsSpec, vaccinesHubSpec, petVaccinesSpec, CUSTOMER_ROLES } from './specs';
+import { homeSpec, myPetsSpec, addPetSpec, petProfileSpec, editPetSpec, vaccinesHubSpec, petVaccinesSpec, CUSTOMER_ROLES } from './specs';
 export { strings } from './strings';
 
 const customer = (r: Omit<RouteDef, 'roles' | 'surface' | 'layout'>): RouteDef => ({ ...r, roles: CUSTOMER_ROLES, surface: 'customer', layout: 'mobile' });
@@ -23,5 +22,4 @@ export const routes: RouteDef[] = [
   customer({ path: '/app/pets/:petId/edit', element: h(PetWizardPage, { mode: 'edit' }), spec: editPetSpec }),
   customer({ path: '/app/pets/:petId/vaccines', element: h(PetVaccinesPage), spec: petVaccinesSpec }),
   customer({ path: '/app/vaccines', element: h(VaccinesHubPage), spec: vaccinesHubSpec }),
-  customer({ path: '/app/notifications', element: h(NotificationsPage), spec: notificationsSpec }),
 ];

@@ -90,7 +90,7 @@ export function PetFormPage() {
       else { pet = await data.insert<PetFull>('pets', { ...core, approval_status: 'pending', socialized_with: null, can_have_treats: true, own_food: false, meals_per_day: null, feeding_am: null, feeding_midday: null, feeding_pm: null, photo_url: null } as Partial<PetFull>); await writeAudit(data, user, 'insert', 'pets', pet.id, { name: pet.name, owner: f.customer_id }, locationId); }
       const prof: Partial<PetProfileRow> = { pet_id: pet.id, registration_number: f.registration_number || null, microchip_number: f.microchip_number || null, dob_approximate: f.dob_approximate, temper: f.temper || null, groom_style: f.groom_style || null, groom_notes: null };
       if (profiles[0]) await data.update<PetProfileRow>('pet_profiles', profiles[0].id, prof); else await data.insert<PetProfileRow>('pet_profiles', prof);
-      // vaccine rows (R-X35)
+      // vaccine rows (R-X65)
       const verifier = can('vaccines.verify');
       for (const v of vax) {
         const hasDates = !!v.vaccinated;
@@ -145,7 +145,7 @@ export function PetFormPage() {
           <Input className="span-2" label="Allergies" value={f.allergies} onChange={set('allergies')} placeholder="e.g. Chicken" />
         </div>
       </Section>
-      <Section title="Vaccination" description={can('vaccines.verify') ? 'Dates + certificate entered by you are saved as verified (you hold the paper, R-X35); dates without a certificate stay "submitted"; empty = missing.' : 'Dates and certificates are saved for a verifier to check.'}>
+      <Section title="Vaccination" description={can('vaccines.verify') ? 'Dates + certificate entered by you are saved as verified (you hold the paper, R-X65); dates without a certificate stay "submitted"; empty = missing.' : 'Dates and certificates are saved for a verifier to check.'}>
         {summaryPreview && <div className="row wrap xs muted" style={{ marginBottom: 8 }}>Current standing: <Badge size="sm" tone={summaryPreview.overall === 'ok' ? 'success' : 'warn'}>{summaryPreview.overall}</Badge></div>}
         <div className="fgp-vaxrow" style={{ fontWeight: 600, fontSize: 12, color: 'var(--color-text-muted)' }}><span>Type</span><span>Vaccinated</span><span>Expires</span><span>Reference</span><span>Certificate</span></div>
         {vax.map((v, i) => { const t = types.find((x) => x.id === v.typeId) as VaccineTypeRow | undefined; if (!t) return null; return (

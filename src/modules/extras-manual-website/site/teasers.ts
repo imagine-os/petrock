@@ -1,4 +1,4 @@
-/** Website price teasers: "from" values computed from the pricing tables (R-X41). Nothing here is a typed price. */
+/** Website price teasers: "from" values computed from the pricing tables (R-X71). Nothing here is a typed price. */
 import { useTable } from '../../../data/DataContext';
 import type { AddonRow, DaycarePricingRow, DiscountRow, FeeRow, PackageRow, RateRow, RoomTypeRow, SeasonRow, TaxRow, VaccineTypeRow, LocationRow } from '../../../data/schema/core';
 import { fmtMoney } from '../../../pricing/engine';

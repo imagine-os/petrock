@@ -17,21 +17,23 @@ npm run screenshots  # Playwright captures into docs/screenshots (needs a build 
 npm run specs        # docs/specs.md from the route manifest
 ```
 
-## What is inside (v0.1.0, foundation)
+## What is inside (v0.2.0, all modules merged)
 
 | Surface | Route | Users |
 |---|---|---|
 | Testing hub | `/#/` | everyone (HUB-01) |
-| Customer app | `/#/app` (PhoneShell, 390 design, Capacitor later) | pet parents |
-| Front desk | `/#/desk` (DesktopShell, pinned to one location) | front desk, groomer, manager |
-| Owner / admin | `/#/admin` | owner, super admin |
+| Customer app | `/#/app` (PhoneShell, 390 design, Capacitor later): auth `/#/auth`, home, pets, vaccines, hotel, Grooming & Spa, daycare, bookings, chat, settings | pet parents |
+| Front desk | `/#/desk` (DesktopShell, pinned to one location): today, reservations, timeline, board, grooming, customers, pets, vaccines, inbox, notifications, reports, extras | front desk, groomer, manager |
+| Owner / admin | `/#/admin`: dashboard, reports, company, locations, rooms, pricing, services, employees, roles, menus, reviews, feedback, approvals, audit, backups, settings, rules | owner, super admin (manager: reports, inboxes) |
 | Staff PIN login | `/#/staff/pin` (A-00) | staff |
-| Dev | `/#/dev/tokens` `components` `specs` `tables` `rules` `knowledge` | super admin |
+| Public website | `/#/site` (P-01..P-12) | everyone |
+| Ops manual | `/#/manual` (M-01, chapters M-10..M-33) | staff |
+| Dev | `/#/dev/tokens` `components` `specs` `tables` `rules` `knowledge` + quality tools `/#/dev/qa/*`, `data`, `layout`, `seed`, `routes` | super admin |
 | Docs | `/#/docs` | super admin, owner, manager |
 
-Stack: Vite + React 18 + TypeScript strict, HashRouter, CSS tokens (light / dark, brands `petrock` and `sunset`), mock data in localStorage behind a `DataProvider` with a Company-OS REST adapter seam, payments behind a `PaymentProvider` (Stripe stub). 42 library components, 39 tables, 76 business rules, one booking lifecycle, a tested pricing engine, a super-admin builder tool on every page (Ctrl+.).
+Stack: Vite + React 18 + TypeScript strict, HashRouter, CSS tokens (light / dark, brands `petrock` and `sunset`), mock data in localStorage behind a `DataProvider` with a Company-OS REST adapter seam, payments behind a `PaymentProvider` (Stripe stub). 182 routes, 135 library components, 74 tables, 214 business rules, one booking lifecycle, a tested pricing engine, a super-admin builder tool on every page (Ctrl+.).
 
-Demo PINs: 0000 super admin · 1111 owner · 2222 manager · 3333 Encino desk · 4444 Westwood desk · 5555 groomer. All people and pets are fictional.
+Demo customers: avery@demo.petrock.test / Biscuit!23 (verified), riley@demo.petrock.test / Biscuit!23 (unverified). Demo PINs: 0000 super admin · 1111 owner · 2222 manager · 3333 Encino desk · 4444 Westwood desk · 5555 groomer. All people and pets are fictional.
 
 ## For agents
 

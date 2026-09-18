@@ -121,7 +121,7 @@ export function HubPage() {
               <Link to="/dev/tables" onClick={() => switchUser('super_admin')}><Icon name="table" size={16} /> Tables <code className="xs faint">D-04</code></Link>
               <Link to="/dev/rules" onClick={() => switchUser('super_admin')}><Icon name="flag" size={16} /> Rules <code className="xs faint">D-05</code></Link>
               <Link to="/dev/knowledge" onClick={() => switchUser('super_admin')}><Icon name="book" size={16} /> Knowledge <code className="xs faint">D-07</code></Link>
-              <Link to="/site"><Icon name="globe" size={16} /> Public site <code className="xs faint">P-00</code></Link>
+              <Link to="/site"><Icon name="globe" size={16} /> Public site <code className="xs faint">P-01</code></Link>
             </div>
           </Card>
         </section>

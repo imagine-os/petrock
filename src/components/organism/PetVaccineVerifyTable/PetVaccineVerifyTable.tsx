@@ -13,7 +13,7 @@ export interface PetVaccineVerifyTableProps {
 const fmt = (iso: string | null) => (iso ? new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—');
 const expired = (r: VaccineVerifyRow) => !!r.expiresOn && r.expiresOn < new Date().toISOString().slice(0, 10);
 
-/** Per-pet vaccine records (Pet Details .pdf table) with the staff verify / reject actions that drive R-X30. Also used by the F-56 queue with pet + owner columns. */
+/** Per-pet vaccine records (Pet Details .pdf table) with the staff verify / reject actions that drive R-X60. Also used by the F-56 queue with pet + owner columns. */
 export function PetVaccineVerifyTable({ rows, canVerify, showPet = false, dense = true, onVerify, onReject, onUpload, onEditDates, onOpenPet }: PetVaccineVerifyTableProps) {
   const columns = [
     ...(showPet ? [{ key: 'pet', label: 'Pet', value: (r: VaccineVerifyRow) => r.petName, render: (r: VaccineVerifyRow) => <button type="button" className="vaxtable-link" onClick={() => onOpenPet?.(r)}>{r.petName}<span className="muted xs"> · {r.ownerName}</span></button> }] : []),

@@ -11,7 +11,7 @@ import { EmptyState } from '../../../components/molecule/EmptyState/EmptyState';
 import { NOTIFICATION_KIND_LABEL, StaffNotificationRow } from '../../../components/molecule/StaffNotificationRow/StaffNotificationRow';
 import './extras.css';
 
-/** F-60 Staff notifications for the signed-in user: unread / all tabs, kind filter, mark read on open, mark all read (R-X48, R-M07, R-M08). */
+/** F-60 Staff notifications for the signed-in user: unread / all tabs, kind filter, mark read on open, mark all read (R-X78, R-M07, R-M08). */
 export function StaffNotificationsPage() {
   const data = useData();
   const { user } = useSession();
@@ -21,7 +21,7 @@ export function StaffNotificationsPage() {
   const unread = rows.filter((r) => !r.read);
   const list = useMemo(() => rows.filter((r) => (tab === 'all' || !r.read) && (!kind || r.kind === kind)), [rows, tab, kind]);
   const kinds = useMemo(() => [...new Set(rows.map((r) => r.kind))], [rows]);
-  // The bell count drops as soon as the page is left: everything shown while the list was open counts as seen (R-X48).
+  // The bell count drops as soon as the page is left: everything shown while the list was open counts as seen (R-X78).
   const [seen] = useState(() => new Set(unread.map((r) => r.id)));
   useEffect(() => () => { for (const id of seen) void data.update('notifications', id, { read: true }); }, [data, seen]);
   const markAll = async () => { for (const n of unread) await data.update('notifications', n.id, { read: true }); };

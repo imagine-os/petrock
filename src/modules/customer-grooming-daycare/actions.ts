@@ -1,7 +1,7 @@
 /**
  * Writes for the module: create a Grooming & Spa order (grooming_orders + per-pet appointments + invoice + payment +
  * notification), create a daycare day (daycare_bookings + daycare_booking_pets + invoice + payment + notification),
- * cancel before confirmation (R-X04). Status follows the one lifecycle: paid + vaccines verified -> confirmed;
+ * cancel before confirmation (R-X14). Status follows the one lifecycle: paid + vaccines verified -> confirmed;
  * vaccines missing -> pending_vaccines (R-A05); pay at location -> requested.
  */
 import type { DataProvider } from '../../data/provider';

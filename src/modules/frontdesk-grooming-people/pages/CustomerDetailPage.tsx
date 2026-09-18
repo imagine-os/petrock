@@ -131,7 +131,7 @@ export function CustomerDetailPage() {
           </div>
         </div>
       )}
-      {can('customers.write') && <div className="row wrap" style={{ justifyContent: 'flex-end' }}><Button variant={customer.status === 'active' ? 'danger' : 'secondary'} icon="lock" size="sm" onClick={() => setPin({ action: 'record.delete', title: customer.status === 'active' ? 'Deactivate customer' : 'Reactivate customer', description: `${fullName(customer)} keeps their history; bookings stay linked (R-X38).`, subjectTable: 'customers', subjectId: customer.id })}>{customer.status === 'active' ? 'Deactivate customer' : 'Reactivate customer'}</Button></div>}
+      {can('customers.write') && <div className="row wrap" style={{ justifyContent: 'flex-end' }}><Button variant={customer.status === 'active' ? 'danger' : 'secondary'} icon="lock" size="sm" onClick={() => setPin({ action: 'record.delete', title: customer.status === 'active' ? 'Deactivate customer' : 'Reactivate customer', description: `${fullName(customer)} keeps their history; bookings stay linked (R-X68).`, subjectTable: 'customers', subjectId: customer.id })}>{customer.status === 'active' ? 'Deactivate customer' : 'Reactivate customer'}</Button></div>}
       <PinApprovalModal open={!!pin} request={pin} onClose={() => setPin(null)} onApproved={(a) => { setPin(null); deactivate(a.id); }} />
     </div>
   );

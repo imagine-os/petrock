@@ -27,7 +27,7 @@ Dark: `../screenshots/HUB-01/390-dark.jpg`, `../screenshots/HUB-01/1280-dark.jpg
 2. SessionStrip - RoleSwitcher (demo user + view as) and LocationSwitcher
 3. SurfaceGrid - customer app card with PhoneFrame iframe of #/app, front desk per location, owner/admin, manual, docs
 4. Staff roles - one button per staff role + PIN login
-5. Dev - links to D-01..D-07 and P-00
+5. Dev - links to D-01..D-07 and P-01
 6. Footer - counts: routes, built, stubs, tables, rules, components
 
 ## Data

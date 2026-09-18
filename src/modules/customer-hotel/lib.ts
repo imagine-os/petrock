@@ -52,7 +52,7 @@ export function petVaccineState(petId: string, records: VaccineRecordRow[], type
   }
   return state;
 }
-/** R-X31: app bookings start requested, or pending_vaccines when any pet is not fully verified. */
+/** R-X51: app bookings start requested, or pending_vaccines when any pet is not fully verified. */
 export function initialStatusFor(petIds: string[], records: VaccineRecordRow[], types: VaccineTypeRow[]): BookingStatus {
   return petIds.every((id) => petVaccineState(id, records, types) === 'ok') ? 'requested' : 'pending_vaccines';
 }
@@ -76,7 +76,7 @@ export const fmtDate = (iso: string | null | undefined, opts: Intl.DateTimeForma
 export const fmtDateTime = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) : '—');
 export const fmtTime = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '—');
 
-// ---- room fit (R-E09, R-X01, R-X37) & availability (R-X36) ----
+// ---- room fit (R-E09, R-X01, R-X57) & availability (R-X56) ----
 export const HEAVY_LBS = 30; // needs a bottom penthouse room (R-E09)
 export const SUITE_ONLY_LBS = 55; // must be a Suite (R-X01)
 export function roomFit(roomType: RoomTypeRow, pets: PetRow[]): { blocked: boolean; reason?: string; needsBottom: boolean } {
@@ -103,7 +103,7 @@ export function availability(i: AvailabilityInput): { capacity: number; used: nu
 export interface PricingRows { rates: RateRow[]; seasons: SeasonRow[]; discounts: DiscountRow[]; fees: FeeRow[]; taxes: TaxRow[]; packages: PackageRow[]; addons: AddonRow[] }
 export interface HotelQuoteBundle { rooms: { label: string; petNames: string[]; quote: Quote }[]; lines: QuoteLine[]; subtotal: number; discountTotal: number; taxTotal: number; total: number; nights: number; notes: string[] }
 
-/** R-X33: one room with N dogs when sharing, else one room per pet. Fee is NOT included here (see chargeFor). */
+/** R-X53: one room with N dogs when sharing, else one room per pet. Fee is NOT included here (see chargeFor). */
 export function buildHotelQuote(d: Pick<HotelDraft, 'checkIn' | 'checkInTime' | 'checkOut' | 'checkOutTime' | 'shareRoom' | 'locationId'>, roomType: RoomTypeRow, pets: PetRow[], paidInFull: boolean, t: PricingRows): HotelQuoteBundle | null {
   if (!d.checkIn || !d.checkOut || !pets.length) return null;
   const ci = new Date(combineDateTime(d.checkIn, d.checkInTime)), co = new Date(combineDateTime(d.checkOut, d.checkOutTime));
@@ -113,7 +113,7 @@ export function buildHotelQuote(d: Pick<HotelDraft, 'checkIn' | 'checkInTime' | 
   const sum = (k: keyof Quote) => round2(rooms.reduce((s, r) => s + (r.quote[k] as number), 0));
   return { rooms, lines, subtotal: sum('subtotal'), discountTotal: sum('discountTotal'), taxTotal: sum('taxTotal'), total: sum('total'), nights: rooms[0]?.quote.nights ?? 0, notes: [...new Set(rooms.flatMap((r) => r.quote.notes))] };
 }
-/** Average nightly rate per pet over the stay (R-X39). */
+/** Average nightly rate per pet over the stay (R-X59). */
 export function avgNightly(d: Pick<HotelDraft, 'checkIn' | 'checkInTime' | 'checkOut' | 'checkOutTime' | 'locationId'>, roomType: RoomTypeRow, t: PricingRows): number | null {
   if (!d.checkIn || !d.checkOut) return null;
   const q = quoteHotel({ roomTypeId: roomType.id, roomTypeName: roomType.name, checkIn: new Date(combineDateTime(d.checkIn, d.checkInTime)), checkOut: new Date(combineDateTime(d.checkOut, d.checkOutTime)), dogs: 1, paidInFull: false, payWithCard: false, locationId: d.locationId, rates: t.rates, seasons: t.seasons, discounts: [], fees: [], taxes: [] });
@@ -130,7 +130,7 @@ export function buildGroomingQuotes(grooming: Record<string, PetGrooming>, pets:
   });
 }
 export const depositFor = (total: number, s: HotelBookingSettings) => round2(total * s.deposit_percent / 100);
-/** R-X38: card fee on the amount charged now (deposit or full), from the fees table. */
+/** R-X58: card fee on the amount charged now (deposit or full), from the fees table. */
 export function chargeFor(amount: number, payWithCard: boolean, fees: FeeRow[]): { fee: number; feePercent: number; charged: number } {
   const f = fees.find((x) => x.active && x.kind === 'card');
   const fee = payWithCard && f ? round2(amount * f.percent / 100) : 0;

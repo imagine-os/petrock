@@ -10,7 +10,7 @@ export interface GroomDayGridProps {
   columns: GroomDayGridColumn[]; items: GroomDayGridItem[];
   /** Grid start / end hours (24h). */ startHour?: number; endHour?: number; /** Pixel height of one hour. */ hourHeight?: number;
   onItemClick?: (id: string) => void;
-  /** Column context menu callbacks (R-X32). */ onMoveColumn?: (id: string, dir: -1 | 1) => void; onColorColumn?: (id: string, color: string | null) => void; onHideColumn?: (id: string, hidden: boolean) => void;
+  /** Column context menu callbacks (R-X62). */ onMoveColumn?: (id: string, dir: -1 | 1) => void; onColorColumn?: (id: string, color: string | null) => void; onHideColumn?: (id: string, hidden: boolean) => void;
   /** Click on an empty slot: (columnId, HH:MM). */ onSlotClick?: (columnId: string, hhmm: string) => void;
   /** Rows with this many or more overlapping items are shaded (R-G21). */ capacity?: number;
   /** Items moved by drag: (id, columnId, HH:MM). */ onItemMove?: (id: string, columnId: string, hhmm: string) => void;

@@ -36,9 +36,9 @@ export const groomingTimeSpec = defineSpec({
   code: 'C-53', name: 'Choose date & time', purpose: 'Step 3: location, date, groomer and start time. Slots come from location hours, grooming capacity and existing appointments; the Figma export had no slot screen (open question 54) so this is designed fresh.',
   layout: ['PageHeader + Stepper (3/4)', 'Location chips + address', 'DatePicker (closed days disabled, 90-day window)', 'Groomer select (any / named groomer at that location)', 'Day card: hours + GroomingSlotPicker', 'Notes for the groomer (100 chars)', 'ServiceFlowFooter (Next)'],
   data: ['locations', 'employees', 'capacities', 'appointments', 'packages', 'addons'], roles: ROLES,
-  logic: ['orderMinutes = longest per-pet chair time (pets are groomed in parallel up to capacity).', 'computeSlots(): 30-min steps from open to close - orderMinutes; a slot is unavailable when for any 15-min step booked appointments + pets in the order > capacities.grooming, or the chosen groomer is busy; today\'s past times are "Too soon" (R-X05, R-G21).', 'Changing location or groomer clears the chosen time.'],
+  logic: ['orderMinutes = longest per-pet chair time (pets are groomed in parallel up to capacity).', 'computeSlots(): 30-min steps from open to close - orderMinutes; a slot is unavailable when for any 15-min step booked appointments + pets in the order > capacities.grooming, or the chosen groomer is busy; today\'s past times are "Too soon" (R-X15, R-G21).', 'Changing location or groomer clears the chosen time.'],
   integrations: [], components: ['PageHeader', 'Stepper', 'Chip', 'DatePicker', 'Select', 'Card', 'GroomingSlotPicker', 'Textarea', 'ServiceFlowFooter'],
-  rules: ['R-X05', 'R-G21', 'R-E10', 'R-G17', 'R-G13', 'R-K02', 'R-J02'], states: ['no date', 'open day with slots', 'closed day', 'all slots taken', 'specific groomer'],
+  rules: ['R-X15', 'R-G21', 'R-E10', 'R-G17', 'R-G13', 'R-K02', 'R-J02'], states: ['no date', 'open day with slots', 'closed day', 'all slots taken', 'specific groomer'],
   figma: ['Grooming.png (day view as reference)'], checkedAt: W,
 });
 export const groomingCheckoutSpec = defineSpec({
@@ -54,9 +54,9 @@ export const groomingOrderSpec = defineSpec({
   code: 'C-55', name: 'Order detail & confirmation', purpose: 'One Grooming & Spa order: confirmation state right after booking, status in the one lifecycle, per-pet lines, location, groomer, payment and invoice totals; re-create it or cancel before confirmation.',
   layout: ['PageHeader', 'Success block (?new=1)', 'GroomingOrderCard', 'Pending-vaccines notice', 'Details card (status, location, groomer, chair time, payment, invoice, notes)', 'Totals (ServiceQuoteLines from the invoice)', 'Actions: Re-create | Cancel booking / Message the front desk', 'Cancel confirm Modal'],
   data: ['grooming_orders', 'appointments', 'invoices', 'locations', 'employees', 'pets', 'packages', 'addons', 'notifications'], roles: ROLES,
-  logic: ['Customer labels via BOOKING_STATUS_CUSTOMER_LABEL (Pending verification, Upcoming, Completed).', 'Re-create writes a draft with the same pets, packages, add-ons, location and groomer, then opens C-53 for a new time (R-G16).', 'Cancel allowed only in requested / pending_vaccines (R-X04): sets order and appointments to cancelled and notifies; otherwise offers the front desk chat.'],
+  logic: ['Customer labels via BOOKING_STATUS_CUSTOMER_LABEL (Pending verification, Upcoming, Completed).', 'Re-create writes a draft with the same pets, packages, add-ons, location and groomer, then opens C-53 for a new time (R-G16).', 'Cancel allowed only in requested / pending_vaccines (R-X14): sets order and appointments to cancelled and notifies; otherwise offers the front desk chat.'],
   integrations: [], components: ['PageHeader', 'GroomingOrderCard', 'Card', 'ServiceQuoteLines', 'Button', 'Modal', 'EmptyState', 'Toast'],
-  rules: ['R-X04', 'R-I06', 'R-A05', 'R-G16', 'R-G15', 'R-D14'], states: ['just booked', 'upcoming', 'pending vaccines', 'completed', 'cancelled', 'not found'],
+  rules: ['R-X14', 'R-I06', 'R-A05', 'R-G16', 'R-G15', 'R-D14'], states: ['just booked', 'upcoming', 'pending vaccines', 'completed', 'cancelled', 'not found'],
   figma: ['Frame 1171276435.png'], checkedAt: W,
 });
 export const groomingOrdersSpec = defineSpec({
@@ -77,12 +77,12 @@ export const daycareStartSpec = defineSpec({
   rules: ['R-F01', 'R-F02', 'R-F03', 'R-F04', 'R-F05', 'R-A03', 'R-A01'], states: ['no upcoming', 'upcoming', 'no pets', 'dark'], figma: ['Day care.png', 'DayCare-1.png'], checkedAt: W,
 });
 export const daycareBookSpec = defineSpec({
-  code: 'C-61', name: 'Daycare reservation', purpose: 'Step 1: pick pets, location and day, set drop-off and pick-up times and see the computed price live; the day length decides whether grooming can be added (R-X02 / R-X07).',
+  code: 'C-61', name: 'Daycare reservation', purpose: 'Step 1: pick pets, location and day, set drop-off and pick-up times and see the computed price live; the day length decides whether grooming can be added (R-X02 / R-X17).',
   layout: ['PageHeader + Stepper (1/3)', 'PetChoiceStrip (multi)', 'Vaccine notice', 'Location chips', 'Pricing tiles (current item highlighted)', 'DatePicker (closed days disabled)', 'Check in / Check out TimePickers', 'Computed price block', 'Add-grooming toggle or "no time for grooming" notice', 'ServiceFlowFooter (Next)'],
   data: ['pets', 'vaccine_records', 'locations', 'daycare_pricing', 'discounts', 'fees', 'taxes', 'packages', 'settings'], roles: ROLES,
-  logic: ['hours = check_out - check_in; quoteDaycare(hours, pets): full day at/above threshold, half day below, play hour at 1 h or less; extra-pet discount per additional pet (R-F01..F06).', 'Times are clamped to the location\'s hours, check-out at least 1 h after check-in (R-X06).', 'groomingFitMinutes = shortest package for the pets\' sizes + settings.daycare.grooming_buffer_min (default 60); day >= fit offers the add-grooming toggle, otherwise explains (R-X07).'],
+  logic: ['hours = check_out - check_in; quoteDaycare(hours, pets): full day at/above threshold, half day below, play hour at 1 h or less; extra-pet discount per additional pet (R-F01..F06).', 'Times are clamped to the location\'s hours, check-out at least 1 h after check-in (R-X16).', 'groomingFitMinutes = shortest package for the pets\' sizes + settings.daycare.grooming_buffer_min (default 60); day >= fit offers the add-grooming toggle, otherwise explains (R-X17).'],
   integrations: [], components: ['PageHeader', 'Stepper', 'PetChoiceStrip', 'Chip', 'Card', 'DatePicker', 'TimePicker', 'Toggle', 'ServiceFlowFooter'],
-  rules: ['R-F01', 'R-F02', 'R-F03', 'R-F05', 'R-F06', 'R-X02', 'R-X06', 'R-X07', 'R-A05', 'R-A11', 'R-K02'], states: ['nothing selected', 'half day', 'full day', 'play hour', 'multi-pet with discount', 'too short for grooming', 'closed day'],
+  rules: ['R-F01', 'R-F02', 'R-F03', 'R-F05', 'R-F06', 'R-X02', 'R-X16', 'R-X17', 'R-A05', 'R-A11', 'R-K02'], states: ['nothing selected', 'half day', 'full day', 'play hour', 'multi-pet with discount', 'too short for grooming', 'closed day'],
   figma: ['DayCare-1.png', 'DayCare.png'], checkedAt: W,
 });
 export const daycareDetailsSpec = defineSpec({
@@ -103,11 +103,11 @@ export const daycareCheckoutSpec = defineSpec({
 });
 export const daycareBookingSpec = defineSpec({
   code: 'C-64', name: 'Daycare day detail', purpose: 'One daycare day: confirmation right after booking, status, pets with their questionnaire answers, payment and totals; book again, cancel before confirmation, or add grooming when the day is long enough.',
-  layout: ['PageHeader', 'Success block (?new=1)', 'DaycareDayCard', 'Pending-vaccines notice', 'Add-grooming card (R-X07)', 'Details card', 'Pet details card', 'Totals', 'Actions: Book again | Cancel / Message the front desk', 'Cancel Modal'],
+  layout: ['PageHeader', 'Success block (?new=1)', 'DaycareDayCard', 'Pending-vaccines notice', 'Add-grooming card (R-X17)', 'Details card', 'Pet details card', 'Totals', 'Actions: Book again | Cancel / Message the front desk', 'Cancel Modal'],
   data: ['daycare_bookings', 'daycare_booking_pets', 'invoices', 'locations', 'pets', 'daycare_pricing', 'packages', 'notifications'], roles: ROLES,
-  logic: ['Book again prefills the daycare draft (pets, times, location, questionnaire) and opens C-61.', 'Book grooming prefills the grooming draft with the same pets, date and location and opens C-51 (R-X07).', 'Cancel only in requested / pending_vaccines (R-X04).'],
+  logic: ['Book again prefills the daycare draft (pets, times, location, questionnaire) and opens C-61.', 'Book grooming prefills the grooming draft with the same pets, date and location and opens C-51 (R-X17).', 'Cancel only in requested / pending_vaccines (R-X14).'],
   integrations: [], components: ['PageHeader', 'DaycareDayCard', 'Card', 'ServiceQuoteLines', 'Button', 'Modal', 'EmptyState', 'Toast'],
-  rules: ['R-X04', 'R-X07', 'R-X02', 'R-A05', 'R-F05'], states: ['just booked', 'upcoming', 'pending vaccines', 'checked in', 'completed', 'cancelled'], figma: [], checkedAt: W,
+  rules: ['R-X14', 'R-X17', 'R-X02', 'R-A05', 'R-F05'], states: ['just booked', 'upcoming', 'pending vaccines', 'checked in', 'completed', 'cancelled'], figma: [], checkedAt: W,
 });
 export const daycareBookingsSpec = defineSpec({
   code: 'C-65', name: 'Your daycare days', purpose: 'History of daycare days split into upcoming and past; book any day again in one tap.',

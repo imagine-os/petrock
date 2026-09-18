@@ -6,21 +6,21 @@ part: II
 version: 0.2.0
 updated: 2026-09-18
 summary: The one chat thread per customer, the inbox, tone and scripts, staff notifications, moderating reviews, website inquiries.
-rules: R-M09, R-M08, R-M07, R-X40, R-X42, R-X48
+rules: R-M09, R-M08, R-M07, R-X70, R-X72, R-X78
 ---
 
 # Messages, notifications and reviews
 
-Parents write to **Front Desk** from the app; one thread per customer, forever. Staff answer from the **Messages inbox (F-61)**. Notifications (F-60) tell you what needs a hand. Reviews arrive from the app and are moderated before they appear on the website (F-65).
+Parents write to **Front Desk** from the app; one thread per customer, forever. Staff answer from the **Messages inbox (F-57)**. Notifications (F-60) tell you what needs a hand. Website contact-form inquiries land in **Website inquiries (F-61)**. Reviews arrive from the app and are moderated before they appear on the website (F-65).
 
 ## 1. The inbox
 
-1. Open **Messages (F-61)**. Conversations at your location sort by last message; unread counts on the left.
+1. Open **Messages (F-57)**. Conversations at your location sort by last message; unread counts on the left.
 2. Open a thread; read the whole thing before answering.
 3. Answer in the composer; Enter sends. The parent gets a push notification in the app (later a real one).
 4. Quote prices only from the live tables or the app estimate, never from memory.
 
-[screenshot: F-61 — Messages inbox with thread and composer]
+[screenshot: F-57 — Messages inbox with thread and composer]
 
 ### Scripts
 
@@ -41,7 +41,7 @@ Kinds are a fixed vocabulary (booking confirmed, new booking, payment, vaccine e
 
 ## 3. Reviews
 
-A review has a rating, a title, a body and sentiment tags. It starts **pending**. Only a manager, the owner or the super admin moderates: **Approve** publishes it to the website, **Archive** hides it. Only published reviews appear on the public site (R-X40).
+A review has a rating, a title, a body and sentiment tags. It starts **pending**. Only a manager, the owner or the super admin moderates: **Approve** publishes it to the website, **Archive** hides it. Only published reviews appear on the public site (R-X70).
 
 [screenshot: F-65 — Reviews moderation queue]
 
@@ -58,7 +58,7 @@ The contact form on the website writes a row to `site_inquiries` at the location
 
 ## Online lesson
 
-1. Open **Messages (F-61)**, open a thread, send a reply as the desk demo user.
+1. Open **Messages (F-57)**, open a thread, send a reply as the desk demo user.
 2. Open **Notifications (F-60)**, filter by "Vaccine proof".
 3. As the manager, open **Reviews (F-65)**, approve one, archive one; open the public reviews page (P-07) and find the published one.
 

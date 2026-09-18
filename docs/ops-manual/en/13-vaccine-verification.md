@@ -6,7 +6,7 @@ part: II
 version: 0.2.0
 updated: 2026-09-18
 summary: Which vaccines we require, how a proof arrives from the app, how to verify or reject it, why bookings wait on it.
-rules: R-A05, R-X48
+rules: R-A05, R-X78
 ---
 
 # Vaccine verification

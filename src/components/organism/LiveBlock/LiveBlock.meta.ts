@@ -3,7 +3,7 @@ import { defineMeta } from '../../../design/meta';
 import { LiveBlock } from './LiveBlock';
 
 export default defineMeta({
-  tier: 'organism', name: 'LiveBlock', description: 'Renders an ops-manual directive ({{table:room_types}}, {{pricing:rooms}}, {{locations}}, {{statuses}}, {{rules:vaccines}}, {{roles}}, {{routes:frontdesk}}, {{capacities}}, {{vaccines}}, {{stats}}, {{demo-users}}, {{permissions:manager}}, {{tables}}) with data read from the tables, the rules registry, the route manifest and the domain, so a chapter never types a number the system owns (R-X43). Unknown directives explain themselves instead of breaking the page.',
+  tier: 'organism', name: 'LiveBlock', description: 'Renders an ops-manual directive ({{table:room_types}}, {{pricing:rooms}}, {{locations}}, {{statuses}}, {{rules:vaccines}}, {{roles}}, {{routes:frontdesk}}, {{capacities}}, {{vaccines}}, {{stats}}, {{demo-users}}, {{permissions:manager}}, {{tables}}) with data read from the tables, the rules registry, the route manifest and the domain, so a chapter never types a number the system owns (R-X73). Unknown directives explain themselves instead of breaking the page.',
   props: [{ name: 'kind', type: 'string', required: true, description: 'Directive name' }, { name: 'arg', type: 'string', description: 'Argument after the colon' }],
   states: ['table', 'pricing', 'locations', 'statuses', 'rules', 'unknown directive'],
   usages: [

@@ -12,7 +12,7 @@ export const CODE_RANGES: { module: string; prefix: string; from: number; to: nu
   { module: 'customer-auth', prefix: 'C', from: 1, to: 9 }, { module: 'customer-home-pets', prefix: 'C', from: 10, to: 29 }, { module: 'customer-hotel', prefix: 'C', from: 30, to: 49 },
   { module: 'customer-grooming-daycare', prefix: 'C', from: 50, to: 69 }, { module: 'customer-settings-chat', prefix: 'C', from: 70, to: 89 },
   { module: 'frontdesk-reservations', prefix: 'F', from: 1, to: 29 }, { module: 'frontdesk-grooming-people', prefix: 'F', from: 30, to: 59 },
-  { module: 'admin-control-panel', prefix: 'A', from: 1, to: 49 }, { module: 'extras-manual-website', prefix: 'P', from: 1, to: 19 }, { module: 'extras-manual-website', prefix: 'M', from: 1, to: 30 }, { module: 'extras-manual-website', prefix: 'F', from: 60, to: 79 },
+  { module: 'admin-control-panel', prefix: 'A', from: 1, to: 49 }, { module: 'extras-manual-website', prefix: 'P', from: 1, to: 19 }, { module: 'extras-manual-website', prefix: 'M', from: 1, to: 39 }, { module: 'extras-manual-website', prefix: 'F', from: 60, to: 79 },
   { module: 'dev-quality', prefix: 'D', from: 8, to: 19 }, { module: 'dev', prefix: 'D', from: 1, to: 7 }, { module: 'docs', prefix: 'D', from: 6, to: 6 }, { module: 'hub', prefix: 'HUB', from: 1, to: 2 }, { module: 'auth', prefix: 'A', from: 0, to: 0 }, { module: 'settings-rules', prefix: 'A', from: 40, to: 40 }, { module: 'public', prefix: 'P', from: 0, to: 0 },
 ];
 export function expectedModule(code: string): string[] {

@@ -23,7 +23,7 @@ const QUALITY = Number(arg(args, 'quality', '72'));
 const WIDTHS = SMOKE ? [1280] : list(arg(args, 'widths', '390,1280')).map(Number);
 const PORT = Number(arg(args, 'port', process.env.QA_PORT ?? '4173'));
 const BASE = `http://localhost:${PORT}/#`;
-const KEY_PAGES = new Set(['HUB-01', 'A-00', 'D-01', 'D-02', 'D-04', 'D-05', 'P-00', 'C-10', 'F-01', 'A-01']);
+const KEY_PAGES = new Set(['HUB-01', 'A-00', 'D-01', 'D-02', 'D-04', 'D-05', 'P-01', 'C-10', 'F-01', 'A-01']);
 const fileName = (width, theme, label = '') => `${width}${theme === 'dark' ? '-dark' : ''}${label ? `-${label}` : ''}.jpg`;
 const safe = (code) => code.replace(/[^\w-]/g, '_');
 

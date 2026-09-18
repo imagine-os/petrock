@@ -198,7 +198,7 @@ export function GroomBookingFormPage() {
           <Textarea label="Note" maxLength={100} showCount value={note} onChange={(e) => setNote(e.target.value)} placeholder="Owner asked for a shorter cut around the ears" />
           <Checkbox label="Include notes on invoice" checked={notesOnInvoice} onChange={(e) => setNotesOnInvoice(e.target.checked)} />
         </Section>
-        <Section title="Invoice" description="Computed live from the pricing tables. Discounts need a manager PIN (R-X34).">
+        <Section title="Invoice" description="Computed live from the pricing tables. Discounts need a manager PIN (R-X64).">
           <Card padding="sm">
             <div className="fgp-lines">
               {quotes.length === 0 && <p className="muted small" style={{ margin: 8 }}>Pick pets and a package to see the estimate.</p>}

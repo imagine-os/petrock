@@ -21,12 +21,12 @@ rules: R-I05, R-I06
 ---
 ```
 
-- `code` is the page code (M-10..M-30 are chapters; M-01 cover, M-02 fallback, M-03 pending are reserved).
+- `code` is the page code (M-10..M-39 are chapters (M-28..M-33 were folded from module drafts at integration); M-01 cover, M-02 fallback, M-03 pending are reserved).
 - `roles` is a comma list of audiences: `all staff`, `front desk`, `groomer`, `manager`, `owner`. The cover's "reading path" filters on it.
 - `part` groups chapters: I Start here · II Front desk · III Grooming, daycare & walks · IV Money & approvals · V Managers & owners · VI System & reference.
 - `rules` are the `R-xxx` ids the chapter teaches; they appear in the chapter header and the page spec.
 
-Every chapter has a `## In-person lesson` and a `## Online lesson` section; the reader records both with the buttons in the header (writes `training_completions`, R-X44).
+Every chapter has a `## In-person lesson` and a `## Online lesson` section; the reader records both with the buttons in the header (writes `training_completions`, R-X74).
 
 ## Inside a chapter
 
@@ -43,7 +43,7 @@ Every chapter has a `## In-person lesson` and a `## Online lesson` section; the 
 | `{{roles}}` `{{permissions:manager}}` `{{routes:frontdesk}}` `{{demo-users}}` `{{stats}}` | roles, permissions, screens of a surface, demo people, row counts |
 | `> NOTE:` `> TIP:` `> WARNING:` `> DECISION NEEDED:` `> IN PERSON:` `> ONLINE:` | callouts; `DECISION NEEDED` also lists on `/#/manual/pending` |
 
-A `{{…}}` directive sits alone on its line. **No price, hour, capacity, status name or rule is ever typed into a chapter**: the block reads the system (R-X43). Unknown directives explain themselves instead of breaking the page.
+A `{{…}}` directive sits alone on its line. **No price, hour, capacity, status name or rule is ever typed into a chapter**: the block reads the system (R-X73). Unknown directives explain themselves instead of breaking the page.
 
 ## Drafts from other modules
 

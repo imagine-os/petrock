@@ -18,7 +18,7 @@ import { dayWindow, isClosed, toHHMM, toMin } from './slots';
 import { addDaysIso, hoursBetween, todayIso } from './format';
 import { CgdPage, DAYCARE_STEPS, Notice } from './layout';
 
-/** Shortest possible groom for these pets + buffer: the day must be at least this long to add grooming (R-X02 / R-X07). */
+/** Shortest possible groom for these pets + buffer: the day must be at least this long to add grooming (R-X02 / R-X17). */
 export function groomingFitMinutes(petSizes: string[], packages: { minutes_s: number; minutes_m: number; minutes_l: number; minutes_xl: number; minutes_giant: number }[], bufferMin: number) {
   if (!packages.length || !petSizes.length) return null;
   const shortest = Math.min(...petSizes.map((s) => Math.min(...packages.map((p) => packageMinutes(p as never, (s as 'S' | 'M' | 'L' | 'XL' | 'Giant') ?? 'M')))));
@@ -39,7 +39,7 @@ export function DaycareBookPage() {
   useEffect(() => { if (!draft.locationId && locationId) update({ locationId }); }, [draft.locationId, locationId, update]);
   const location = locations.find((l) => l.id === locationId);
   const window = dayWindow(location, draft.date);
-  // keep times inside the day's window (R-X06)
+  // keep times inside the day's window (R-X16)
   useEffect(() => {
     if (!window) return;
     let ci = draft.checkIn, co = draft.checkOut;

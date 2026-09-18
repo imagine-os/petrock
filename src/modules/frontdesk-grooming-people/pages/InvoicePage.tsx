@@ -87,7 +87,7 @@ export function InvoicePage() {
   const backTo = source?.type === 'appointment' || invoice?.source_type === 'appointment' ? `/desk/grooming/${invoice?.source_id ?? source?.id}` : customer ? `/desk/customers/${customer.id}` : '/desk';
   return (
     <div className="page stack">
-      <PageHeader code="F-59" title={invoice ? invoice.number : `Invoice preview · ${source!.code}`} backTo={backTo} eyebrow={<Badge size="sm" tone={toneFor(status)}>{status}</Badge>} subtitle={invoice ? `Issued ${fmtDate(invoice.issued_at)} · balance ${fmtMoney(invoice.balance)}` : 'Not issued yet: numbers come from Settings › Invoice when you create it (R-X37).'}
+      <PageHeader code="F-59" title={invoice ? invoice.number : `Invoice preview · ${source!.code}`} backTo={backTo} eyebrow={<Badge size="sm" tone={toneFor(status)}>{status}</Badge>} subtitle={invoice ? `Issued ${fmtDate(invoice.issued_at)} · balance ${fmtMoney(invoice.balance)}` : 'Not issued yet: numbers come from Settings › Invoice when you create it (R-X67).'}
         actions={<div className="fgp-actions invpage-actions">
           {!invoice && can('invoices.write') && <Button icon="plus" onClick={create} loading={busy}>Create invoice</Button>}
           {invoice && invoice.status === 'issued' && invoice.balance > 0 && can('payments.write') && <><Select size="sm" aria-label="Payment method" value={method} onChange={(e) => setMethod(e.target.value as 'card' | 'cash')} options={[{ value: 'card', label: 'Card' }, { value: 'cash', label: 'Cash' }]} /><Button icon="dollar" onClick={markPaid} loading={busy}>Take {fmtMoney(invoice.balance)}</Button></>}

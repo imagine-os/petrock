@@ -1,5 +1,5 @@
 /**
- * Grooming start times for a day at a location (R-X05, R-G21, R-E10): opening hours from locations.hours, 30-minute
+ * Grooming start times for a day at a location (R-X15, R-G21, R-E10): opening hours from locations.hours, 30-minute
  * steps, the order must end before closing, and for every 15-minute step the appointments already booked plus this
  * order's pets must stay within capacities.grooming. A chosen groomer must also be free.
  */

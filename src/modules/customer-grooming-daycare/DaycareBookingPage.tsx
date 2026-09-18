@@ -24,7 +24,7 @@ import { CgdPage, Notice } from './layout';
 
 type Row = DaycareBookingRow & { location_id?: string; notes?: string | null };
 
-/** C-64 Daycare day detail & confirmation: status, pets and their questionnaire, totals, book again, cancel before confirmation (R-X04), add grooming when the day is long enough (R-X07). */
+/** C-64 Daycare day detail & confirmation: status, pets and their questionnaire, totals, book again, cancel before confirmation (R-X14), add grooming when the day is long enough (R-X17). */
 export function DaycareBookingPage() {
   const t = useT();
   const nav = useNavigate();

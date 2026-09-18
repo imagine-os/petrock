@@ -26,7 +26,7 @@ import './extras.css';
 const PRIORITY_TONE = { low: 'neutral', normal: 'info', high: 'danger' } as const;
 const today = () => new Date().toISOString().slice(0, 10);
 
-/** F-68 Tasks and checklists (management): per-location to-dos with assignee, due date, priority and status; delete is PIN-gated (R-L07, R-X47). */
+/** F-68 Tasks and checklists (management): per-location to-dos with assignee, due date, priority and status; delete is PIN-gated (R-L07, R-X77). */
 export function TasksPage() {
   const data = useData();
   const { user } = useSession();

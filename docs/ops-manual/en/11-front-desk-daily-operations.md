@@ -6,7 +6,7 @@ part: II
 version: 0.2.0
 updated: 2026-09-18
 summary: Opening the desk, the Today screen and its four day tabs, the arrivals and departures rhythm, notifications, closing.
-rules: R-I05, R-I01, R-K02, R-X48, R-S01
+rules: R-I05, R-I01, R-K02, R-X78, R-S01
 ---
 
 # Front desk daily operations

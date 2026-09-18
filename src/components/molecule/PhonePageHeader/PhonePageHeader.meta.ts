@@ -9,5 +9,5 @@ export default defineMeta({
   states: ['with back', 'without back', 'with actions'],
   usages: [{ title: 'Variants', render: () => h('div', { className: 'stack', style: { maxWidth: 390, border: '1px solid var(--color-border)', borderRadius: 10 } }, h(PhonePageHeader, { title: 'My pets', backTo: '/app', sticky: false, actions: h(IconButton, { icon: 'plus', label: 'Add pet' }) }), h(PhonePageHeader, { title: 'Notifications', backTo: -1, sticky: false, subtitle: '2 unread' })) }],
   a11y: ['Back is an icon button labelled "Back"; the title is the page h1.'],
-  usedBy: ['C-11', 'C-12', 'C-13', 'C-14', 'C-15', 'C-20', 'C-21'], figma: ['Pet Edit.png', 'notification.png', 'My pets (more than one pet).jpg'],
+  usedBy: ['C-11', 'C-12', 'C-13', 'C-14', 'C-20', 'C-21'], figma: ['Pet Edit.png', 'notification.png', 'My pets (more than one pet).jpg'],
 });

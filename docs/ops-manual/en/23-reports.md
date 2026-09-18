@@ -6,7 +6,7 @@ part: V
 version: 0.2.0
 updated: 2026-09-18
 summary: The reports overview, revenue by period and payment method, occupancy and capacity, how to read a chart and export the table.
-rules: R-X46, R-L05
+rules: R-X76, R-L05
 ---
 
 # Reports

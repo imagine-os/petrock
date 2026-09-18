@@ -6,7 +6,7 @@ part: IV
 version: 0.2.0
 updated: 2026-09-18
 summary: What a manager PIN gates, how the approval modal works, what is written to the audit, how to handle a PIN you are asked for.
-rules: R-I06, R-P01, R-P02, R-X47
+rules: R-I06, R-P01, R-P02, R-X77
 ---
 
 # PIN approvals

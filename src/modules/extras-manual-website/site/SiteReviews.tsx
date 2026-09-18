@@ -11,7 +11,7 @@ import { Card } from '../../../components/molecule/Card/Card';
 import { CtaBand } from './siteBits';
 import { useLocations } from './teasers';
 
-/** P-07 Reviews: only published reviews (R-X40), average rating, filter by location, distribution. */
+/** P-07 Reviews: only published reviews (R-X70), average rating, filter by location, distribution. */
 export function SiteReviews() {
   const locations = useLocations();
   const [loc, setLoc] = useState<string>('all');

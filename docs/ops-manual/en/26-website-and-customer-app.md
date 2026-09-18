@@ -6,7 +6,7 @@ part: VI
 version: 0.2.0
 updated: 2026-09-18
 summary: What a pet parent sees on the public website and in the app, how a booking flows from there to the desk, what the desk can say about it.
-rules: R-X40, R-X41, R-X42, R-A01
+rules: R-X70, R-X71, R-X72, R-A01
 ---
 
 # Website and customer app
@@ -15,7 +15,7 @@ Parents meet Petrock on the website first, then in the app. Knowing both lets th
 
 ## 1. The website
 
-The public site (P-01…P-12) shows rooms, Grooming & Spa, daycare, a pricing teaser, both locations with hours, published reviews, vaccines and policies, an FAQ and a contact form. Prices are "from" teasers computed from the same tables the desk uses (R-X41); the binding quote is in the app. Only published reviews appear (R-X40). Contact-form messages land in `site_inquiries` at the chosen location (R-X42).
+The public site (P-01…P-12) shows rooms, Grooming & Spa, daycare, a pricing teaser, both locations with hours, published reviews, vaccines and policies, an FAQ and a contact form. Prices are "from" teasers computed from the same tables the desk uses (R-X71); the binding quote is in the app. Only published reviews appear (R-X70). Contact-form messages land in `site_inquiries` at the chosen location (R-X72).
 
 [screenshot: P-01 — Website home]
 

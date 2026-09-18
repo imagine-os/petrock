@@ -1,7 +1,7 @@
 /**
  * Shared logic for the frontdesk-grooming-people module: appointment lifecycle helpers (mirroring the ONE booking
- * lifecycle), vaccine summaries and the verify -> approve pet -> confirm bookings chain (R-X30), audit writes,
- * invoice creation (R-X37), date / time formatting and relative timestamps (R-M08).
+ * lifecycle), vaccine summaries and the verify -> approve pet -> confirm bookings chain (R-X60), audit writes,
+ * invoice creation (R-X67), date / time formatting and relative timestamps (R-M08).
  */
 import type { DataProvider } from '../../data/provider';
 import type { BaseRow } from '../../data/schema/types';
@@ -23,7 +23,7 @@ export const APPOINTMENT_STATUS_LABEL: Record<AppointmentStatus, string> = { req
 export const APPOINTMENT_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
   requested: ['confirmed', 'cancelled'], confirmed: ['in_progress', 'cancelled', 'no_show'], in_progress: ['done'], done: [], cancelled: ['requested'], no_show: ['requested'],
 };
-/** R-X33: same PIN gates as PIN_GATED_TRANSITIONS (cancel / no-show a confirmed one, re-open). */
+/** R-X63: same PIN gates as PIN_GATED_TRANSITIONS (cancel / no-show a confirmed one, re-open). */
 export const APPOINTMENT_PIN_GATED: Partial<Record<AppointmentStatus, AppointmentStatus[]>> = { confirmed: ['cancelled', 'no_show'], cancelled: ['requested'], no_show: ['requested'] };
 export const canTransitionAppointment = (from: string, to: string) => (APPOINTMENT_TRANSITIONS[from as AppointmentStatus] ?? []).includes(to as AppointmentStatus);
 export const appointmentNeedsPin = (from: string, to: string) => (APPOINTMENT_PIN_GATED[from as AppointmentStatus] ?? []).includes(to as AppointmentStatus);
@@ -128,7 +128,7 @@ export async function notify(data: DataProvider, userId: string | null | undefin
   return data.insert<NotificationRow>('notifications', { user_id: userId, kind, title, body, link, read: false, sent_at: new Date().toISOString() });
 }
 
-/** Approves the pet when every required vaccine is verified and confirms its pending_vaccines bookings (R-X30). Returns what changed. */
+/** Approves the pet when every required vaccine is verified and confirms its pending_vaccines bookings (R-X60). Returns what changed. */
 export async function settleVaccineStatus(data: DataProvider, petId: string, actor: Actor, locationId: string | null): Promise<{ petApproved: boolean; bookingsConfirmed: string[] }> {
   const types = await data.list<VaccineTypeRow>('vaccine_types');
   const records = await data.list<VaccineRecordRow>('vaccine_records', { where: { pet_id: petId } });
@@ -178,7 +178,7 @@ export async function rejectVaccineRecord(data: DataProvider, rec: VaccineRecord
   await notify(data, customerUserId, 'vaccine_rejected', `${petName}: ${vaccineName} proof needs another look`, reason, '/app/pets');
 }
 
-/** R-X37: invoice from an appointment or hotel booking using settings.invoice numbering. */
+/** R-X67: invoice from an appointment or hotel booking using settings.invoice numbering. */
 export async function createInvoiceFor(data: DataProvider, src: { type: 'appointment' | 'booking' | 'daycare'; id: string; customerId: string; locationId: string | null; quote: Quote; deposit: number; note?: string | null }): Promise<InvoiceRow> {
   const settings = await data.list<SettingRow>('settings', { where: { key: 'invoice' } });
   const setting = settings[0];

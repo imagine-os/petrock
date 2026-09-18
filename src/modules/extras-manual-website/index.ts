@@ -1,6 +1,6 @@
 /**
  * extras-manual-website: public website (P-01..P-12), business operations manual (M-01..M-03 + one route per chapter
- * M-10..), and the front-desk extras (F-60 notifications, F-61 messages, F-62..F-64 reports, F-65 reviews, F-66 education,
+ * M-10..), and the front-desk extras (F-60 notifications, F-61 website inquiries, F-62..F-64 reports, F-65 reviews, F-66 education,
  * F-67 walking, F-68 tasks). Registered by src/app/registry.ts through the module glob.
  */
 import { createElement as h } from 'react';
@@ -29,7 +29,7 @@ export const strings: StringTable = {
   'extras-manual-website.manual.pending': { en: 'Pending decisions', es: 'Decisiones pendientes' },
   'extras-manual-website.site.book': { en: 'Book now', es: 'Reservar' },
   'extras-manual-website.desk.notifications': { en: 'Notifications', es: 'Notificaciones' },
-  'extras-manual-website.desk.messages': { en: 'Messages', es: 'Mensajes' },
+  'extras-manual-website.desk.inquiries': { en: 'Website inquiries', es: 'Consultas del sitio web' },
   'extras-manual-website.desk.reports': { en: 'Reports', es: 'Reportes' },
 };
 
@@ -39,7 +39,7 @@ const desk = (path: string, el: () => JSX.Element, spec: RouteDef['spec'], roles
 
 export const routes: RouteDef[] = [
   // Public website
-  site('/site/home', SiteHome, S.siteHomeSpec), site('/site/hotel', SiteHotel, S.siteHotelSpec), site('/site/grooming', SiteGrooming, S.siteGroomingSpec), site('/site/daycare', SiteDaycare, S.siteDaycareSpec),
+  site('/site', SiteHome, S.siteHomeSpec), site('/site/home', SiteHome, S.siteHomeSpec), site('/site/hotel', SiteHotel, S.siteHotelSpec), site('/site/grooming', SiteGrooming, S.siteGroomingSpec), site('/site/daycare', SiteDaycare, S.siteDaycareSpec),
   site('/site/pricing', SitePricing, S.sitePricingSpec), site('/site/locations', SiteLocations, S.siteLocationsSpec), site('/site/reviews', SiteReviews, S.siteReviewsSpec), site('/site/policies', SitePolicies, S.sitePoliciesSpec),
   site('/site/book', SiteBook, S.siteBookSpec), site('/site/contact', SiteContact, S.siteContactSpec), site('/site/faq', SiteFaq, S.siteFaqSpec), site('/site/about', SiteAbout, S.siteAboutSpec),
   // Ops manual
@@ -49,7 +49,7 @@ export const routes: RouteDef[] = [
   { path: '/manual/:slug', element: h(ManualNotFound), spec: S.manualFallbackSpec, roles: STAFF_ROLES, surface: 'manual', layout: 'desktop' },
   // Front desk extras
   desk('/desk/notifications', StaffNotificationsPage, S.notificationsSpec, STAFF_ROLES, { label: 'Notifications', icon: 'bell', order: 10, group: 'messages' }),
-  desk('/desk/messages', DeskMessagesPage, S.messagesSpec, STAFF_ROLES, { label: 'Messages', icon: 'message', order: 0, group: 'messages' }),
+  desk('/desk/inquiries', DeskMessagesPage, S.messagesSpec, STAFF_ROLES, { label: 'Website inquiries', icon: 'globe', order: 5, group: 'messages' }),
   desk('/desk/reviews', ReviewsModerationPage, S.reviewsModSpec, MGMT, { label: 'Reviews', icon: 'star', order: 20, group: 'messages' }),
   desk('/desk/reports', ReportsOverviewPage, S.reportsSpec, MGMT, { label: 'Overview', icon: 'chart', order: 0, group: 'reports' }),
   desk('/desk/reports/revenue', ReportRevenuePage, S.revenueSpec, MGMT, { label: 'Revenue', icon: 'dollar', order: 10, group: 'reports' }),

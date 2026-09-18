@@ -15,7 +15,7 @@ import './extras.css';
 
 type Tab = 'pending' | 'published' | 'archived' | 'all';
 
-/** F-65 Reviews moderation (reviews.jpg): tabs pending / published / archived, rating filter, Approve publishes, Archive hides (R-M12, R-X40). */
+/** F-65 Reviews moderation (reviews.jpg): tabs pending / published / archived, rating filter, Approve publishes, Archive hides (R-M12, R-X70). */
 export function ReviewsModerationPage() {
   const data = useData();
   const { can } = useSession();

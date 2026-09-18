@@ -9,7 +9,7 @@ const rows = [
   { id: '4', typeName: 'Leptospirosis', required: false, status: 'missing', vaccinatedOn: null, expiresOn: null, proofName: null, proofUrl: null, note: null },
 ];
 export default defineMeta({
-  tier: 'organism', name: 'PetVaccineVerifyTable', description: 'Vaccine records table (Pet Details .pdf: Type, Vaccinated, Expires, Certificate, Status) with staff Verify / Reject / Upload / Dates actions. Verify triggers the R-X30 chain in the page. Optional pet + owner column for the F-56 queue.',
+  tier: 'organism', name: 'PetVaccineVerifyTable', description: 'Vaccine records table (Pet Details .pdf: Type, Vaccinated, Expires, Certificate, Status) with staff Verify / Reject / Upload / Dates actions. Verify triggers the R-X60 chain in the page. Optional pet + owner column for the F-56 queue.',
   props: [{ name: 'rows', type: 'VaccineVerifyRow[]', required: true, description: 'Records joined with their type' }, { name: 'canVerify', type: 'boolean', required: true, description: "can('vaccines.verify')" }, { name: 'showPet', type: 'boolean', description: 'Queue mode' }, { name: 'onVerify / onReject / onUpload / onEditDates', type: '(row) => void', description: 'Actions' }],
   states: ['verified', 'submitted (Verify / Reject)', 'expired', 'missing (Upload)', 'rejected'],
   usages: [{ title: 'One pet', render: () => h(PetVaccineVerifyTable, { rows, canVerify: true, onVerify: () => {}, onReject: () => {}, onUpload: () => {}, onEditDates: () => {} }) }],

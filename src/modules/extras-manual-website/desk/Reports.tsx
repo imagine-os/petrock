@@ -35,7 +35,7 @@ function usePeriod() {
 }
 const Locs = ({ all, name }: { all: boolean; name: string }) => <Badge size="sm" tone={all ? 'primary' : 'neutral'}>{all ? 'All locations' : name}</Badge>;
 
-/** F-62 Reports overview: KPIs for the period at the location scope, revenue per day chart, quick links to the detailed reports (R-X46). */
+/** F-62 Reports overview: KPIs for the period at the location scope, revenue per day chart, quick links to the detailed reports (R-X76). */
 export function ReportsOverviewPage() {
   const { scope, allLocations, location } = useLocation();
   const { can } = useSession();
@@ -116,7 +116,7 @@ export function ReportRevenuePage() {
   );
 }
 
-/** F-64 Occupancy: nights sold vs capacity per room type per day, average stay, today's fill per location (R-X46). */
+/** F-64 Occupancy: nights sold vs capacity per room type per day, average stay, today's fill per location (R-X76). */
 export function ReportOccupancyPage() {
   const { scope, allLocations, location, locations } = useLocation();
   const { period, setPeriod, days } = usePeriod();

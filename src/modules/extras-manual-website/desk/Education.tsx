@@ -17,7 +17,7 @@ import { useToast } from '../../../components/molecule/Toast/Toast';
 import { chapterPath, chapters, chaptersForRole, readingMinutes } from '../manual/manualIndex';
 import './extras.css';
 
-/** F-66 Education: manual chapters as lessons; per-employee matrix of online / in-person completion; managers sign off (R-X44). */
+/** F-66 Education: manual chapters as lessons; per-employee matrix of online / in-person completion; managers sign off (R-X74). */
 export function EducationPage() {
   const data = useData();
   const { user, role, can } = useSession();

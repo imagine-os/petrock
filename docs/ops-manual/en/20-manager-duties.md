@@ -6,7 +6,7 @@ part: V
 version: 0.2.0
 updated: 2026-09-18
 summary: The manager's day and week, approvals, staff schedule and training sign-off, capacity watch, escalation to the owner.
-rules: R-I06, R-P01, R-X44, R-L01
+rules: R-I06, R-P01, R-X74, R-L01
 ---
 
 # Manager duties

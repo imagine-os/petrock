@@ -21,7 +21,7 @@ import { cancelGroomingOrder, CUSTOMER_CANCELLABLE } from './actions';
 import { orderPetLines } from './orderLines';
 import { CgdPage, Notice } from './layout';
 
-/** C-55 Order detail & confirmation: status, per-pet lines, totals, invoice; re-create (R-G16) and cancel-before-confirmation (R-X04). */
+/** C-55 Order detail & confirmation: status, per-pet lines, totals, invoice; re-create (R-G16) and cancel-before-confirmation (R-X14). */
 export function GroomingOrderPage() {
   const t = useT();
   const nav = useNavigate();

@@ -6,7 +6,7 @@ part: V
 version: 0.2.0
 updated: 2026-09-18
 summary: Where every price lives, how the engine uses it, seasons and holidays, discounts, fees and taxes, daycare and grooming price lists, what changing a value does.
-rules: R-D05, R-D06, R-E01, R-H03, R-H04, R-G02, R-F01, R-X41
+rules: R-D05, R-D06, R-E01, R-H03, R-H04, R-G02, R-F01, R-X71
 ---
 
 # Owner settings and pricing
