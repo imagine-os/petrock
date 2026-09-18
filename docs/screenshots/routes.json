@@ -219,7 +219,7 @@
   "path": "/desk/notifications",
   "code": "F-60",
   "surface": "frontdesk",
-  "status": "stub",
+  "status": "built",
   "roles": [
    "super_admin",
    "owner",
@@ -230,10 +230,10 @@
   "spec": {
    "code": "F-60",
    "name": "Staff notifications",
-   "purpose": "Notifications for the signed-in staff user (vaccine proofs submitted, new app bookings, messages).",
+   "purpose": "Notifications for the signed-in staff user: vaccine proofs submitted, new app bookings, payments, messages, reviews. Unread / all tabs, kind filter, mark read on open, mark all read; the TopBar bell shows the unread count.",
    "layout": [
-    "PageHeader",
-    "NotificationList"
+    "PageHeader (tabs, kind filter, mark all read)",
+    "NotificationList (StaffNotificationRow)"
    ],
    "data": [
     "notifications"
@@ -246,16 +246,42 @@
     "groomer"
    ],
    "logic": [
-    "mark read on open"
+    "where user_id = session user; unread first.",
+    "Rows visible while the list was open are marked read on leave (R-X48); the dot toggles read/unread.",
+    "relativeTime() (R-M08); kind vocabulary (R-M07)."
    ],
-   "integrations": [],
+   "integrations": [
+    "Push / email delivery later (R-M13)"
+   ],
    "components": [
+    "PageHeader",
+    "Tabs",
+    "Select",
     "Card",
-    "Badge",
-    "EmptyState"
+    "StaffNotificationRow",
+    "EmptyState",
+    "Button"
    ],
    "rules": [
-    "R-M07"
+    "R-M07",
+    "R-M08",
+    "R-X48",
+    "R-M13"
+   ],
+   "states": [
+    "unread",
+    "all",
+    "caught up"
+   ],
+   "figma": [
+    "notification.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
    ]
   }
  },
@@ -311,46 +337,73 @@
   "path": "/manual",
   "code": "M-01",
   "surface": "manual",
-  "status": "stub",
+  "status": "built",
   "roles": [
    "super_admin",
    "owner",
    "manager",
    "front_desk",
-   "groomer",
-   "customer"
+   "groomer"
   ],
   "spec": {
    "code": "M-01",
    "name": "Ops manual cover",
-   "purpose": "Business operations manual: who reads what per role, chapters with screenshots and live data blocks.",
+   "purpose": "Business operations manual cover: what the manual is, the reading path for the current role with completion ticks, the role x chapter matrix, and every chapter by part. Chapters come from docs/ops-manual/en/*.md at build time.",
    "layout": [
-    "Cover",
-    "RoleMatrix",
-    "ChapterGrid"
+    "ManualSidebar (search, parts, pending)",
+    "Cover (stats)",
+    "Your reading path (role)",
+    "Who reads what (matrix)",
+    "Parts I–VI chapter grids"
    ],
    "data": [
-    "locations",
-    "rules"
+    "training_completions",
+    "employees"
    ],
    "roles": [
     "super_admin",
     "owner",
     "manager",
     "front_desk",
-    "groomer",
-    "customer"
+    "groomer"
    ],
    "logic": [
-    "chapters from docs/ops-manual/*.md at build time"
+    "chaptersForRole(role): audience labels in front matter (all staff, front desk, groomer, manager, owner).",
+    "Completion = training_completions rows of the signed-in employee.",
+    "readingMinutes = words/180 + figures + directives."
    ],
    "integrations": [],
    "components": [
-    "Card",
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
     "Figure",
-    "MarkdownViewer"
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
    ],
-   "rules": []
+   "rules": [
+    "R-X43",
+    "R-X44"
+   ],
+   "states": [
+    "role with chapters",
+    "role without chapters",
+    "completed chapters"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
   }
  },
  {
@@ -1939,6 +1992,3210 @@
     "document",
     "prompt split",
     "gallery"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/home",
+  "code": "P-01",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-01",
+   "name": "Website home",
+   "purpose": "Petrock brand landing: hero with tagline, the three services with live \"from\" teasers, why Petrock, both locations with hours and open-now, published reviews with the average rating, how it works, book-now CTA into the app.",
+   "layout": [
+    "SiteLayout header",
+    "SiteHero (tagline, open-now card)",
+    "Services (Hotel, Daycare, Grooming & Spa tiles with teasers)",
+    "Why Petrock",
+    "Locations strip",
+    "Reviews (published)",
+    "How it works",
+    "CtaBand",
+    "Footer"
+   ],
+   "data": [
+    "locations",
+    "room_types",
+    "rates",
+    "packages",
+    "daycare_pricing",
+    "reviews",
+    "customers"
+   ],
+   "logic": [
+    "Teasers = min standard-season nightly rate per room type, Gold price_s, full-day daycare price (R-X41).",
+    "Open now = current time inside locations.hours for today.",
+    "Only reviews with status published are shown (R-X40); customer shown as first name + initial."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Badge",
+    "ReviewListItem",
+    "ReviewStars"
+   ],
+   "rules": [
+    "R-X40",
+    "R-X41",
+    "R-K02",
+    "R-A01"
+   ],
+   "states": [
+    "default",
+    "no published reviews",
+    "closed now",
+    "dark"
+   ],
+   "figma": [
+    "front desk.jpg (brand)",
+    "Home Page-1.png (service tiles)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/hotel",
+  "code": "P-02",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-02",
+   "name": "Website: Hotel",
+   "purpose": "Room types with description, inclusions and \"from\" nightly rate (weekday and weekend), shared-room and long-stay discounts read from discounts, seasons, vaccines required before a stay.",
+   "layout": [
+    "SiteHero (soft)",
+    "RoomType blocks (Art + inclusions + from price)",
+    "Good to know (sharing, longer stays, vaccines)",
+    "CtaBand"
+   ],
+   "data": [
+    "room_types",
+    "rates",
+    "seasons",
+    "discounts",
+    "capacities",
+    "locations",
+    "vaccine_types"
+   ],
+   "logic": [
+    "from = min(rates where season_id null) per room type; weekend rate shown when present.",
+    "Room count = sum of penthouse + suite capacities across locations."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Badge"
+   ],
+   "rules": [
+    "R-D01",
+    "R-D05",
+    "R-D06",
+    "R-E01",
+    "R-X41"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "figma": [
+    "Choose Your Room.png"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/grooming",
+  "code": "P-03",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-03",
+   "name": "Website: Grooming & Spa",
+   "purpose": "One service: Gold / Platinum / Diamond tiles with inclusions, full package-by-size price table, add-ons with minutes, hotel-guest note, CTA.",
+   "layout": [
+    "SiteHero (soft)",
+    "Package tiles",
+    "Price table by size",
+    "Add-ons grid",
+    "Hotel guests",
+    "CtaBand"
+   ],
+   "data": [
+    "packages",
+    "addons"
+   ],
+   "logic": [
+    "Prices per size column from packages.price_* (S/M/L/XL/Giant); minutes range minutes_s–minutes_giant.",
+    "Add-on \"from\" when starting_at."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Badge"
+   ],
+   "rules": [
+    "R-G02",
+    "R-G04",
+    "R-G06",
+    "R-X41"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "figma": [
+    "Spa 12.7 price card",
+    "Grooming.png"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/daycare",
+  "code": "P-04",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-04",
+   "name": "Website: Daycare",
+   "purpose": "Daycare price items with thresholds, extra-pet discount, a typical day, capacity per location, CTA.",
+   "layout": [
+    "SiteHero (soft)",
+    "Price tiles",
+    "A typical day (steps)",
+    "Capacity per location",
+    "CtaBand"
+   ],
+   "data": [
+    "daycare_pricing",
+    "discounts",
+    "capacities",
+    "locations"
+   ],
+   "logic": [
+    "Half day / full day copy uses daycare_pricing.threshold_hours (R-F01), never a typed number."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon"
+   ],
+   "rules": [
+    "R-F01",
+    "R-F02",
+    "R-E13",
+    "R-X41"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "figma": [
+    "Day Care.png (placeholder screen)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/pricing",
+  "code": "P-05",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-05",
+   "name": "Website: Pricing",
+   "purpose": "Pricing teaser page: every price live from the tables: room rates by day kind and season, discounts, Grooming & Spa by size, add-ons, daycare items, fees and taxes, how a quote adds up.",
+   "layout": [
+    "SiteHero (soft)",
+    "Hotel rates table",
+    "Discount cards",
+    "Grooming table + add-ons table",
+    "Daycare table",
+    "Fees & taxes cards",
+    "Example",
+    "CtaBand"
+   ],
+   "data": [
+    "room_types",
+    "rates",
+    "seasons",
+    "discounts",
+    "packages",
+    "addons",
+    "daycare_pricing",
+    "fees",
+    "taxes"
+   ],
+   "logic": [
+    "Tables render rows verbatim; the binding quote is the pricing engine in the app (R-X41)."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Section"
+   ],
+   "rules": [
+    "R-D05",
+    "R-D06",
+    "R-E01",
+    "R-E05",
+    "R-H03",
+    "R-H04",
+    "R-G02",
+    "R-F01",
+    "R-X41"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "figma": [
+    "front desk-7.jpg (settings prices)",
+    "13.pdf"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/locations",
+  "code": "P-06",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-06",
+   "name": "Website: Locations",
+   "purpose": "Each location with address, phone, weekly hours collapsed into ranges, open-now badge, capacities, directions link, map placeholder and message-this-location link.",
+   "layout": [
+    "SiteHero (soft)",
+    "Per location: card + map placeholder",
+    "Arriving",
+    "CtaBand"
+   ],
+   "data": [
+    "locations",
+    "capacities"
+   ],
+   "logic": [
+    "hoursSummary() collapses identical consecutive days (Mon–Fri, Sat–Sun).",
+    "isOpenNow() from locations.hours and the browser clock."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Badge"
+   ],
+   "rules": [
+    "R-K01",
+    "R-K02",
+    "R-E11",
+    "R-E12",
+    "R-E13"
+   ],
+   "states": [
+    "open",
+    "closed",
+    "dark"
+   ],
+   "figma": [
+    "1.pdf (locations)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/reviews",
+  "code": "P-07",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-07",
+   "name": "Website: Reviews",
+   "purpose": "All published reviews with location filter, average rating and star distribution; pending and archived never appear.",
+   "layout": [
+    "SiteHero (soft)",
+    "Location filter + list",
+    "Average + distribution card",
+    "CtaBand (rate in app)"
+   ],
+   "data": [
+    "reviews",
+    "customers",
+    "locations"
+   ],
+   "logic": [
+    "where status = published (R-X40); average and distribution computed client-side."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "SegmentedControl",
+    "ReviewListItem",
+    "ReviewStars",
+    "EmptyState"
+   ],
+   "rules": [
+    "R-X40",
+    "R-M12"
+   ],
+   "states": [
+    "reviews",
+    "empty",
+    "dark"
+   ],
+   "figma": [
+    "reviews.jpg (moderation source)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/policies",
+  "code": "P-08",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-08",
+   "name": "Website: Vaccines & policies",
+   "purpose": "Required and recommended vaccines from vaccine_types, how verification works, what each booking status means to a parent, deposit / card fee / prepay / cancellation notes.",
+   "layout": [
+    "SiteHero (soft)",
+    "Vaccines list",
+    "Booking statuses (customer labels)",
+    "Payments & changes cards",
+    "CtaBand"
+   ],
+   "data": [
+    "vaccine_types",
+    "fees",
+    "discounts"
+   ],
+   "logic": [
+    "StatusBadge with customer labels for the one lifecycle.",
+    "Card fee percent from fees; prepay copy from discounts requiring paid_in_full."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Badge",
+    "StatusBadge"
+   ],
+   "rules": [
+    "R-A05",
+    "R-B01",
+    "R-H03",
+    "R-E05"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "figma": [
+    "Pet Edit 7.png (pending until vaccine copy)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/book",
+  "code": "P-09",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-09",
+   "name": "Website: Book now",
+   "purpose": "Hand-off into the customer app: choose hotel / daycare / grooming, what to have ready, sign-in link.",
+   "layout": [
+    "SiteHero (brand, centered)",
+    "Service choice cards",
+    "Have these ready (steps)",
+    "Sign in / call links"
+   ],
+   "data": [
+    "locations"
+   ],
+   "logic": [
+    "All three choices deep-link to /app (the customer surface picks the flow); existing accounts go to /auth/sign-in."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon"
+   ],
+   "rules": [
+    "R-A01",
+    "R-A05"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/contact",
+  "code": "P-10",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-10",
+   "name": "Website: Contact",
+   "purpose": "Phones and addresses per location and a contact form that writes a site_inquiries row for the chosen location; the desk handles it in F-61.",
+   "layout": [
+    "SiteHero (soft)",
+    "Form card (location, name, email, phone, topic, message)",
+    "Location cards + app note"
+   ],
+   "data": [
+    "locations",
+    "site_inquiries"
+   ],
+   "logic": [
+    "Validation: name, email pattern, message >= 10 chars.",
+    "insert site_inquiries { status new, location_id } (R-X42); ?location= preselects."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Input",
+    "Select",
+    "Textarea",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-X42",
+    "R-A02"
+   ],
+   "states": [
+    "form",
+    "sent",
+    "dark"
+   ],
+   "integrations": [
+    "Email / SMS notification to the desk (later, R-M13)"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/faq",
+  "code": "P-11",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-11",
+   "name": "Website: FAQ",
+   "purpose": "Published FAQs from site_faqs grouped by topic tabs with search; owners edit the table, not the code.",
+   "layout": [
+    "SiteHero (soft)",
+    "Topic tabs + search",
+    "Accordion list",
+    "CtaBand"
+   ],
+   "data": [
+    "site_faqs"
+   ],
+   "logic": [
+    "where published = true, order sort_order; client-side topic and text filter."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Tabs",
+    "Input",
+    "EmptyState"
+   ],
+   "rules": [
+    "R-A05",
+    "R-H03"
+   ],
+   "states": [
+    "list",
+    "no match",
+    "dark"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/site/about",
+  "code": "P-12",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-12",
+   "name": "Website: About",
+   "purpose": "Story and values, the team from active employees (first names and roles), the one-system note, links.",
+   "layout": [
+    "SiteHero (soft)",
+    "What we believe",
+    "Team grid",
+    "Behind the app",
+    "CtaBand"
+   ],
+   "data": [
+    "locations",
+    "employees"
+   ],
+   "logic": [
+    "employees where status active; display_name or first name only (no PII)."
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "Avatar"
+   ],
+   "rules": [
+    "R-L01",
+    "R-K01"
+   ],
+   "states": [
+    "default",
+    "dark"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com, to be replaced by these pages)",
+    "Customer app deep links (/app, /auth/sign-in)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/pending",
+  "code": "M-03",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-03",
+   "name": "Manual: pending decisions, captures and drafts",
+   "purpose": "Auto-extracted from the chapters: every > DECISION NEEDED: callout, every [screenshot: CODE] without a capture, and draft chapters other modules dropped in docs/ops-manual/en/_pending.",
+   "layout": [
+    "ManualSidebar",
+    "PageHeader",
+    "Decisions needed",
+    "Screens to capture",
+    "Draft chapters"
+   ],
+   "data": [],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "allDecisions(), allPlaceholders(), pendingDrafts from import.meta.glob."
+   ],
+   "integrations": [],
+   "components": [
+    "PageHeader",
+    "Section",
+    "Card",
+    "Chip",
+    "Badge",
+    "EmptyState",
+    "MarkdownViewer"
+   ],
+   "rules": [
+    "R-X43"
+   ],
+   "states": [
+    "with items",
+    "all clear"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/10-welcome-and-how-to-use-this-manual",
+  "code": "M-10",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-10",
+   "name": "Manual: Welcome and how to use this manual",
+   "purpose": "What Petrock is, how a lesson works (in person, then online), where the live numbers come from, how to practise safely as a demo user. Chapter 10 of the ops manual (part I) for all staff; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "How a chapter is taught",
+    "The people you can practise as",
+    "Where numbers come from",
+    "Reading paths",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "locations",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/10-welcome-and-how-to-use-this-manual.md: 16 segments (md, live, callout, shot).",
+    "4 live directive(s): {{locations}} {{demo-users}} {{statuses}} {{rule:R-K01}}.",
+    "0 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-K01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/11-front-desk-daily-operations",
+  "code": "M-11",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-11",
+   "name": "Manual: Front desk daily operations",
+   "purpose": "Opening the desk, the Today screen and its four day tabs, the arrivals and departures rhythm, notifications, closing. Chapter 11 of the ops manual (part II) for front desk; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Opening the desk",
+    "2. The rhythm of the day",
+    "3. Status colours",
+    "4. Closing",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "locations",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/11-front-desk-daily-operations.md: 14 segments (md, shot, live, callout).",
+    "3 live directive(s): {{locations}} {{statuses}} {{rules:booking}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-I05",
+    "R-I01",
+    "R-K02",
+    "R-X48",
+    "R-S01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/12-check-in-and-check-out",
+  "code": "M-12",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-12",
+   "name": "Manual: Check-in and check-out",
+   "purpose": "What to check before a guest goes to a room, room fit and shared rooms, meds and belongings, the check-out conversation and balance. Chapter 12 of the ops manual (part II) for front desk; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Before the parent arrives",
+    "2. The check-in conversation",
+    "3. Check-out",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/12-check-in-and-check-out.md: 11 segments (md, live, callout, shot).",
+    "2 live directive(s): {{rules:room_fit}} {{statuses}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-A05",
+    "R-A07",
+    "R-A10",
+    "R-E09",
+    "R-X01",
+    "R-I06"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/13-vaccine-verification",
+  "code": "M-13",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-13",
+   "name": "Manual: Vaccine verification",
+   "purpose": "Which vaccines we require, how a proof arrives from the app, how to verify or reject it, why bookings wait on it. Chapter 13 of the ops manual (part II) for front desk, manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. How a proof arrives",
+    "2. Verify or reject",
+    "3. Confirming without vaccines",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "vaccine_types",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/13-vaccine-verification.md: 13 segments (md, live, shot, callout).",
+    "3 live directive(s): {{vaccines}} {{rule:R-A05}} {{rules:vaccines}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-A05",
+    "R-X48"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/14-hotel-reservations-and-the-booking-lifecycle",
+  "code": "M-14",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-14",
+   "name": "Manual: Hotel reservations and the booking lifecycle",
+   "purpose": "Creating a reservation at the desk, room types and rates, the estimate, deposits, the timeline view, changing status the right way. Chapter 14 of the ops manual (part II) for front desk; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Room types and rates",
+    "2. New reservation at the desk",
+    "3. The timeline",
+    "4. Changing status",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "room_types",
+    "rates",
+    "seasons",
+    "discounts",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/14-hotel-reservations-and-the-booking-lifecycle.md: 15 segments (md, live, callout, shot).",
+    "5 live directive(s): {{table:room_types}} {{pricing:rooms}} {{pricing:discounts}} {{statuses}} {{rules:pricing}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-D01",
+    "R-D05",
+    "R-D06",
+    "R-D07",
+    "R-I08",
+    "R-I06"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/15-grooming-and-spa-agenda",
+  "code": "M-15",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-15",
+   "name": "Manual: Grooming & Spa agenda",
+   "purpose": "Packages by size, add-ons and minutes, the day view per groomer, the board by status, hand-offs with the desk and hotel stays. Chapter 15 of the ops manual (part III) for groomer, front desk; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. The day view",
+    "2. The board",
+    "3. Hotel guests",
+    "4. Capacity",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "packages",
+    "addons",
+    "rules",
+    "capacities",
+    "locations",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/15-grooming-and-spa-agenda.md: 15 segments (md, live, shot, callout).",
+    "5 live directive(s): {{pricing:grooming}} {{pricing:addons}} {{rule:R-A08}} {{capacities}} {{rules:grooming}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-G02",
+    "R-G10",
+    "R-G17",
+    "R-E10",
+    "R-A08"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/16-daycare-day",
+  "code": "M-16",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-16",
+   "name": "Manual: Daycare day",
+   "purpose": "Half day vs full day, hours and play hours, drop-off and pick-up, the daycare day screen, capacity. Chapter 16 of the ops manual (part III) for front desk; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Drop-off",
+    "2. During the day",
+    "3. Pick-up",
+    "4. Capacity",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "daycare_pricing",
+    "capacities",
+    "locations",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/16-daycare-day.md: 12 segments (md, live, callout, shot).",
+    "3 live directive(s): {{pricing:daycare}} {{capacities}} {{rules:daycare}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-F01",
+    "R-F02",
+    "R-E13",
+    "R-X02"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/17-pin-approvals",
+  "code": "M-17",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-17",
+   "name": "Manual: PIN approvals",
+   "purpose": "What a manager PIN gates, how the approval modal works, what is written to the audit, how to handle a PIN you are asked for. Chapter 17 of the ops manual (part IV) for manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. What asks for a PIN",
+    "2. How the modal works",
+    "3. Reading the audit",
+    "4. Saying no",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "rules",
+    "approvals",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/17-pin-approvals.md: 14 segments (md, shot, live, callout).",
+    "3 live directive(s): {{rules:pin_approvals}} {{statuses}} {{table:approvals}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-I06",
+    "R-P01",
+    "R-P02",
+    "R-X47"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/18-payments-invoices-and-refunds",
+  "code": "M-18",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-18",
+   "name": "Manual: Payments, invoices and refunds",
+   "purpose": "Deposits and balances, card vs cash and the card fee, prepay discounts, invoices, refunds with a manager PIN. Chapter 18 of the ops manual (part IV) for front desk, manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Deposits",
+    "2. Card vs cash",
+    "3. Taking a payment at the desk",
+    "4. Refunds and discounts",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "fees",
+    "taxes",
+    "discounts",
+    "room_types",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/18-payments-invoices-and-refunds.md: 12 segments (md, live, shot, callout).",
+    "3 live directive(s): {{pricing:fees}} {{pricing:discounts}} {{rules:fees_tax}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-H03",
+    "R-H04",
+    "R-H05",
+    "R-P01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/19-messages-notifications-and-reviews",
+  "code": "M-19",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-19",
+   "name": "Manual: Messages, notifications and reviews",
+   "purpose": "The one chat thread per customer, the inbox, tone and scripts, staff notifications, moderating reviews, website inquiries. Chapter 19 of the ops manual (part II) for front desk, manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. The inbox",
+    "2. Notifications",
+    "3. Reviews",
+    "4. Website inquiries",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "site_inquiries",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/19-messages-notifications-and-reviews.md: 14 segments (md, shot, callout, live).",
+    "1 live directive(s): {{table:site_inquiries}}.",
+    "3 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-M09",
+    "R-M08",
+    "R-M07",
+    "R-X40",
+    "R-X42",
+    "R-X48"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/20-manager-duties",
+  "code": "M-20",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-20",
+   "name": "Manual: Manager duties",
+   "purpose": "The manager's day and week, approvals, staff schedule and training sign-off, capacity watch, escalation to the owner. Chapter 20 of the ops manual (part V) for manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Every day",
+    "2. Every week",
+    "3. Escalate to the owner",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "capacities",
+    "locations",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/20-manager-duties.md: 10 segments (md, live, shot, callout).",
+    "2 live directive(s): {{capacities}} {{permissions:manager}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-I06",
+    "R-P01",
+    "R-L01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/21-owner-settings-and-pricing",
+  "code": "M-21",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-21",
+   "name": "Manual: Owner settings and pricing",
+   "purpose": "Where every price lives, how the engine uses it, seasons and holidays, discounts, fees and taxes, daycare and grooming price lists, what changing a value does. Chapter 21 of the ops manual (part V) for owner; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Room rates",
+    "2. Discounts",
+    "3. Fees and taxes",
+    "4. Grooming & Spa",
+    "5. Daycare",
+    "6. What a change does",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "rates",
+    "room_types",
+    "seasons",
+    "discounts",
+    "fees",
+    "taxes",
+    "packages",
+    "addons",
+    "daycare_pricing",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/21-owner-settings-and-pricing.md: 20 segments (md, live, shot, callout).",
+    "7 live directive(s): {{pricing:rooms}} {{pricing:discounts}} {{pricing:fees}} {{pricing:grooming}} {{pricing:addons}} {{pricing:daycare}} {{rules:pricing}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-D05",
+    "R-D06",
+    "R-E01",
+    "R-H03",
+    "R-H04",
+    "R-G02",
+    "R-F01",
+    "R-X41"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/22-roles-permissions-and-locations",
+  "code": "M-22",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-22",
+   "name": "Manual: Roles, permissions and locations",
+   "purpose": "The seven roles and their homes, permissions as strings, per-role menus, view-as, pinned locations, adding a location. Chapter 22 of the ops manual (part V) for owner, manager; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Permissions",
+    "2. Menus per role",
+    "3. View as",
+    "4. Locations",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "locations",
+    "rules",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/22-roles-permissions-and-locations.md: 16 segments (md, live, shot).",
+    "5 live directive(s): {{roles}} {{permissions:front_desk}} {{permissions:manager}} {{locations}} {{rules:people}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-L05",
+    "R-K01",
+    "R-K02"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/23-reports",
+  "code": "M-23",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-23",
+   "name": "Manual: Reports",
+   "purpose": "The reports overview, revenue by period and payment method, occupancy and capacity, how to read a chart and export the table. Chapter 23 of the ops manual (part V) for manager, owner; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Overview (F-62)",
+    "2. Revenue (F-63)",
+    "3. Occupancy (F-64)",
+    "4. Reading a chart",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "capacities",
+    "locations",
+    "bookings",
+    "appointments",
+    "daycare_bookings",
+    "customers",
+    "pets",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/23-reports.md: 11 segments (md, shot, live).",
+    "2 live directive(s): {{capacities}} {{stats}}.",
+    "2 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-X46",
+    "R-L05"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/24-staff-feedback-and-the-rules-registry",
+  "code": "M-24",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-24",
+   "name": "Manual: Staff feedback and the rules registry",
+   "purpose": "The Feedback button, what the owner does with it, the rules registry, rule statuses, requesting a rule, how rules show on every page. Chapter 24 of the ops manual (part VI) for all staff; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Feedback",
+    "2. The rules registry",
+    "3. Requesting a rule",
+    "4. Rules on every page",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "rules",
+    "feedback",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/24-staff-feedback-and-the-rules-registry.md: 12 segments (md, shot, callout, live).",
+    "2 live directive(s): {{rules:operations}} {{table:feedback}}.",
+    "1 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-S01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/25-glossary-and-data-tables",
+  "code": "M-25",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-25",
+   "name": "Manual: Glossary and data tables",
+   "purpose": "The words we use and the tables behind them; every table in the system grouped by area with a link to its rows. Chapter 25 of the ops manual (part VI) for all staff; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "Words",
+    "Statuses",
+    "The tables",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/25-glossary-and-data-tables.md: 9 segments (md, live).",
+    "3 live directive(s): {{statuses}} {{tables}} {{table:training_completions}}.",
+    "0 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-J03"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/26-website-and-customer-app",
+  "code": "M-26",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-26",
+   "name": "Manual: Website and customer app",
+   "purpose": "What a pet parent sees on the public website and in the app, how a booking flows from there to the desk, what the desk can say about it. Chapter 26 of the ops manual (part VI) for front desk, owner; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. The website",
+    "2. The app",
+    "3. What the desk says",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/26-website-and-customer-app.md: 11 segments (md, shot, live).",
+    "1 live directive(s): {{routes:public}}.",
+    "4 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-X40",
+    "R-X41",
+    "R-X42",
+    "R-A01"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/27-walks-tasks-and-education",
+  "code": "M-27",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-27",
+   "name": "Manual: Walks, tasks and education",
+   "purpose": "Logging walks per pet, the task list and the opening and closing checklists, tracking your own training. Chapter 27 of the ops manual (part III) for all staff; in-person and online lesson recorded to training_completions.",
+   "layout": [
+    "ManualSidebar",
+    "ChapterHeader (code, roles, meta, rules, lesson buttons)",
+    "ManualToc",
+    "1. Walks (F-67)",
+    "2. Tasks (F-68)",
+    "3. Education (F-66)",
+    "In-person lesson",
+    "Online lesson",
+    "PrevNext"
+   ],
+   "data": [
+    "walks",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Rendered from docs/ops-manual/en/27-walks-tasks-and-education.md: 11 segments (md, shot, callout, live).",
+    "1 live directive(s): {{table:walks}}.",
+    "3 screenshot placeholder(s) resolve to docs/screenshots/<CODE>/ when captured.",
+    "Recording a lesson inserts training_completions { mode online | in_person } for the signed-in employee (R-X44)."
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43",
+    "R-X44",
+    "R-X45",
+    "R-L07",
+    "R-X47"
+   ],
+   "states": [
+    "reading",
+    "online recorded",
+    "in-person recorded",
+    "placeholder figures"
+   ],
+   "figma": [],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/manual/:slug",
+  "code": "M-02",
+  "surface": "manual",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "M-02",
+   "name": "Manual chapter (fallback)",
+   "purpose": "Route /manual/:slug: renders the chapter when the slug exists (same as its own M-1x route) or a not-found page with every chapter card.",
+   "layout": [
+    "ManualSidebar",
+    "PageHeader (not found)",
+    "Chapter grid"
+   ],
+   "data": [
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "chapterBySlug(slug) ?? not found"
+   ],
+   "integrations": [],
+   "components": [
+    "ManualChapterCard",
+    "ManualToc",
+    "ManualCallout",
+    "LiveBlock",
+    "Figure",
+    "MarkdownViewer",
+    "Card",
+    "Badge",
+    "Button",
+    "Input",
+    "Chip",
+    "Section",
+    "PageHeader"
+   ],
+   "rules": [
+    "R-X43"
+   ],
+   "states": [
+    "found",
+    "not found"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/messages",
+  "code": "F-61",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "F-61",
+   "name": "Messages inbox",
+   "purpose": "Front desk side of the customer chat: conversations at the location (one per customer, R-M09), the thread with composer, and the website inquiries tab where the desk marks seen / replied / closed.",
+   "layout": [
+    "PageHeader (Chat | Website inquiries tabs)",
+    "ConversationList (search, unread badges)",
+    "Thread (DeskChatThread)",
+    "InquiriesTable (DataTable)"
+   ],
+   "data": [
+    "conversations",
+    "messages",
+    "customers",
+    "pets",
+    "site_inquiries"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Opening a thread zeroes conversations.unread_staff and marks customer messages read.",
+    "Sending inserts messages { sender staff } and updates last_message_at / last_preview / unread_customer.",
+    "Composer needs messages.write; inquiries status flow new -> seen -> replied -> closed (R-X42)."
+   ],
+   "integrations": [
+    "Customer app chat (C-80) shares the tables",
+    "Push to the customer later"
+   ],
+   "components": [
+    "PageHeader",
+    "Tabs",
+    "Card",
+    "Input",
+    "Avatar",
+    "Badge",
+    "Button",
+    "DeskChatThread",
+    "DataTable",
+    "EmptyState"
+   ],
+   "rules": [
+    "R-M09",
+    "R-M08",
+    "R-M11",
+    "R-X42"
+   ],
+   "states": [
+    "inbox",
+    "thread open",
+    "phone (list or thread)",
+    "inquiries"
+   ],
+   "figma": [
+    "message.jpg",
+    "message-1.jpg"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/reviews",
+  "code": "F-65",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager"
+  ],
+  "spec": {
+   "code": "F-65",
+   "name": "Reviews moderation",
+   "purpose": "Moderation queue from reviews.jpg: pending / published / archived tabs, minimum rating filter, KPI tiles, one row per review with Approve (publish) and Archive; only published reviews reach the website.",
+   "layout": [
+    "PageHeader (tabs, rating filter)",
+    "StatTiles",
+    "ReviewList (ReviewListItem rows)"
+   ],
+   "data": [
+    "reviews",
+    "customers"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager"
+   ],
+   "logic": [
+    "where location scope; Approve sets status published, Archive sets archived (R-M12).",
+    "Buttons need reviews.moderate; others read only."
+   ],
+   "integrations": [
+    "Customer app \"Rate your stay\" writes pending reviews"
+   ],
+   "components": [
+    "PageHeader",
+    "Tabs",
+    "Select",
+    "StatTile",
+    "Card",
+    "ReviewListItem",
+    "ReviewStars",
+    "Badge",
+    "Button",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-M12",
+    "R-X40"
+   ],
+   "states": [
+    "pending",
+    "published",
+    "archived",
+    "read-only"
+   ],
+   "figma": [
+    "reviews.jpg"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/reports",
+  "code": "F-62",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager"
+  ],
+  "spec": {
+   "code": "F-62",
+   "name": "Reports overview",
+   "purpose": "KPIs for 7 / 30 / 90 days at the location scope: hotel bookings and nights, grooming appointments, daycare days, money collected (owner), collected-per-day chart, attention list (vaccine proofs, pending bookings, feedback), bookings by status.",
+   "layout": [
+    "PageHeader (period)",
+    "StatTiles",
+    "ReportBarChart (collected per day)",
+    "Needs attention",
+    "Bookings by status table"
+   ],
+   "data": [
+    "bookings",
+    "appointments",
+    "daycare_bookings",
+    "payments",
+    "vaccine_records",
+    "feedback"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager"
+   ],
+   "logic": [
+    "Period = last N days ending today; bookings by check_in, appointments by starts_at, daycare by date, payments by paid_at (status paid).",
+    "useLocation().scope: pinned location or all (R-X46); money needs reports.financial."
+   ],
+   "integrations": [],
+   "components": [
+    "PageHeader",
+    "SegmentedControl",
+    "StatTile",
+    "Card",
+    "ReportBarChart",
+    "DataTable",
+    "Badge",
+    "Button",
+    "Section",
+    "EmptyState"
+   ],
+   "rules": [
+    "R-X46",
+    "R-L05",
+    "R-I05"
+   ],
+   "states": [
+    "7 / 30 / 90 days",
+    "manager (no money)",
+    "owner"
+   ],
+   "figma": [
+    "report.jpg (empty shell)",
+    "front desk-3.jpg (KPI cards)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/reports/revenue",
+  "code": "F-63",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager"
+  ],
+  "spec": {
+   "code": "F-63",
+   "name": "Revenue report",
+   "purpose": "Collected payments for the period by day, by service (hotel / grooming / daycare) and by method (card / cash), card fee and tax collected, outstanding balances, payment list, CSV export. Owner only.",
+   "layout": [
+    "PageHeader (period, export)",
+    "StatTiles",
+    "ReportBarChart",
+    "By service / by method tables",
+    "Payments table"
+   ],
+   "data": [
+    "payments",
+    "invoices"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager"
+   ],
+   "logic": [
+    "paid = payments.status paid && paid_at in period; service from invoices.source_type.",
+    "Fee and tax from invoices issued in the period; outstanding = sum(balance) of open invoices.",
+    "Blocked without reports.financial (EmptyState).",
+    "CSV built client-side."
+   ],
+   "integrations": [
+    "Stripe payouts reconciliation (later)"
+   ],
+   "components": [
+    "PageHeader",
+    "SegmentedControl",
+    "StatTile",
+    "Card",
+    "ReportBarChart",
+    "DataTable",
+    "Button",
+    "Section",
+    "EmptyState"
+   ],
+   "rules": [
+    "R-X46",
+    "R-L05",
+    "R-H03",
+    "R-H04"
+   ],
+   "states": [
+    "owner",
+    "no permission",
+    "empty period"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/reports/occupancy",
+  "code": "F-64",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager"
+  ],
+  "spec": {
+   "code": "F-64",
+   "name": "Occupancy report",
+   "purpose": "Rooms occupied per night against capacity for the period, tonight per room type with a meter, room-nights sold, average stay, arrivals; cancelled and no-show excluded.",
+   "layout": [
+    "PageHeader (period)",
+    "StatTiles",
+    "ReportBarChart (rooms per night)",
+    "Per room type cards (meter + mini chart)"
+   ],
+   "data": [
+    "bookings",
+    "room_types",
+    "capacities"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager"
+   ],
+   "logic": [
+    "occupied(day) = live bookings with check_in <= day < check_out.",
+    "capacity = sum capacities.max_simultaneous for the scoped locations by room_types.key."
+   ],
+   "integrations": [],
+   "components": [
+    "PageHeader",
+    "SegmentedControl",
+    "StatTile",
+    "Card",
+    "ReportBarChart"
+   ],
+   "rules": [
+    "R-X46",
+    "R-E11",
+    "R-E12"
+   ],
+   "states": [
+    "one location",
+    "all locations"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/education",
+  "code": "F-66",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "F-66",
+   "name": "Education",
+   "purpose": "Training from the ops manual: my progress per chapter (online read, in-person done, signed off) and, for managers, the team matrix where a click records a lesson or signs it off.",
+   "layout": [
+    "PageHeader (My progress | Team)",
+    "StatTiles",
+    "My chapters list",
+    "Team matrix (employees x chapters)"
+   ],
+   "data": [
+    "employees",
+    "training_completions"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Chapters and audiences from docs/ops-manual; completion rows per employee per chapter per mode (R-X44).",
+    "Sign-off sets signed_off_by to the manager's employee id; employees.read unlocks the team view."
+   ],
+   "integrations": [],
+   "components": [
+    "PageHeader",
+    "SegmentedControl",
+    "StatTile",
+    "Card",
+    "Badge",
+    "Button",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-X44",
+    "R-L05"
+   ],
+   "states": [
+    "my progress",
+    "team matrix",
+    "no chapters for role"
+   ],
+   "figma": [
+    "education.jpg (empty shell)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/walking",
+  "code": "F-67",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "F-67",
+   "name": "Walking",
+   "purpose": "Walk log per day and location: dog, handler, start, minutes, potty, note; plan / start / finish / skip; checked-in hotel guests listed first when planning.",
+   "layout": [
+    "PageHeader (day, plan)",
+    "StatTiles",
+    "Walks table (row actions)",
+    "Plan-a-walk Drawer"
+   ],
+   "data": [
+    "walks",
+    "pets",
+    "customers",
+    "employees",
+    "bookings"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Start sets started_at now and status in_progress; Finish computes duration from the clock (min 5) and marks done (R-X45).",
+    "Guests in house = pets of bookings with status checked_in at the location."
+   ],
+   "integrations": [
+    "Daycare \"Walk\" price item billing (later, R-F05)"
+   ],
+   "components": [
+    "PageHeader",
+    "StatTile",
+    "Card",
+    "DataTable",
+    "Drawer",
+    "DatePicker",
+    "Select",
+    "Input",
+    "Textarea",
+    "Checkbox",
+    "Badge",
+    "Avatar",
+    "Button",
+    "Toast"
+   ],
+   "rules": [
+    "R-X45",
+    "R-F05"
+   ],
+   "states": [
+    "day with walks",
+    "empty day",
+    "planning"
+   ],
+   "figma": [
+    "employees-3.jpg (Walking shell)",
+    "front desk-7.jpg (Walk price)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920
+   ]
+  }
+ },
+ {
+  "path": "/desk/tasks",
+  "code": "F-68",
+  "surface": "frontdesk",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer"
+  ],
+  "spec": {
+   "code": "F-68",
+   "name": "Tasks & checklists",
+   "purpose": "Management to-dos per location: checklists (opening / closing) and one-off tasks with assignee, due date, priority, status; add via drawer; delete is PIN-gated and audited.",
+   "layout": [
+    "PageHeader (tabs, add)",
+    "StatTiles",
+    "Checklists",
+    "Tasks",
+    "Add Drawer",
+    "PinApprovalModal"
+   ],
+   "data": [
+    "tasks",
+    "employees",
+    "approvals"
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer"
+   ],
+   "logic": [
+    "Toggle completes / reopens (completed_at); Start sets in_progress.",
+    "Overdue = due_on < today and not done.",
+    "Delete opens PinApprovalModal (action task.delete) and removes the row only after approval (R-X47, R-P01)."
+   ],
+   "integrations": [],
+   "components": [
+    "PageHeader",
+    "Tabs",
+    "StatTile",
+    "Section",
+    "Card",
+    "Checkbox",
+    "Badge",
+    "Button",
+    "IconButton",
+    "Drawer",
+    "Input",
+    "Textarea",
+    "Select",
+    "DatePicker",
+    "PinApprovalModal",
+    "EmptyState",
+    "Toast"
+   ],
+   "rules": [
+    "R-L07",
+    "R-X47",
+    "R-P01"
+   ],
+   "states": [
+    "open",
+    "done",
+    "adding",
+    "delete approval"
+   ],
+   "figma": [
+    "education-1.jpg (Tasks shell)",
+    "employees-1.jpg (Check List shell)"
    ],
    "checkedAt": [
     360,

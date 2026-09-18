@@ -18,7 +18,7 @@ _Generated from `src/data/schema/*.ts` by `npm run sql`. The TypeScript files ar
 | `MockProvider.emit()` | polling or a realtime channel |
 | `demoUsers` + `SessionProvider` | `/t/petrock/auth` + memberships |
 
-## Tables (41)
+## Tables (44)
 
 ### Core & locations
 
@@ -173,6 +173,49 @@ _Source: entities 20_
 | `working_hours` | json, null |  |
 | `date_started` | date, null |  |
 | `note` | text, null |  |
+
+#### `tasks` (per location)
+Management task list (F-68): to-dos per location with assignee, due date, priority and status; the "Tasks" and "Check List" items of the Figma sidebar.  
+_Source: extras-manual-website (F-68); education-1.jpg (Tasks shell), employees-1.jpg (Check List)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `title` | text |  |
+| `description` | text, null |  |
+| `assignee_id` | uuid, null | -> `employees`  |
+| `created_by` | uuid, null | -> `users`  |
+| `due_on` | date, null |  |
+| `priority` | enum (low \| normal \| high) |  |
+| `status` | enum (open \| in_progress \| done) |  |
+| `kind` | enum (task \| checklist) |  |
+| `completed_at` | timestamptz, null |  |
+
+**Access:** staff read/write; manager delete (PIN)
+
+#### `training_completions` (per location)
+Which ops-manual chapter each employee has completed (Education, F-66): one row per employee per chapter, with the lesson mode and who signed it off.  
+_Source: extras-manual-website (F-66, M-xx)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `employee_id` | uuid | -> `employees`  |
+| `user_id` | uuid, null | -> `users`  |
+| `chapter_slug` | text | File name of the chapter in docs/ops-manual/en |
+| `chapter_code` | text | Manual page code (M-xx) |
+| `mode` | enum (in_person \| online) |  |
+| `completed_at` | timestamptz |  |
+| `signed_off_by` | uuid, null | -> `employees`  |
+| `note` | text, null |  |
+
+**Access:** staff read own; manager write
 
 ### Pets & vaccines
 
@@ -494,6 +537,28 @@ _Source: R-F01..F05_
 | `threshold_hours` | numeric, null | Half day below, full day at/above |
 | `active` | bool |  |
 
+#### `walks` (per location)
+Walk log (Walking, F-67): which pet was walked by which handler, when, for how long, and how it went. Feeds the daycare "Walk" item later.  
+_Source: extras-manual-website (F-67); front desk-7.jpg (Walk $12)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `pet_id` | uuid | -> `pets`  |
+| `handler_id` | uuid, null | -> `employees`  |
+| `booking_id` | uuid, null | -> `bookings`  |
+| `daycare_booking_id` | uuid, null | -> `daycare_bookings`  |
+| `started_at` | timestamptz |  |
+| `duration_min` | int |  |
+| `status` | enum (planned \| in_progress \| done \| skipped) |  |
+| `potty` | bool, null |  |
+| `note` | text, null |  |
+
+**Access:** staff read/write; customer read own (later)
+
 ### Pricing, invoices & payments
 
 #### `discounts` (global)
@@ -703,6 +768,44 @@ _Source: entities 23_
 | `tags` | json, null |  |
 | `status` | enum (pending \| published \| archived) |  |
 
+#### `site_faqs` (global)
+Questions and answers shown on the public website (P-11) grouped by topic; owners edit them here instead of in code.  
+_Source: extras-manual-website (P-11)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `topic` | enum (hotel \| grooming \| daycare \| vaccines \| payments \| general) |  |
+| `question` | text |  |
+| `answer` | text |  |
+| `sort_order` | int |  |
+| `published` | bool |  |
+
+**Access:** everyone read; owner write
+
+#### `site_inquiries` (per location)
+Contact-form submissions from the public website (P-10): who wrote, about what, for which location, and whether staff replied.  
+_Source: extras-manual-website (P-10)_
+
+| column | type | notes |
+| --- | --- | --- |
+| `id` | uuid | Primary key |
+| `location_id` | uuid | -> `locations` Owning location (Encino / Westwood) |
+| `created_at` | timestamptz |  |
+| `updated_at` | timestamptz |  |
+| `name` | text |  |
+| `email` | text |  |
+| `phone` | text, null |  |
+| `topic` | enum (hotel \| grooming \| daycare \| in_home \| other) |  |
+| `message` | text |  |
+| `status` | enum (new \| seen \| replied \| closed) |  |
+| `replied_by` | uuid, null | -> `users`  |
+| `replied_at` | timestamptz, null |  |
+
+**Access:** public insert; staff read/write
+
 ### System
 
 #### `approvals` (per location)
@@ -742,48 +845,6 @@ _Source: entities 9 (audit)_
 | `table_name` | text |  |
 | `row_id` | text, null |  |
 | `diff` | json, null |  |
-
-#### `backups` (global)
-Log of JSON exports of the mock database (A-43). Each row records who exported, how many tables / rows and the file size.  
-_Source: project brief (backups / export)_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `kind` | enum (manual \| scheduled) |  |
-| `file_name` | text |  |
-| `table_count` | int |  |
-| `row_count` | int |  |
-| `size_bytes` | int |  |
-| `created_by` | uuid, null | -> `users`  |
-| `created_by_name` | text, null |  |
-| `note` | text, null |  |
-
-**Access:** owner read/write; super_admin read/write
-
-#### `providers` (global)
-Outbound channel configuration: email (None / Gmail / SMTP), SMS (None / Twilio / Petlinx), push (None / FCM / APNs). Secrets are masked; test-send is a stub until an integration exists.  
-_Source: 5.pdf, R-M13_
-
-| column | type | notes |
-| --- | --- | --- |
-| `id` | uuid | Primary key |
-| `created_at` | timestamptz |  |
-| `updated_at` | timestamptz |  |
-| `kind` | enum (email \| sms \| push) |  |
-| `name` | text | Display name (email From name, SMS sender name) |
-| `provider` | text | none | gmail | smtp | twilio | petlinx | fcm | apns |
-| `from_address` | text, null |  |
-| `config` | json, null | Non-secret settings (host, port, sender id) |
-| `secret_masked` | text, null | Last 4 of the API key; the real secret never lives in the mock |
-| `status` | enum (not_configured \| configured \| test_ok \| error) |  |
-| `last_test_at` | timestamptz, null |  |
-| `last_test_result` | text, null |  |
-| `enabled` | bool |  |
-
-**Access:** owner write; super_admin write
 
 #### `rules` (global)
 Rules added in Settings > Rules at runtime (the code registry in src/rules is merged with these).  

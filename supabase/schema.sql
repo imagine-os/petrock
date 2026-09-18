@@ -793,6 +793,73 @@ create table if not exists public.settings (
 );
 create trigger settings_touch before update on public.settings for each row execute function public.touch_updated_at();
 
+-- comms · Website FAQs: Questions and answers shown on the public website (P-11) grouped by topic; owners edit them here instead of in code.
+-- access:
+--   · everyone read
+--   · owner write
+create table if not exists public.site_faqs (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  topic text not null check (topic in ('hotel', 'grooming', 'daycare', 'vaccines', 'payments', 'general')),
+  question text not null,
+  answer text not null,
+  sort_order integer not null,
+  published boolean not null default false
+);
+create trigger site_faqs_touch before update on public.site_faqs for each row execute function public.touch_updated_at();
+
+-- comms · Website inquiries: Contact-form submissions from the public website (P-10): who wrote, about what, for which location, and whether staff replied.
+-- access:
+--   · public insert
+--   · staff read/write
+create table if not exists public.site_inquiries (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  name text not null,
+  email text not null,
+  phone text,
+  topic text not null check (topic in ('hotel', 'grooming', 'daycare', 'in_home', 'other')),
+  message text not null,
+  status text not null check (status in ('new', 'seen', 'replied', 'closed')),
+  replied_by uuid references public.users(id) on delete set null,
+  replied_at timestamptz
+);
+create index if not exists site_inquiries_location_idx on public.site_inquiries(location_id);
+create index if not exists site_inquiries_replied_by_idx on public.site_inquiries(replied_by);
+create trigger site_inquiries_touch before update on public.site_inquiries for each row execute function public.touch_updated_at();
+
+-- people · Tasks: Management task list (F-68): to-dos per location with assignee, due date, priority and status; the "Tasks" and "Check List" items of the Figma sidebar.
+-- access:
+--   · staff read/write
+--   · manager delete (PIN)
+create table if not exists public.tasks (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  title text not null,
+  description text,
+  assignee_id uuid references public.employees(id) on delete set null,
+  created_by uuid references public.users(id) on delete set null,
+  due_on date,
+  priority text not null check (priority in ('low', 'normal', 'high')),
+  status text not null check (status in ('open', 'in_progress', 'done')),
+  kind text not null check (kind in ('task', 'checklist')),
+  completed_at timestamptz
+);
+create index if not exists tasks_location_idx on public.tasks(location_id);
+create index if not exists tasks_assignee_id_idx on public.tasks(assignee_id);
+create index if not exists tasks_created_by_idx on public.tasks(created_by);
+create trigger tasks_touch before update on public.tasks for each row execute function public.touch_updated_at();
+
 -- commerce · Taxes: Tax settings: one named tax with service / product / boarding rates, prices exclusive by default.
 create table if not exists public.taxes (
   -- Primary key
@@ -808,6 +875,34 @@ create table if not exists public.taxes (
   active boolean not null default false
 );
 create trigger taxes_touch before update on public.taxes for each row execute function public.touch_updated_at();
+
+-- people · Training completions: Which ops-manual chapter each employee has completed (Education, F-66): one row per employee per chapter, with the lesson mode and who signed it off.
+-- access:
+--   · staff read own
+--   · manager write
+create table if not exists public.training_completions (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  employee_id uuid not null references public.employees(id) on delete set null,
+  user_id uuid references public.users(id) on delete set null,
+  -- File name of the chapter in docs/ops-manual/en
+  chapter_slug text not null,
+  -- Manual page code (M-xx)
+  chapter_code text not null,
+  mode text not null check (mode in ('in_person', 'online')),
+  completed_at timestamptz not null,
+  signed_off_by uuid references public.employees(id) on delete set null,
+  note text
+);
+create index if not exists training_completions_location_idx on public.training_completions(location_id);
+create index if not exists training_completions_employee_id_idx on public.training_completions(employee_id);
+create index if not exists training_completions_user_id_idx on public.training_completions(user_id);
+create index if not exists training_completions_signed_off_by_idx on public.training_completions(signed_off_by);
+create trigger training_completions_touch before update on public.training_completions for each row execute function public.touch_updated_at();
 
 -- core · Users: Login principals: staff and customers. Role is the primary role; permissions derive from it.
 create table if not exists public.users (
@@ -874,6 +969,34 @@ create table if not exists public.vets (
   address text
 );
 create trigger vets_touch before update on public.vets for each row execute function public.touch_updated_at();
+
+-- daycare · Dog walks: Walk log (Walking, F-67): which pet was walked by which handler, when, for how long, and how it went. Feeds the daycare "Walk" item later.
+-- access:
+--   · staff read/write
+--   · customer read own (later)
+create table if not exists public.walks (
+  -- Primary key
+  id uuid primary key default gen_random_uuid(),
+  -- Owning location (Encino / Westwood)
+  location_id uuid not null references public.locations(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  pet_id uuid not null references public.pets(id) on delete set null,
+  handler_id uuid references public.employees(id) on delete set null,
+  booking_id uuid references public.bookings(id) on delete set null,
+  daycare_booking_id uuid references public.daycare_bookings(id) on delete set null,
+  started_at timestamptz not null,
+  duration_min integer not null,
+  status text not null check (status in ('planned', 'in_progress', 'done', 'skipped')),
+  potty boolean default false,
+  note text
+);
+create index if not exists walks_location_idx on public.walks(location_id);
+create index if not exists walks_pet_id_idx on public.walks(pet_id);
+create index if not exists walks_handler_id_idx on public.walks(handler_id);
+create index if not exists walks_booking_id_idx on public.walks(booking_id);
+create index if not exists walks_daycare_booking_id_idx on public.walks(daycare_booking_id);
+create trigger walks_touch before update on public.walks for each row execute function public.touch_updated_at();
 
 -- Access intent per role (enforced in the API layer / RLS later):
 --   super_admin, owner   read/write everything, every location
