@@ -1,0 +1,2 @@
+.petvax { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; max-width: 100%; }
+.petvax-detail { opacity: .75; font-weight: var(--fw-regular); }

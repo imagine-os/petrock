@@ -1,0 +1,6 @@
+.vaxtable-type { display: inline-flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.vaxtable-proof { display: inline-flex; align-items: center; gap: 4px; color: var(--color-primary); font-size: var(--fs-xs); text-decoration: none; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vaxtable-status { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.vaxtable-actions { display: flex; gap: var(--sp-1); justify-content: flex-end; flex-wrap: wrap; }
+.vaxtable-link { border: 0; background: none; font: inherit; color: var(--color-primary); font-weight: var(--fw-medium); cursor: pointer; text-align: left; padding: 0; }
+.vaxtable-link:hover { text-decoration: underline; }
