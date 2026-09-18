@@ -47,7 +47,7 @@ async function main() {
       const themes = !SMOKE && (ALL_DARK || KEY_PAGES.has(code)) ? ['light', 'dark'] : ['light'];
       for (const theme of themes) {
         const ctx = await browser.newContext({ viewport: { width, height: width < 600 ? 844 : 800 }, deviceScaleFactor: 1 });
-        await ctx.addInitScript(...initScript(theme));
+        await ctx.addInitScript(...initScript(theme, path, { devMode: true }));
         const page = await ctx.newPage();
         await page.route(/^https?:\/\/(?!localhost)/, (r) => r.abort());
         const errors = [];

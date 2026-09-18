@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useData, useRow, useTable } from '../../data/DataContext';
 import type { AppointmentRow, BookingPetRow, BookingRow, InvoiceRow, LocationRow, PackageRow, PaymentRow, PetRow, RoomTypeRow, VaccineRecordRow, VaccineTypeRow } from '../../data/schema/core';
 import type { BookingChangeRequestRow, BookingPetCareRow } from '../../data/schema/customer-hotel';
-import { BOOKING_STATUS_CUSTOMER_LABEL, type BookingStatus } from '../../domain/booking';
+import { BOOKING_STATUS_CUSTOMER_LABEL, type BookingStatus, quoteLinesOf } from '../../domain/booking';
 import { fmtMoney, type QuoteLine } from '../../pricing/engine';
 import { HotelBookingFrame } from '../../components/template/HotelBookingFrame/HotelBookingFrame';
 import { Button } from '../../components/atom/Button/Button';
@@ -57,7 +57,7 @@ export function ReservationDetailPage() {
   const invPayments = invoice ? payments.filter((p) => p.invoice_id === invoice.id) : [];
   const paid = invoice ? invoice.deposit : booking.deposit;
   const balance = invoice ? invoice.balance : Math.max(0, booking.total - booking.deposit);
-  const lines = (invoice?.lines as QuoteLine[] | undefined) ?? ((booking as unknown as { quote?: { hotel?: QuoteLine[]; grooming?: QuoteLine[]; fee?: QuoteLine[]; lines?: QuoteLine[] } }).quote ? [...((booking as unknown as { quote: { hotel?: QuoteLine[]; lines?: QuoteLine[] } }).quote.hotel ?? (booking as unknown as { quote: { lines?: QuoteLine[] } }).quote.lines ?? []), ...((booking as unknown as { quote: { grooming?: QuoteLine[] } }).quote.grooming ?? []), ...((booking as unknown as { quote: { fee?: QuoteLine[] } }).quote.fee ?? [])] : []);
+  const lines = (invoice?.lines as QuoteLine[] | undefined) ?? (quoteLinesOf(booking.quote) as QuoteLine[]);
   const status = booking.status as BookingStatus;
   const canChange = CHANGEABLE.includes(status);
   const directCancel = status === 'requested' || status === 'pending_vaccines';

@@ -18,44 +18,66 @@ result: **47 of 51 steps passed**. 7 of 8 journeys complete end to end. Journey 
 | 7 | Staff feedback -> owner inbox | PASS | `feedback` row with page_code F-01, route, role, status new; A-36 lists it, opening it flips new -> seen, drawer shows author and page link |
 | 8 | Dark mode persists across reload | PASS | TopBar toggle sets `html[data-theme=dark]`, `petrock.theme` in localStorage, survives reload both ways; C-72 switch does the same for the customer app; the hub picks up the stored theme |
 
+> Fix status per finding: `docs/qa/fix-status.md` (changelog 0019).
+
 ## Findings (ordered by severity)
 
 ### 1. BLOCKER - F-12 booking detail crashes (white screen) for every booking created in the customer app
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - Repro: create a stay in the app (flow 1), then as front desk open `/#/desk/reservations/<id>` (also reached from F-10 row click and the F-13 popover "Open" button). The React root unmounts; console: `TypeError: E.lines is not iterable`. There is no error boundary, so the whole desk surface is blank until a hard reload.
 - Cause: `src/modules/customer-hotel/PaymentPage.tsx` stores `bookings.quote` as `{ hotel: QuoteLine[], grooming: QuoteLine[], fee: QuoteLine[], plan, method }`, while `src/modules/frontdesk-reservations/BookingDetailPage.tsx:171` casts `booking.quote as Quote` and spreads `quote.lines`. Desk-created bookings (F-11) store a `Quote` with `lines`, so the seed and desk paths never hit it. The customer's own C-39 already handles both shapes (`ReservationDetailPage.tsx` line ~60), so the two surfaces disagree on the `bookings.quote` schema.
 - Impact: the desk cannot open, check in, record payment for, refund or delete any app booking - the main hand-off of the product.
 - Fix: normalise once (`quoteLinesOf(booking)` in `src/domain/booking.ts` or `src/pricing/engine.ts`) and use it in F-12, F-59 and C-39; or make C-36 store a real `Quote` (`lines`, `subtotal`, `taxTotal`, ...). Add an `ErrorBoundary` per shell so a page error never blanks the app. Add a pricing test that round-trips an app booking through the desk detail.
 
 ### 2. MAJOR - F-56 vaccine queue does not refresh after "Verify" (row stays in "To verify" until reload)
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - Repro: `/#/desk/vaccines` as front desk, click Verify on a submitted row. Toast "X verified" appears, the DB row flips to `verified` (checked in localStorage), but the row stays in the table with a Verify button; clicking again re-verifies the same record (4 identical toasts in `e2e-shots/F2-12-FAIL-vaccines-verified.jpg` of the first pass). After a reload the tab count drops.
 - Cause: `MockProvider.peek()`/`list()` return the live array when there is no query (`applyQuery` returns `rows` unchanged) and `update()` mutates it in place, so `useTable('vaccine_records')` hands back the same array reference and every `useMemo([... vaccineRecords])` downstream (`usePeople()` in `src/modules/frontdesk-grooming-people/hooks.ts`, `rows` in `VaccineQueuePage.tsx`) is never recomputed. `CrudTable.tsx` already carries a workaround comment ("Always pass an orderBy so the provider returns a fresh array"). 188 query-less `useTable(...)` call sites share the risk.
 - Fix: return a copy from `peek()` (`applyQuery(...)` -> `[...rows]` when no query) or have `update/insert/remove` replace `this.db[table]` with a new array. One-line provider fix; then delete the CrudTable workaround.
 
 ### 3. MAJOR - Customer-facing links to `/app/chat` land on "Nothing here"
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `src/modules/frontdesk-grooming-people/pages/MessagesPage.tsx:75` - the notification written for every staff reply links to `/app/chat`.
 - `src/modules/customer-grooming-daycare/GroomingOrderPage.tsx:80` and `DaycareBookingPage.tsx:76` - "Message the desk" buttons link to `/app/chat`.
 - `src/data/seed/customer-home-pets.ts:31` - seeded notification link.
 - The real routes are `/app/inbox` and `/app/inbox/:conversationId`. Fix the four links (the notification should deep-link to `/app/inbox/<conversation id>`).
 
 ### 4. MAJOR (known gap #5, confirmed in code) - C-10 / C-13 booking cards link to routes that do not exist
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `src/modules/customer-home-pets/lib.ts:144,148` (`useCustomerBookings`) builds `/app/grooming/<appointment id>` and `/app/daycare/<daycare id>`. Routes are `/app/grooming/orders/:id` (expects a `grooming_orders` id, not an appointment id) and `/app/daycare/bookings/:id`. Unknown paths redirect to the Testing hub (`App.tsx:32`). Not hit by the script (the new order was not rendered as a link on C-10 at test time) but wrong by inspection.
 
 ### 5. MINOR - Seeded chat timestamps are in the future for most of the working day (known gap #6, now with a visible symptom)
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `src/data/seed/core.ts:225` and `seed/customer-settings-chat.ts` stamp conv_1 messages at 13:07-14:10 local *today*. Before that hour a fresh staff reply (07:17 in `e2e-shots/F5-33-desk-reply.jpg`) renders above the "Session start" marker and the seed messages, and C-81 shows the seed customer line ("You: Thanks! See you Friday.") as the preview while the unread badge says 3. Seed relative to `now`, not to fixed clock times. Also the seeded staff reply quotes prices ("Gold Groom is $50-$135") against R-M10.
 
 ### 6. MINOR - Timeline "Check in" on a booking without a room only assigns the room
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `src/modules/frontdesk-reservations/TimelinePage.tsx:141` reuses `RoomPickModal` with the default title/label ("Room for PR-xxxx" / "Assign room") and `onPick -> actions.assignRoom(...)`, so choosing "Checked in" from the popover status menu leaves the booking `confirmed`; a second "Checked in" is needed. F-12 and F-01 pass `confirmLabel="Assign & check in"` and call `changeStatus(b, 'checked_in', { roomId })`; do the same here. The popover also has no quick "Check in" button (only the "Set status" menu) and is positioned below the block, so at 1440x900 it clips off-screen for blocks in the lower half of the grid.
 
 ### 7. MINOR - Customer surfaces show the staff status vocabulary in the badge (R-I04)
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `StatusBadge` (`src/components/atom/Badge/Badge.tsx:15`) ignores its `customer` prop for the label: C-39 renders the badge "Pending vaccines" next to the text "Pending verification" (`e2e-shots-b/F1-17-reservation-detail.jpg`). Use `BOOKING_STATUS_CUSTOMER_LABEL` when `customer` is set.
 
 ### 8. MINOR - Check-in "with PIN approval" is not what the app does
+
+**Status: Deferred (needs Justin, D-179)** (changelog 0019, see `fix-status.md`).
 - The brief expected a PIN at check-in; `PIN_GATED_TRANSITIONS` (`src/domain/booking.ts:29`) deliberately exempts `confirmed -> checked_in` (comment: "Check-in/out by the desk do not"). Either the spec or the code needs a decision from Justin (D-xxx). The PIN modal itself works: wrong-role PIN is rejected by name and role, manager PIN writes `approvals` with `approved_by_name` and `approver_role`.
 
 ### 9. MINOR - Mock database reseeds every calendar day
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 - `MockProvider.load()` (`src/data/MockProvider.ts:40`) discards the whole localStorage DB when `seededOn` is not today, so every account, pet, booking and setting change made in the demo disappears at midnight. Fine for a demo, surprising for anyone testing across days; document it on HUB-01 or keep user-created rows across reseeds.
 
 ### 10. OBSERVATION - toasts pile up
+
+**Status: Fixed (CSS)** (changelog 0019, see `fix-status.md`).
 - Screenshots `e2e-shots-b/F1-14..F1-17` still show the "Luna added" toast several screens and well over 4 s later, alongside "Paid $228.89". `ToastProvider` uses a 4 s timeout; headless timers may explain it, but the stack of up to 4 toasts covering the phone footer is worth a look at 390 px.
 
 ## What passed (evidence)

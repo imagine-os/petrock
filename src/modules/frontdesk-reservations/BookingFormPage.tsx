@@ -14,7 +14,7 @@ import { Select } from '../../components/atom/Select/Select';
 import { TimePicker } from '../../components/molecule/TimePicker/TimePicker';
 import { Toggle } from '../../components/atom/Toggle/Toggle';
 import { Checkbox } from '../../components/atom/Checkbox/Checkbox';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Textarea } from '../../components/atom/Textarea/Textarea';
 import { Button } from '../../components/atom/Button/Button';
 import { IconButton } from '../../components/atom/IconButton/IconButton';

@@ -6,6 +6,7 @@ import { LocationProvider } from '../tenant/LocationProvider';
 import { DataProviderRoot } from '../data/DataContext';
 import { RequireRole } from '../auth/RequireRole';
 import { ToastProvider } from '../components/molecule/Toast/Toast';
+import { ErrorBoundary } from '../components/organism/ErrorBoundary/ErrorBoundary';
 import { PaymentCtx, defaultPaymentProvider } from '../payments';
 import { DevTools } from '../dev/DevTools';
 import { getRoutes, getStrings } from './registry';
@@ -28,7 +29,7 @@ export function App() {
                   <HashRouter>
                     <ScrollToTop />
                     <Routes>
-                      {allRoutes.map((r) => <Route key={r.path} path={r.path} element={<RequireRole roles={r.roles}>{withShell(r, r.element)}</RequireRole>} />)}
+                      {allRoutes.map((r) => <Route key={r.path} path={r.path} element={<RequireRole roles={r.roles}>{withShell(r, <ErrorBoundary resetKey={r.path}>{r.element}</ErrorBoundary>)}</RequireRole>} />)}
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                     <DevTools />

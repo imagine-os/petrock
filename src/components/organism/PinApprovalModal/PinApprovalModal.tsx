@@ -10,7 +10,7 @@ import { canApprove, demoPinHolders, findByPin, type PinHolder } from '../../../
 import { ROLE_LABEL, type Role } from '../../../auth/roles';
 import './PinApprovalModal.css';
 
-export interface PinApprovalRequest { action: string; title?: string; description?: string; subjectTable?: string; subjectId?: string; details?: Record<string, unknown> }
+export interface PinApprovalRequest { action: string; title?: string; description?: string; subjectTable?: string; subjectId?: string; details?: Record<string, unknown>; /** Location of the subject row; defaults to the actor's UI location. */ locationId?: string | null }
 export interface PinApprovalModalProps { open: boolean; request: PinApprovalRequest | null; onClose: () => void; onApproved: (approval: ApprovalRow) => void }
 
 /**
@@ -43,7 +43,7 @@ export function PinApprovalModal({ open, request, onClose, onApproved }: PinAppr
     if (!holder) { setError('PIN not recognised'); setBusy(false); return; }
     if (!canApprove(holder.role)) { setError(`${holder.name} is ${ROLE_LABEL[holder.role]}; a manager or owner PIN is needed`); setBusy(false); return; }
     const approval = await data.insert<ApprovalRow>('approvals', {
-      location_id: locationId, action: request.action, subject_table: request.subjectTable ?? null, subject_id: request.subjectId ?? null,
+      location_id: request.locationId ?? locationId, action: request.action, subject_table: request.subjectTable ?? null, subject_id: request.subjectId ?? null,
       requested_by: user.id, requested_by_name: user.name, approved_by: holder.userId, approved_by_name: holder.name, approver_role: holder.role,
       details: request.details ?? null, approved_at: new Date().toISOString(),
     });

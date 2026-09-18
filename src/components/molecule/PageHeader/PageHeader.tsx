@@ -12,7 +12,7 @@ export function PageHeader({ title, subtitle, eyebrow, actions, backTo, code, ch
       <div className="pagehead-row">
         <div className="pagehead-text">
           {backTo && <Link to={backTo} className="pagehead-back"><Icon name="arrow-left" size={16} /> Back</Link>}
-          {(eyebrow || code) && <div className="eyebrow row" style={{ gap: 8 }}>{code && <code className="pagehead-code">{code}</code>}{eyebrow}</div>}
+          {(eyebrow || code) && <div className="eyebrow row wrap" style={{ gap: 8, rowGap: 4 }}>{code && <code className="pagehead-code">{code}</code>}{eyebrow}</div>}
           <h1 className="pagehead-title">{title}</h1>
           {subtitle && <p className="pagehead-sub muted">{subtitle}</p>}
         </div>

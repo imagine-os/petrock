@@ -5,7 +5,7 @@ import type { BookingPetRow, BookingRow, LocationRow, NotificationRow, PetRow, U
 import type { BookingChangeRequestRow, CHANGE_REQUEST_KINDS } from '../../data/schema/customer-hotel';
 import { HotelBookingFrame } from '../../components/template/HotelBookingFrame/HotelBookingFrame';
 import { Button } from '../../components/atom/Button/Button';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Checkbox } from '../../components/atom/Checkbox/Checkbox';
 import { Textarea } from '../../components/atom/Textarea/Textarea';
 import { Card } from '../../components/molecule/Card/Card';

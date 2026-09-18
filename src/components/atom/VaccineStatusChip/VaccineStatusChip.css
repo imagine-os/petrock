@@ -1,5 +1,5 @@
 .vchip { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-xs); font-weight: var(--fw-semibold); line-height: 1; white-space: nowrap; background: var(--color-surface-3); color: var(--color-text-muted); }
-.vchip-sm { height: 20px; padding: 0 8px; font-size: 11px; }
+.vchip-sm { height: 20px; padding: 0 8px; font-size: var(--fs-xs); }
 .vchip[data-status="verified"] { background: var(--color-success-bg); color: var(--color-success); }
 .vchip[data-status="pending"] { background: var(--color-warn-bg); color: var(--color-warn); }
 .vchip[data-status="expired"], .vchip[data-status="rejected"] { background: var(--color-danger-bg); color: var(--color-danger); }

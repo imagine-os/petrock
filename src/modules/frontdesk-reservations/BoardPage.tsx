@@ -16,7 +16,7 @@ import { Avatar } from '../../components/atom/Avatar/Avatar';
 import { Button } from '../../components/atom/Button/Button';
 import { Drawer } from '../../components/organism/Drawer/Drawer';
 import { Modal } from '../../components/organism/Modal/Modal';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { AppointmentBoard, type BoardCard, type BoardColumn } from '../../components/organism/AppointmentBoard/AppointmentBoard';
 import { BookingInfoGrid } from '../../components/molecule/BookingInfoGrid/BookingInfoGrid';
 import { PetVaccineStatus } from '../../components/molecule/PetVaccineStatus/PetVaccineStatus';

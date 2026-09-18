@@ -1,7 +1,7 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import { HotelBookingFrame } from '../../components/template/HotelBookingFrame/HotelBookingFrame';
 import { Button } from '../../components/atom/Button/Button';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Chip } from '../../components/atom/Chip/Chip';
 import { Card } from '../../components/molecule/Card/Card';
 import { Avatar } from '../../components/atom/Avatar/Avatar';

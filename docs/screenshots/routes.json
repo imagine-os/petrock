@@ -245,7 +245,8 @@
     "super_admin",
     "owner",
     "manager",
-    "front_desk"
+    "front_desk",
+    "groomer"
    ],
    "logic": [
     "bucketOf(row, day) groups rows with dayBucket() (R-I05); daycare days form their own group.",
@@ -1146,6 +1147,9 @@
    "rules": [
     "R-D05",
     "R-D06",
+    "R-D09",
+    "R-D10",
+    "R-D12",
     "R-E15",
     "R-X44",
     "R-X41",
@@ -5433,8 +5437,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-70",
@@ -5504,8 +5507,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-71",
@@ -5574,8 +5576,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-72",
@@ -5633,8 +5634,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-73",
@@ -5691,8 +5691,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-74",
@@ -5761,8 +5760,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-75",
@@ -5815,8 +5813,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-76",
@@ -5891,8 +5888,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-77",
@@ -5963,8 +5959,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-78",
@@ -5998,7 +5993,10 @@
     "Card",
     "Badge"
    ],
-   "rules": [],
+   "rules": [
+    "R-X39",
+    "R-M05"
+   ],
    "states": [
     "default"
    ],
@@ -6020,8 +6018,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-79",
@@ -6050,7 +6047,10 @@
     "Badge",
     "Button"
    ],
-   "rules": [],
+   "rules": [
+    "R-M05",
+    "R-X39"
+   ],
    "states": [
     "document",
     "not found"
@@ -6071,8 +6071,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-80",
@@ -6139,8 +6138,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-81",
@@ -6201,8 +6199,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-82",
@@ -6281,8 +6278,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-83",
@@ -6349,8 +6345,7 @@
   "surface": "customer",
   "status": "built",
   "roles": [
-   "customer",
-   "super_admin"
+   "customer"
   ],
   "spec": {
    "code": "C-84",
@@ -6424,7 +6419,9 @@
     "SpecsTable",
     "InspectorPanel"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -6441,7 +6438,9 @@
     "InspectorPanel",
     "Chip"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80"
+   ],
    "states": [
     "all",
     "filtered by surface"
@@ -6477,7 +6476,9 @@
     "Spacing & radii",
     "Shadows & motion"
    ],
-   "data": [],
+   "data": [
+    "page_layouts"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -6527,7 +6528,9 @@
     "TierTabs",
     "ComponentCards (props table, usages, a11y)"
    ],
-   "data": [],
+   "data": [
+    "page_layouts"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -6543,7 +6546,9 @@
     "Chip",
     "Section"
    ],
-   "rules": [],
+   "rules": [
+    "R-X81"
+   ],
    "states": [
     "by tier",
     "anchor #Name"
@@ -6576,7 +6581,9 @@
     "SpecsTable",
     "InspectorPanel"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -6593,7 +6600,9 @@
     "InspectorPanel",
     "Chip"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80"
+   ],
    "states": [
     "all",
     "filtered by surface"
@@ -6782,7 +6791,9 @@
     "Textarea",
     "Button"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80"
+   ],
    "states": [
     "all",
     "filtered",
@@ -6815,7 +6826,9 @@
     "Tabs (kanban, changelog, prompts, build plan)",
     "Content"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin",
     "owner"
@@ -6831,7 +6844,9 @@
     "Card",
     "Badge"
    ],
-   "rules": [],
+   "rules": [
+    "R-M04"
+   ],
    "states": [
     "kanban",
     "changelog",
@@ -6866,7 +6881,9 @@
     "StatesByComponent (chips per state)",
     "A11yNotes (all notes grouped by component)"
    ],
-   "data": [],
+   "data": [
+    "page_layouts"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -6924,7 +6941,9 @@
     "ReportTable (DataTable, one row per route, issues listed)",
     "IssueDrawer (route detail + open inspector)"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -7318,7 +7337,10 @@
     "ModulesSummary (routes per module, code ranges)",
     "Collisions (same path or code across modules)"
    ],
-   "data": [],
+   "data": [
+    "rules",
+    "users"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -7442,7 +7464,9 @@
     "FrameGrid (ViewportFrame per width)",
     "Notes (what degrades gracefully)"
    ],
-   "data": [],
+   "data": [
+    "qa_runs"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -7497,7 +7521,9 @@
     "ViewportFrame (the scanned page)",
     "RulesLegend (what each rule checks and its WCAG criterion)"
    ],
-   "data": [],
+   "data": [
+    "qa_runs"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -7614,7 +7640,9 @@
     "CoverageTable (code x 390 / 1280 / dark / before)",
     "CompareCard (ImageCompare for the chosen code + width)"
    ],
-   "data": [],
+   "data": [
+    "qa_runs"
+   ],
    "roles": [
     "super_admin"
    ],
@@ -7672,7 +7700,9 @@
     "SearchHitList",
     "FolderCounts"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -7692,7 +7722,9 @@
     "Card",
     "EmptyState"
    ],
-   "rules": [],
+   "rules": [
+    "R-M04"
+   ],
    "states": [
     "empty",
     "results",
@@ -7727,7 +7759,9 @@
     "Document (MarkdownViewer)",
     "ScreenshotGallery"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -7744,7 +7778,10 @@
     "Section",
     "Chip"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80",
+    "R-X81"
+   ],
    "states": [
     "index",
     "document",
@@ -7779,7 +7816,9 @@
     "Document (MarkdownViewer)",
     "ScreenshotGallery"
    ],
-   "data": [],
+   "data": [
+    "rules"
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -7796,7 +7835,10 @@
     "Section",
     "Chip"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80",
+    "R-X81"
+   ],
    "states": [
     "index",
     "document",
@@ -8856,7 +8898,9 @@
     "Screens to capture",
     "Draft chapters"
    ],
-   "data": [],
+   "data": [
+    "locations"
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -13240,8 +13284,7 @@
    "super_admin",
    "owner",
    "manager",
-   "front_desk",
-   "groomer"
+   "front_desk"
   ],
   "spec": {
    "code": "F-14",
@@ -13273,8 +13316,7 @@
     "super_admin",
     "owner",
     "manager",
-    "front_desk",
-    "groomer"
+    "front_desk"
    ],
    "logic": [
     "Columns = APPOINTMENT_STATUS with cancelled + no_show merged into one locked column.",
@@ -13915,6 +13957,9 @@
     "EmptyState",
     "Button"
    ],
+   "rules": [
+    "R-X88"
+   ],
    "states": [
     "default"
    ],
@@ -13948,7 +13993,8 @@
     "AddRuleDrawer"
    ],
    "data": [
-    "rules"
+    "rules",
+    "audit_log"
    ],
    "roles": [
     "owner",
@@ -13971,7 +14017,10 @@
     "Textarea",
     "Button"
    ],
-   "rules": [],
+   "rules": [
+    "R-X80",
+    "R-X41"
+   ],
    "states": [
     "all",
     "filtered",

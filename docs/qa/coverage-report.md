@@ -35,9 +35,13 @@ No blockers. 3 major, 7 minor findings.
 - Components: 135 (atom / molecule / organism / template). 8 are in no spec, all shell / tooling parts: BottomNav, SpecChip, FeedbackButton, Sidebar, TopBar, DesktopShell, PageStub, PhoneShell.
 - Tables: 74; every table is named in at least one `spec.data`.
 
+> Fix status per finding: `docs/qa/fix-status.md` (changelog 0019).
+
 ## Findings (most severe first)
 
 ### 1. MAJOR - `StatusBadge` is used by 10 specs and mandated by CLAUDE.md but has no meta and is not in `/dev/components`
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/components/atom/Badge/Badge.tsx:15` (`export function StatusBadge(...)` as a second export of the Badge folder); no `StatusBadge.meta.ts` anywhere. Specs naming it: A-01, C-10, C-39, F-01, F-10, F-12, F-13, F-52, F-55, P-08 (`grep -rn "'StatusBadge'" src/modules/*/specs.ts`). 12 page files import it (`grep -rl StatusBadge src/modules`). `GroomStatusBadge` (molecule) does have its own folder and meta.
 - **Repro**: open `#/dev/components`, search "StatusBadge": nothing. Open `#/desk/reservations` (F-10), press Ctrl+., Components tab: `StatusBadge` links to `/dev/components#StatusBadge`, which lands on the library with no matching entry.
@@ -46,6 +50,8 @@ No blockers. 3 major, 7 minor findings.
 
 ### 2. MAJOR - 13 spec `rules` entries point at ids that are not in the registry
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **Where / list**: `A-12: R-K07`, `A-44: R-J09`, `C-33: R-A09`, `C-35: R-A09`, `C-35: R-H02`, `C-36: R-H01`, `C-36: R-H02`, `C-37: R-I04`, `C-38: R-I04`, `C-39: R-I04`, `C-50: R-A09`, `F-51: R-J11` (twice, both F-51 paths). Modules: `src/modules/customer-hotel/specs.ts`, `customer-grooming-daycare/specs.ts`, `admin-control-panel/specs.ts`, `frontdesk-grooming-people/specs.ts`.
 - **Repro**: `#/app/hotel/estimate` (C-35) -> Ctrl+. -> Rules tab shows `R-H02 (not in registry yet)` and `R-A09 (not in registry yet)`; `#/admin/settings/rules` (A-40) has no row for them. D-16 spec report flags them as `unknown_rule` warnings.
 - **Why it matters**: the builder tool and Settings > Rules disagree about which rules a page implements; three of the ids are in scope here (R-H01 payment methods, R-H02 deposit / pay-in-full paths, R-I04 customer-facing booking statuses) and are actually implemented by those pages.
@@ -53,12 +59,16 @@ No blockers. 3 major, 7 minor findings.
 
 ### 3. MAJOR - 12 routes have empty `spec.rules`, 15 have empty `spec.data` (spec contract: "non-empty purpose, data, roles, components, rules")
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **`rules: []`**: A-40 `/admin/settings/rules` (it reuses the D-05 spec), C-78 `/app/about`, C-79 `/app/legal/:slug`, D-02 `/dev/components`, D-03 `/dev` and `/dev/specs`, D-05 `/dev/rules`, D-06 `/docs` and `/docs/*`, D-07, D-18, HUB-02 `/no-access`.
 - **`data: []`**: D-01, D-02, D-03 (x2), D-06 (x2), D-07, D-08, D-09, D-13, D-15, D-17, D-18, D-19, M-03.
 - **Repro**: `#/admin/settings/rules` -> Ctrl+. -> Rules tab is empty on the very page that manages rules; Overview shows the D-05 name overridden but the spec body untouched (`src/modules/settings-rules/index.ts:9`).
 - **Fix**: the registry / tokens / components / docs pages should at least cite the meta-rules they enforce (R-X80 spec report, R-X84 table edits, D-006 registry rule) and list the tooling tables they read (`rules`, `feedback`, `page_layouts`, `perf_budgets`, ...). For C-78 / C-79 add the legal / support rules (R-X39, R-M05). For HUB-02 add the role-guard rule. `specReport.ts:43` already downgrades `rules` / `states` / tooling `data` to warnings; the binding text in the task says non-empty, so either fill them or record the tooling exemption as a decision.
 
 ### 4. MINOR - 19 in-scope rows of the rules doc are not in the registry
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 Grouped by what they are about (all are `seen in design` in the doc and would become `requested`, `deprecated` or `implemented` rows):
 
@@ -78,11 +88,15 @@ Grouped by what they are about (all are `seen in design` in the doc and would be
 
 ### 5. MINOR - Capacity rules are `implemented` but only displayed, never enforced; R-E13 points at an unbuilt page
 
+**Status: Fixed (status)** (changelog 0019, see `fix-status.md`).
+
 - **Where**: `src/rules/operations.ts` (or the module file that declares them): R-E10 grooming 2 simultaneous, R-E11 penthouses 12 / 20, R-E12 suites 42 / 16, R-E13 daycare 20 / 15, R-G21 grooming slots respect capacity - all `implemented` with `implementedIn: 'capacities seed'`. `grep -rn capacities src/modules` shows the table is read only by A-10 / A-11, reports (F-62..F-64), the public site (P-04, P-06) and the dashboard meters. Booking creation (`frontdesk-reservations/lib/availability.ts`, `customer-hotel`, `customer-grooming-daycare`, `frontdesk-grooming-people/lib.ts`) checks rooms (R-X03 / R-X56) and groomer slots, not `capacities.max_simultaneous`; the merge report itself says "daycare ignores capacity (R-E13)".
 - **Repro**: `#/app/daycare/book` (C-60): book 21 dogs for the same Encino day (or run the seed and count `daycare_bookings` for one day) - no block, no warning. `#/admin/settings/rules`: R-E13 shows Implemented, pages `F-40, A-10`; `#/desk/daycare` (F-40) is `/no-access`-free but does not exist (404 to the hub).
 - **Fix**: set R-E13 and R-G21 to `in_dev` (or `requested`) until the daycare day page (F-40..F-49) lands; set R-E10..E12 `implementedIn` to the room-availability code they actually rely on and note that `capacities` is informational; or add a `capacityFor(locationId, kind, day)` helper in `src/domain` and call it from the three booking flows.
 
 ### 6. MINOR - Rule `pages` reference codes that are not routes; 4 rules are in no page spec
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Unknown pages** (11 entries): `F-20` in R-B10, R-D14, R-H03, R-H04, R-H09, R-H10, R-P01; `F-40` in R-E13, R-F01, R-F02, R-F05. Neither code is registered (desk invoices F-20..F-29 and daycare day F-40..F-49 are the known unbuilt ranges).
 - **Not in any `spec.rules`**: R-B10 (vaccination fee $40, pages F-20 only), R-D09, R-D10, R-D12 (boarding charge multipliers / charge-by / minimum days; pages A-20, but `src/modules/admin-control-panel/specs.ts:16` A-20 lists R-D05, R-D06, R-E15, R-X44, R-X41, R-X42 only).
@@ -91,10 +105,14 @@ Grouped by what they are about (all are `seen in design` in the doc and would be
 
 ### 7. MINOR - 4 tables have no seed rows
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - `account_deletion_requests` (system), `auth_codes` (core), `groomer_column_prefs` (grooming), `page_layouts` (design). They are runtime-written tables and the app handles the empty state, but `/dev/tables` shows them at 0 rows and the D-14 seed inspector cannot demonstrate them.
 - **Fix**: one demo row each in the owning seed file (an expired OTP code, one pending deletion request for a fictional customer, one saved groomer column order, one saved layout for D-11), or record "intentionally empty" in `TableDef.description`.
 
 ### 8. MINOR - `spec.roles` disagrees with `route.roles` on 16 routes
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - F-01 `/desk`: spec omits `groomer`, route includes it (`src/modules/frontdesk-reservations/index.ts`). C-70..C-84 (all of `customer-settings-chat`): spec says `customer`, route adds `super_admin`.
 - **Effect**: `RequireRole` uses the route array, the Inspector Overview and `docs/specs.md` show the spec array, so the builder tool under-reports who can open the page.
@@ -102,10 +120,14 @@ Grouped by what they are about (all are `seen in design` in the doc and would be
 
 ### 9. MINOR - `atom/Radio` folder registers as `RadioGroup`
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - `src/components/atom/Radio/Radio.tsx` exports `RadioGroup`; `Radio.meta.ts:13` has `name: 'RadioGroup'`; 11 specs reference `'RadioGroup'`. The folder contract is `<Name>/<Name>.tsx` with the meta named after the component, so a folder-to-library check by name fails for this one component (it is the only mismatch in 135).
 - **Fix**: rename the folder and files to `RadioGroup/` (imports in 4 modules), or rename the export.
 
 ### 10. MINOR - 7 `implemented` rules carry no `implementedIn`; two "bug" rows are marked implemented
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - R-A01, R-B05, R-B07, R-B11, R-M05, R-X01, R-X02 are `implemented` without a code pointer (the integration commit flipped R-A01, R-M05, R-X01, R-X02 to implemented per builder requests). R-F06 "Mobile computed price bug" and R-G15 "Grooming totals in the mobile mock do not reconcile" are design errors, not rules; `implemented` reads as if the bug were implemented. R-X50 "Deposit is a settings percentage" is implemented, but `src/modules/customer-hotel/lib.ts:15` keeps `deposit_percent: 30` and `free_cancellation_hours: 48` as `DEFAULT_HOTEL_SETTINGS` fallbacks (the seed writes the `settings` row, so the fallback is only hit when the row is missing; both values are on the needs-Justin list).
 - **Fix**: fill `implementedIn`; retitle R-F06 / R-G15 as "Daycare price derives from hours (fixes design error)" / "Grooming total = package + add-ons + tax" or deprecate them and point to R-F01 / R-G01.

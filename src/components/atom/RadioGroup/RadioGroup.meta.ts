@@ -1,6 +1,6 @@
 import { createElement as h, useState } from 'react';
 import { defineMeta } from '../../../design/meta';
-import { RadioGroup } from './Radio';
+import { RadioGroup } from './RadioGroup';
 
 function Demo({ cards }: { cards?: boolean }) {
   const [v, setV] = useState<string | null>(cards ? 'full' : 'calm');

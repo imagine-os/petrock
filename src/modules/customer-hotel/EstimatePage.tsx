@@ -5,7 +5,7 @@ import { fmtMoney, round2 } from '../../pricing/engine';
 import { HotelBookingFrame } from '../../components/template/HotelBookingFrame/HotelBookingFrame';
 import { Button } from '../../components/atom/Button/Button';
 import { SegmentedControl } from '../../components/molecule/SegmentedControl/SegmentedControl';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { HotelEstimateCard } from '../../components/molecule/HotelEstimateCard/HotelEstimateCard';
 import { StayDatesCard } from '../../components/molecule/StayDatesCard/StayDatesCard';
 import { useT } from '../../i18n';

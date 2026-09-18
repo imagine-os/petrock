@@ -4,7 +4,7 @@ import { useI18n } from '../../i18n/I18nProvider';
 import type { Lang } from '../../i18n/types';
 import { useData } from '../../data/DataContext';
 import { CustomerScreenHeader } from '../../components/molecule/CustomerScreenHeader/CustomerScreenHeader';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Button } from '../../components/atom/Button/Button';
 import { useToast } from '../../components/molecule/Toast/Toast';
 import { useCustomerAccount, k } from './useCustomerAccount';

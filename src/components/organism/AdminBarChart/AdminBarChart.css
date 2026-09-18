@@ -2,11 +2,11 @@
 :root[data-theme="dark"] .achart { --achart-1: #9d7bd8; --achart-2: #d95926; --achart-3: #199e70; --achart-4: #c98500; }
 .achart-svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--font-sans); }
 .achart-grid line { stroke: var(--achart-grid); stroke-width: 1; }
-.achart-axis text { fill: var(--achart-text); font-size: 11px; }
+.achart-axis text { fill: var(--achart-text); font-size: var(--fs-xs); }
 .achart-bar { transition: opacity var(--dur-fast); }
 .achart-band:hover .achart-bar, .achart-band.is-active .achart-bar { opacity: .85; }
 .achart-band rect.achart-hit { fill: transparent; }
-.achart-label { fill: var(--color-heading); font-size: 11px; font-weight: 600; }
+.achart-label { fill: var(--color-heading); font-size: var(--fs-xs); font-weight: 600; }
 .achart-legend { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
 .achart-key { display: inline-flex; align-items: center; gap: 6px; } .achart-swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .achart-tip { position: absolute; pointer-events: none; background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: var(--r-md); box-shadow: var(--shadow-md); padding: 6px 10px; font-size: var(--fs-xs); color: var(--color-text); z-index: 2; min-width: 120px; transform: translate(-50%, -100%); white-space: nowrap; }

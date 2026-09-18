@@ -18,12 +18,13 @@
 
 ## Doing
 - Phase 3 integration: QA pass over every page (D-016 widths, console errors, functional flows), spec completeness to 100 %, StatTile dark-mode hint contrast, PhonePageHeader / CustomerScreenHeader dedupe, core seed chat times relative to now, SessionProvider remember-me expiry (R-X35), DesktopShell reads roles.menu (R-X40) and permissions table (R-X49)
-- Awaiting Justin: review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012); answers to the pricing conflicts chosen in the build (daycare 6 h, card fee 3.89 %, Diamond prices)
+- Awaiting Justin: D-179 (PIN at check-in?), review of D-010/D-011, Figma paid seat or wait for Sep 22 (D-012); answers to the pricing conflicts chosen in the build (daycare 6 h, card fee 3.89 %, Diamond prices)
 
 ## Blocked
 - Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
+- QA fixes (changelog 0019, prompt 0007): 33 of 35 findings from the four QA reports fixed (blocker F-12 white screen, F-56 refresh, /app/chat links, location guards, manager menu, 12 px font floor, FeedbackButton position, StatusBadge atom, rules registry +25 rows, spec gaps, RadioGroup rename, ErrorBoundary, QA scripts per the D-016 brief with full matrix); D-175..D-182; `docs/qa/fix-status.md`
 - Integration merge (changelogs 0008..0017, decisions D-020..D-174, manual chapters 28..33, prompt 0006): ten module branches merged into main; rule ids renumbered (customer-hotel R-X50..59, frontdesk-grooming-people R-X60..68, extras R-X70..78, customer-grooming-daycare R-X14..17); duplicate catalog rule ids merged at runtime (pages union); /app/notifications = C-80 (C-15 retired), /desk/notifications = F-60 (F-58 retired), /desk/messages = F-57 and F-61 became Website inquiries at /desk/inquiries, /site = P-01 (P-00 placeholder removed); R-A01, R-E09, R-X01, R-X02, R-M03, R-M05, R-B05, R-B07, R-B11 flipped to implemented; SEED_VERSION 2; 182 routes, 135 components, 74 tables, 214 rules, 172 page docs, 462 screenshots
 - customer-auth C-01..C-09 built (changelog 0008): welcome, sign in with lockout, sign up, OTP verify, forgot / reset, locked, account created, sign out; auth_credentials / auth_codes / auth_events
 - customer-home-pets C-10..C-14, C-20, C-21 built (changelog 0009): home, pets list, add-pet wizard, pet profile / edit, vaccines hub and per-pet records with mock proof upload

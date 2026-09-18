@@ -39,7 +39,7 @@ export function useBookingActions() {
       await data.insert('audit_log', { location_id: b.location_id ?? null, user_id: user.id, user_name: user.name, action: 'booking.status', table_name: 'bookings', row_id: b.id, diff: { from, to } });
       toast({ tone: 'success', title: `${b.code} is now ${BOOKING_STATUS_LABEL[to]}` });
     };
-    gate(transitionNeedsPin(from, to), { action: 'booking.status', title: `Set ${b.code} to ${BOOKING_STATUS_LABEL[to]}`, description: `Changing a ${BOOKING_STATUS_LABEL[from]} booking to ${BOOKING_STATUS_LABEL[to]} needs a manager PIN (R-I06).`, subjectTable: 'bookings', subjectId: b.id, details: { from, to } }, run);
+    gate(transitionNeedsPin(from, to), { action: 'booking.status', title: `Set ${b.code} to ${BOOKING_STATUS_LABEL[to]}`, description: `Changing a ${BOOKING_STATUS_LABEL[from]} booking to ${BOOKING_STATUS_LABEL[to]} needs a manager PIN (R-I06).`, subjectTable: 'bookings', subjectId: b.id, details: { from, to }, locationId: b.location_id ?? null }, run);
   }, [data, gate, logEvent, toast, user]);
 
   const assignRoom = useCallback(async (b: BookingRow, roomId: string | null, roomCode: string) => {

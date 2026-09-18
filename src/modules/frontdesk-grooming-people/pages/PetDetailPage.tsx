@@ -37,9 +37,13 @@ export function PetDetailPage() {
   const data = useData();
   const { toast } = useToast();
   const { user, can } = useSession();
-  const { locationId } = useLocation();
-  const pet = useRow<PetFull>('pets', id);
+  const { locationId, allLocations } = useLocation();
+  const petRow = useRow<PetFull>('pets', id);
   const { customerById, vaccineRecords, vaccineTypes } = usePeople();
+  // Pinned staff never open the other location's pet by URL (R-X45): scoped through the owner's home location.
+  const petHome = petRow ? customerById.get(petRow.customer_id)?.home_location_id ?? null : null;
+  const foreign = !!petRow && !allLocations && !!petHome && petHome !== locationId;
+  const pet = foreign ? null : petRow;
   const { views } = useAppointments();
   const { rows: profiles } = useTable<PetProfileRow>('pet_profiles', { where: { pet_id: id ?? '__none__' } });
   const { rows: vets } = useTable<VetRow>('vets');
@@ -60,7 +64,7 @@ export function PetDetailPage() {
   }), [vaccineTypes, records, users, id]);
   const myBookings = useMemo(() => bookingPets.map((bp) => bookings.find((b) => b.id === bp.booking_id)).filter((b): b is BookingRow => !!b).sort((a, b) => b.check_in.localeCompare(a.check_in)), [bookingPets, bookings]);
   const myApps = useMemo(() => views.filter((v) => v.ap.pet_id === id).sort((a, b) => b.ap.starts_at.localeCompare(a.ap.starts_at)), [views, id]);
-  if (!pet || !summary) return <div className="page"><PageHeader code="F-55" title="Pet" backTo="/desk/pets" /><EmptyState icon="paw" title="Pet not found" action={<Button onClick={() => nav('/desk/pets')}>Back to pets</Button>} /></div>;
+  if (!pet || !summary) return <div className="page"><PageHeader code="F-55" title="Pet" backTo="/desk/pets" /><EmptyState icon="paw" title={foreign ? 'This pet belongs to the other location' : 'Pet not found'} body={foreign ? 'You are pinned to your own location; ask a manager or owner to open it.' : undefined} action={<Button onClick={() => nav('/desk/pets')}>Back to pets</Button>} /></div>;
   const owner = customerById.get(pet.customer_id);
   const profile = profiles[0];
   const vet = vets.find((v) => v.id === pet.vet_id);

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useSession } from '../auth/SessionProvider';
 import { ALL_LOCATION_ROLES } from '../auth/roles';
+import { demoUserByRole } from '../auth/demoUsers';
 import { useTable } from '../data/DataContext';
 import type { LocationRow } from '../data/schema/core';
 import { DEFAULT_LOCATION_ID } from './locations';
@@ -31,13 +32,14 @@ function read(): { locationId: string; all: boolean } {
 
 /** Must sit inside SessionProvider and DataProviderRoot. Front desk / groomer / manager are pinned to their location. */
 export function LocationProvider({ children }: { children: ReactNode }) {
-  const { user, role } = useSession();
+  const { user, role, viewAs } = useSession();
   const { rows } = useTable<LocationRow>('locations', { orderBy: { column: 'sort_order' } });
   const [state, setState] = useState(read);
   useEffect(() => { try { localStorage.setItem(LOCATION_KEY, JSON.stringify(state)); } catch { /* ignore */ } }, [state]);
 
   const canSwitch = ALL_LOCATION_ROLES.includes(role);
-  const pinned = !canSwitch ? user.locationId : null;
+  // A super admin viewing as a pinned role is pinned where that role's demo user works (not the super admin's own null location).
+  const pinned = !canSwitch ? (viewAs ? demoUserByRole(viewAs).locationId ?? user.locationId : user.locationId) : null;
   const active = rows.filter((l) => l.active !== false);
   const locationId = (pinned && active.some((l) => l.id === pinned) ? pinned : null) ?? (active.some((l) => l.id === state.locationId) ? state.locationId : active[0]?.id ?? DEFAULT_LOCATION_ID);
   const location = active.find((l) => l.id === locationId) ?? ({ id: locationId, name: 'Location', short_name: 'Location' } as unknown as LocationRow);

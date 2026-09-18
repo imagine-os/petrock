@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import './Radio.css';
+import './RadioGroup.css';
 
 export interface RadioOption<T extends string = string> { value: T; label: ReactNode; description?: ReactNode; disabled?: boolean }
 export interface RadioGroupProps<T extends string = string> { name?: string; label?: ReactNode; options: RadioOption<T>[]; value: T | null; onChange: (v: T) => void; inline?: boolean; cards?: boolean }

@@ -35,4 +35,7 @@ export function seed(ctx: SeedCtx) {
   ev('aev_5', 'usr_cust_riley', 'riley@demo.petrock.test', 'sign_up', 'C-03', daysAgo(2, 20));
   ev('aev_6', 'usr_cust_riley', 'riley@demo.petrock.test', 'otp_sent', 'C-04', daysAgo(2, 20), { purpose: 'verify_email', channel: 'email' });
   ev('aev_7', null, 'nobody@example.com', 'sign_in_failed', 'C-02', daysAgo(3, 12), { reason: 'unknown_email' });
+
+  // ---- one expired one-time code so auth_codes is not empty in the table library (D-04) ----
+  add('auth_codes', { id: 'otp_seed_1', user_id: 'usr_cust_riley', email: 'riley@demo.petrock.test', purpose: 'verify_email', channel: 'email', code: '482913', expires_at: daysAgo(2, 20), consumed_at: null, attempts: 1 });
 }

@@ -35,7 +35,7 @@
 .fdr-service { display: grid; grid-template-columns: minmax(0, 1.5fr) 80px 110px auto auto; gap: var(--sp-2); align-items: center; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: var(--r-md); background: var(--color-surface); }
 .fdr-service .field { margin: 0; }
 @media (max-width: 700px) { .fdr-service { grid-template-columns: 1fr 1fr; } .fdr-service > :first-child { grid-column: 1 / -1; } }
-.fdr-mae { display: inline-flex; gap: 2px; } .fdr-mae button { width: 28px; height: 28px; border-radius: var(--r-sm); border: 1px solid var(--color-border); background: var(--color-surface); font-size: 11px; font-weight: var(--fw-semibold); color: var(--color-text-muted); }
+.fdr-mae { display: inline-flex; gap: 2px; } .fdr-mae button { width: 28px; height: 28px; border-radius: var(--r-sm); border: 1px solid var(--color-border); background: var(--color-surface); font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-text-muted); }
 .fdr-mae button[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-text-on-primary); }
 .fdr-legend { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
 .fdr-legend-swatch { display: inline-block; width: 14px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: middle; border-left: 3px solid var(--color-primary); }

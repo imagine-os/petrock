@@ -6,7 +6,7 @@ import { useData, useRow, useTable } from '../../data/DataContext';
 import type { ApprovalRow, BookingPetRow, BookingRow, CustomerRow, EmployeeRow, InvoiceRow, PaymentRow, PetRow, RoomRow, RoomTypeRow, VaccineRecordRow, VaccineTypeRow } from '../../data/schema/core';
 import type { BookingEventRow, BookingServiceRow } from '../../data/schema/frontdesk-reservations';
 import { usePayments } from '../../payments';
-import { fmtMoney, type Quote } from '../../pricing/engine';
+import { fmtMoney } from '../../pricing/engine';
 import { PageHeader } from '../../components/molecule/PageHeader/PageHeader';
 import { Card } from '../../components/molecule/Card/Card';
 import { Avatar } from '../../components/atom/Avatar/Avatar';
@@ -25,7 +25,7 @@ import { PetVaccineStatus } from '../../components/molecule/PetVaccineStatus/Pet
 import { BookingChargeSummary } from '../../components/molecule/BookingChargeSummary/BookingChargeSummary';
 import { BookingStatusMenu } from '../../components/molecule/BookingStatusMenu/BookingStatusMenu';
 import { useToast } from '../../components/molecule/Toast/Toast';
-import { BOOKING_STATUS_LABEL, type BookingStatus } from '../../domain/booking';
+import { BOOKING_STATUS_LABEL, quoteLinesOf, quoteNotesOf, type BookingStatus } from '../../domain/booking';
 import { petVaccineSummary } from './lib/vaccines';
 import { fmtDate, fmtDateTime, fmtTime } from './lib/dates';
 import { useBookingActions } from './lib/useBookingActions';
@@ -40,9 +40,12 @@ export function BookingDetailPage() {
   const payments = usePayments();
   const { toast } = useToast();
   const { can, user } = useSession();
-  const { scope, locationId } = useLocation();
+  const { scope, locationId, allLocations, locations } = useLocation();
   const actions = useBookingActions();
-  const booking = useRow<BookingRow>('bookings', id ?? null);
+  const bookingRow = useRow<BookingRow>('bookings', id ?? null);
+  // Pinned staff never open the other location's stay by URL (R-X45): same not-found state as a missing id.
+  const foreign = !!bookingRow && !allLocations && !!bookingRow.location_id && bookingRow.location_id !== locationId;
+  const booking = foreign ? null : bookingRow;
   const { rows: bookingPets } = useTable<BookingPetRow>('booking_pets', { where: { booking_id: id ?? '__none__' } });
   const { rows: services } = useTable<BookingServiceRow>('booking_services', { where: { booking_id: id ?? '__none__' } });
   const { rows: events } = useTable<BookingEventRow>('booking_events', { where: { booking_id: id ?? '__none__' }, orderBy: { column: 'at', dir: 'desc' } });
@@ -67,12 +70,13 @@ export function BookingDetailPage() {
   const room = rooms.find((r) => r.id === booking?.room_id);
   const roomType = roomTypes.find((r) => r.id === booking?.room_type_id);
   const handler = employees.find((e) => e.id === (booking as unknown as { handler_id?: string | null })?.handler_id);
-  const quote = (booking?.quote ?? null) as Quote | null;
+  const quoteLines = quoteLinesOf(booking?.quote);
+  const quoteNotes = quoteNotesOf(booking?.quote);
   const invoiceIds = new Set(invoices.map((i) => i.id));
   const bookingPayments = allPayments.filter((p) => (p.invoice_id && invoiceIds.has(p.invoice_id)) || (p as unknown as { booking_id?: string }).booking_id === id).sort((a, b) => (b.paid_at ?? '').localeCompare(a.paid_at ?? ''));
   const balance = booking ? Math.round((booking.total - booking.deposit) * 100) / 100 : 0;
 
-  if (!booking) return <div className="fdr-page"><PageHeader title="Booking not found" backTo="/desk/reservations" code="F-12" /><Card className="fdr-empty-card"><EmptyState icon="search" title="No booking with this id at this location" body="It may belong to the other location or have been deleted." action={<Button onClick={() => nav('/desk/reservations')}>Back to reservations</Button>} /></Card></div>;
+  if (!booking) return <div className="fdr-page"><PageHeader title="Booking not found" backTo="/desk/reservations" code="F-12" /><Card className="fdr-empty-card"><EmptyState icon="search" title={foreign ? `This booking belongs to ${locations.find((l) => l.id === bookingRow?.location_id)?.short_name ?? 'the other location'}` : 'No booking with this id at this location'} body={foreign ? 'You are pinned to your own location; ask a manager or owner to open it.' : 'It may belong to the other location or have been deleted.'} action={<Button onClick={() => nav('/desk/reservations')}>Back to reservations</Button>} /></Card></div>;
 
   const onStatus = (to: BookingStatus) => { if (to === 'checked_in' && !booking.room_id) { setRoomOpen('checkin'); return; } actions.changeStatus(booking, to); };
   const remove = () => actions.withApproval({ action: 'record.delete', title: `Delete ${booking.code}`, description: 'Deleting a booking removes its pets and services. Needs a manager PIN (R-P01).', subjectTable: 'bookings', subjectId: booking.id }, async () => {
@@ -111,9 +115,9 @@ export function BookingDetailPage() {
 
   return (
     <div className="fdr-page">
-      <PageHeader title={booking.code} eyebrow={<span className="row" style={{ gap: 8 }}><StatusBadge status={booking.status} />{roomType?.name} · {booking.nights} night{booking.nights === 1 ? '' : 's'}{booking.source === 'app' && <Badge size="sm" tone="info">from the app</Badge>}</span>} subtitle={`${custName} · ${stayPets.map((x) => x.pet.name).join(', ') || 'no pets'} · ${fmtDate(booking.check_in)} → ${fmtDate(booking.check_out)}`} backTo="/desk/reservations" code="F-12"
+      <PageHeader title={booking.code} eyebrow={<span className="row wrap" style={{ gap: 8, rowGap: 4 }}><StatusBadge status={booking.status} />{roomType?.name} · {booking.nights} night{booking.nights === 1 ? '' : 's'}{booking.source === 'app' && <Badge size="sm" tone="info">from the app</Badge>}</span>} subtitle={`${custName} · ${stayPets.map((x) => x.pet.name).join(', ') || 'no pets'} · ${fmtDate(booking.check_in)} → ${fmtDate(booking.check_out)}`} backTo="/desk/reservations" code="F-12"
         actions={<div className="fdr-toolbar">
-          <BookingStatusMenu status={booking.status as BookingStatus} onSelect={onStatus} quick size="md" disabled={!can('bookings.write_any')} />
+          <BookingStatusMenu status={booking.status as BookingStatus} onSelect={onStatus} quick size="md" disabled={!can('bookings.status')} />
           <Button variant="secondary" icon="edit" onClick={() => nav(`/desk/reservations/${booking.id}/edit`)}>Edit</Button>
           <Button variant="secondary" icon="refresh" onClick={() => nav(`/desk/reservations/new?rebook=${booking.id}`)}>Rebook</Button>
           <IconButton icon="trash" label="Delete booking (manager PIN)" variant="outline" onClick={remove} />
@@ -168,7 +172,7 @@ export function BookingDetailPage() {
 
         <div className="fdr-detail-col">
           <Card header={<><strong>Charges</strong><span className="xs muted">quote at booking time</span></>}>
-            {quote ? <BookingChargeSummary lines={[...quote.lines, ...services.filter((s) => !quote.lines.some((l) => l.label.startsWith(s.label))).map((s) => ({ label: s.label, qty: s.qty, unit: s.rate, amount: s.total, kind: 'service' as const }))]} subtotal={booking.subtotal} discountTotal={booking.discount_total} feeTotal={booking.fee_total} taxTotal={booking.tax_total} total={booking.total} deposit={booking.deposit} notes={quote.notes}
+            {quoteLines.length ? <BookingChargeSummary lines={[...quoteLines, ...services.filter((s) => !quoteLines.some((l) => l.label.startsWith(s.label))).map((s) => ({ label: s.label, qty: s.qty, unit: s.rate, amount: s.total, kind: 'service' as const }))]} subtotal={booking.subtotal} discountTotal={booking.discount_total} feeTotal={booking.fee_total} taxTotal={booking.tax_total} total={booking.total} deposit={booking.deposit} notes={quoteNotes}
               footer={<div className="fdr-inline-actions">{balance > 0 && booking.status !== 'cancelled' && <Button size="sm" icon="card" onClick={() => setPay({ amount: String(balance), method: booking.payment_method ?? 'card' })} disabled={!can('payments.write')}>Record payment</Button>}{booking.deposit > 0 && <Button size="sm" variant="secondary" icon="lock" onClick={refund}>Refund</Button>}<Button size="sm" variant="ghost" icon="download" onClick={() => toast({ tone: 'info', title: 'Invoice PDF', body: 'Printing lands with the invoices module (F-20s).' })}>Invoice</Button></div>} />
               : <EmptyState compact icon="dollar" title="No quote stored" body={`Total ${fmtMoney(booking.total)}, deposit ${fmtMoney(booking.deposit)}`} />}
           </Card>

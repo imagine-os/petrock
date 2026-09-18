@@ -10,7 +10,9 @@ export const newId = (prefix = 'row'): string => `${prefix}_${Math.random().toSt
 
 /**
  * In-browser database: seeded from src/data/seed, persisted to localStorage, emits change events to
- * simulate realtime. Reseeds when the seed day changes so "today" always has arrivals and departures.
+ * simulate realtime. Reseeds when the seed day changes so "today" always has arrivals and departures;
+ * rows that are not part of the seed (ids the seed does not produce) survive the reseed, edits to seeded rows do not.
+ * Every write replaces the table array (never mutates it in place) so `useTable` subscribers get a new reference.
  */
 export class MockProvider implements DataProvider {
   readonly name = 'mock';
@@ -41,8 +43,24 @@ export class MockProvider implements DataProvider {
       }
     } catch { /* fall through to reseed */ }
     const db = buildSeed();
+    this.carryOver(db);
     this.persist(db);
     return db;
+  }
+  /** Keep rows a person created in the demo (ids the seed does not produce) when the day or seed version changes. */
+  private carryOver(db: Db) {
+    try {
+      const raw = localStorage.getItem(DB_KEY);
+      if (!raw) return;
+      const old = (JSON.parse(raw) as { db?: Db }).db;
+      if (!old) return;
+      for (const t of tableNames) {
+        const seeded = new Set((db[t] ?? []).map((r) => r.id));
+        // runtime ids come from newId(): `<3-letter prefix>_<8 base36 chars>`; seed ids are hand-written
+        const extra = (old[t] ?? []).filter((r) => r && typeof r.id === 'string' && !seeded.has(r.id) && /^[a-z]{1,4}_[a-z0-9]{8}$/.test(r.id));
+        if (extra.length) db[t] = [...(db[t] ?? []), ...extra];
+      }
+    } catch { /* ignore a half-written value */ }
   }
   private persist(db = this.db) {
     try { localStorage.setItem(DB_KEY, JSON.stringify({ seededOn: new Date().toDateString(), version: SEED_VERSION, db })); } catch { /* quota or private mode */ }
@@ -63,7 +81,7 @@ export class MockProvider implements DataProvider {
   async insert<T extends BaseRow>(table: string, row: Partial<T>): Promise<T> {
     const now = new Date().toISOString();
     const full = { id: newId(table.slice(0, 3)), created_at: now, updated_at: now, ...row } as T;
-    this.rows(table).push(full);
+    this.db[table] = [...this.rows(table), full];
     this.persist();
     this.emit({ table, type: 'insert', row: full });
     return full;
@@ -73,7 +91,7 @@ export class MockProvider implements DataProvider {
     const i = rows.findIndex((r) => r.id === id);
     if (i < 0) throw new Error(`${table}/${id} not found`);
     const next = { ...rows[i], ...patch, updated_at: new Date().toISOString() } as T;
-    rows[i] = next;
+    this.db[table] = [...rows.slice(0, i), next, ...rows.slice(i + 1)];
     this.persist();
     this.emit({ table, type: 'update', row: next, id });
     return next;

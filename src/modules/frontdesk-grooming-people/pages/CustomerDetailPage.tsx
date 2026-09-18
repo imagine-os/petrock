@@ -33,8 +33,11 @@ export function CustomerDetailPage() {
   const data = useData();
   const { toast } = useToast();
   const { user, can } = useSession();
-  const { locationId } = useLocation();
-  const customer = useRow<CustomerFull>('customers', id);
+  const { locationId, allLocations } = useLocation();
+  const customerRow = useRow<CustomerFull>('customers', id);
+  // Pinned staff never open the other location's pet parent by URL (R-X45).
+  const foreign = !!customerRow && !allLocations && !!customerRow.home_location_id && customerRow.home_location_id !== locationId;
+  const customer = foreign ? null : customerRow;
   const { pets, vaccineOf } = usePeople();
   const { views } = useAppointments();
   const { rows: profiles } = useTable<CustomerProfileRow>('customer_profiles', { where: { customer_id: id ?? '__none__' } });
@@ -52,7 +55,7 @@ export function CustomerDetailPage() {
   const [pin, setPin] = useState<PinApprovalRequest | null>(null);
   const myPets = useMemo(() => pets.filter((p) => p.customer_id === id), [pets, id]);
   const myApps = useMemo(() => views.filter((v) => v.ap.customer_id === id).sort((a, b) => b.ap.starts_at.localeCompare(a.ap.starts_at)), [views, id]);
-  if (!customer) return <div className="page"><PageHeader code="F-52" title="Customer" backTo="/desk/customers" /><EmptyState icon="users" title="Customer not found" action={<Button onClick={() => nav('/desk/customers')}>Back to customers</Button>} /></div>;
+  if (!customer) return <div className="page"><PageHeader code="F-52" title="Customer" backTo="/desk/customers" /><EmptyState icon="users" title={foreign ? `This pet parent belongs to ${locations.find((l) => l.id === customerRow?.home_location_id)?.short_name ?? 'the other location'}` : 'Customer not found'} body={foreign ? 'You are pinned to your own location; ask a manager or owner to open it.' : undefined} action={<Button onClick={() => nav('/desk/customers')}>Back to customers</Button>} /></div>;
   const profile = profiles[0];
   const invoiceDue = invoices.filter((i) => i.status === 'issued').reduce((s, i) => s + i.balance, 0);
   const balance = Math.round((customer.balance + invoiceDue) * 100) / 100;

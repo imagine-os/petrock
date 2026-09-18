@@ -1,5 +1,5 @@
 .badge { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-xs); font-weight: var(--fw-semibold); line-height: 1; white-space: nowrap; background: var(--color-surface-3); color: var(--color-text-muted); }
-.badge-sm { height: 20px; padding: 0 8px; font-size: 11px; }
+.badge-sm { height: 20px; padding: 0 8px; font-size: var(--fs-xs); }
 .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
 .badge-primary { background: var(--color-primary-soft); color: var(--color-primary-text); }
 .badge-success { background: var(--color-success-bg); color: var(--color-success); }

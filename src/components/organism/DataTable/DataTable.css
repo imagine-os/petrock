@@ -8,14 +8,14 @@
 .datatable th { background: var(--color-surface-3); color: var(--color-heading); font-weight: var(--fw-semibold); font-size: var(--fs-xs); }
 .datatable thead.is-sticky th { position: sticky; top: 0; z-index: 2; }
 .datatable thead.is-sticky .datatable-groups th { top: 0; } .datatable thead.is-sticky .datatable-groups + tr th { top: 32px; }
-.datatable-groups th { height: 32px; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); background: var(--color-surface-2); }
+.datatable-groups th { height: 32px; text-align: center; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); background: var(--color-surface-2); }
 .datatable-groups th.has-group { border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); }
 .datatable-sort { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 0; color: inherit; font: inherit; }
 .datatable-sorticon { color: var(--color-text-faint); } th[aria-sort] .datatable-sorticon { color: var(--color-primary-text); }
 .datatable tbody tr:last-child td { border-bottom: 0; }
 .datatable tbody tr.is-clickable { cursor: pointer; } .datatable tbody tr.is-clickable:hover td { background: var(--color-surface-tint-2); }
 .datatable tbody tr.is-selected td { background: var(--color-surface-tint); }
-.datatable-json { font-size: 11px; max-width: 320px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle; }
+.datatable-json { font-size: var(--fs-xs); max-width: 320px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle; }
 .datatable-actions { text-align: right; width: 1%; } .datatable-actions > * { display: inline-flex; gap: 4px; }
 .datatable-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
 .datatable-page { border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--r-md); width: 28px; height: 28px; }

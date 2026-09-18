@@ -9,7 +9,7 @@ interface ToastCtx { toast: (t: Omit<ToastItem, 'id'> | string) => void; dismiss
 const Ctx = createContext<ToastCtx | null>(null);
 const ICON: Record<ToastTone, IconName> = { info: 'info', success: 'check', warn: 'warning', danger: 'close' };
 
-/** Mount once (App). `useToast().toast('Saved')` from anywhere. Auto-dismisses after 4 s. */
+/** Mount once (App). `useToast().toast('Saved')` from anywhere. Auto-dismisses after 4 s; at most 3 stacked (2 on phones, see Toast.css). */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const dismiss = useCallback((id: number) => setItems((xs) => xs.filter((x) => x.id !== id)), []);

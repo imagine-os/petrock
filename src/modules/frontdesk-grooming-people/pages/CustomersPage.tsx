@@ -19,7 +19,7 @@ import '../module.css';
 export function CustomersPage() {
   const nav = useNavigate();
   const { can } = useSession();
-  const { locationId, allLocations, location } = useLocation();
+  const { locationId, allLocations, location, canSwitch } = useLocation();
   const { customers, pets, vaccineOf } = usePeople();
   const { rows: profiles } = useTable<CustomerProfileRow>('customer_profiles');
   const { rows: locations } = useTable<LocationRow>('locations');
@@ -52,7 +52,7 @@ export function CustomersPage() {
       </div>
       <DataTable<Row> columns={columns} rows={rows} rowKey={(r) => r.id} searchable onRowClick={(r) => nav(`/desk/customers/${r.id}`)} emptyText="No customers match"
         filters={[{ key: 'status', label: 'Status', options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], test: (r, v) => r.status === v }, { key: 'balance', label: 'Balance', options: [{ value: 'due', label: 'Balance due' }, { value: 'clear', label: 'Nothing due' }], test: (r, v) => (v === 'due' ? r.balance > 0 : r.balance <= 0) }]}
-        toolbar={<Button size="sm" variant={scopeAll ? 'primary' : 'secondary'} icon="location" onClick={() => setScopeAll((s) => !s)}>{scopeAll ? 'All locations' : `${location.short_name} only`}</Button>} />
+        toolbar={canSwitch ? <Button size="sm" variant={scopeAll ? 'primary' : 'secondary'} icon="location" onClick={() => setScopeAll((s) => !s)}>{scopeAll ? 'All locations' : `${location.short_name} only`}</Button> : undefined} />
     </div>
   );
 }

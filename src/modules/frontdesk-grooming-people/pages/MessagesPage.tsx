@@ -72,7 +72,7 @@ export function MessagesPage() {
     const now = new Date().toISOString();
     await data.insert<MessageRow>('messages', { conversation_id: conv.id, sender: 'staff', sender_user_id: user.id, text, image_url: null, sent_at: now, read: true });
     await data.update<ConversationRow>('conversations', conv.id, { last_message_at: now, last_preview: text.slice(0, 80), unread_customer: conv.unread_customer + 1, status: 'open' });
-    await notify(data, cust?.user_id, 'message', 'New message from the Front Desk', text.slice(0, 120), '/app/chat');
+    await notify(data, cust?.user_id, 'message', 'New message from the Front Desk', text.slice(0, 120), `/app/inbox/${conv.id}`);
   };
   const assign = async (userId: string) => {
     if (!conv) return;

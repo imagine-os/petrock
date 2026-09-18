@@ -87,8 +87,10 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
     onBlockClick?.(b);
     if (!renderDetail) return;
     const r = el.getBoundingClientRect();
-    const vw = window.innerWidth;
-    setActive({ block: b, x: Math.min(Math.max(8, r.left), vw - 328), y: r.bottom + 6 });
+    const vw = window.innerWidth, vh = window.innerHeight, popH = 300;
+    // below the block by default; above it when that would run off the bottom of the viewport
+    const y = r.bottom + 6 + popH > vh ? Math.max(8, r.top - 6 - popH) : r.bottom + 6;
+    setActive({ block: b, x: Math.min(Math.max(8, r.left), vw - 328), y });
   };
 
   return (

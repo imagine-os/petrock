@@ -131,7 +131,7 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
 export const type = {
   'font-sans': "'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
   'font-mono': "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
-  'fs-2xs': '11px', 'fs-xs': '12px', 'fs-sm': '14px', 'fs-md': '16px', 'fs-lg': '20px', 'fs-xl': '24px', 'fs-2xl': '32px', 'fs-3xl': '40px',
+  'fs-2xs': '12px', 'fs-xs': '12px', 'fs-sm': '14px', 'fs-md': '16px', 'fs-lg': '20px', 'fs-xl': '24px', 'fs-2xl': '32px', 'fs-3xl': '40px',
   'lh-xs': '16px', 'lh-sm': '20px', 'lh-md': '24px', 'lh-lg': '28px', 'lh-xl': '32px', 'lh-2xl': '40px',
   'lh-tight': '1.2', 'lh-base': '1.5',
   'fw-regular': '400', 'fw-medium': '500', 'fw-semibold': '600', 'fw-bold': '700',

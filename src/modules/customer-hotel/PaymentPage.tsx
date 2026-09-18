@@ -8,7 +8,7 @@ import { useSession } from '../../auth/SessionProvider';
 import { fmtMoney, round2, type QuoteLine } from '../../pricing/engine';
 import { HotelBookingFrame } from '../../components/template/HotelBookingFrame/HotelBookingFrame';
 import { Button } from '../../components/atom/Button/Button';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Card } from '../../components/molecule/Card/Card';
 import { Icon } from '../../components/atom/Icon/Icon';
 import { HotelEstimateCard } from '../../components/molecule/HotelEstimateCard/HotelEstimateCard';

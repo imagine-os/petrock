@@ -11,4 +11,4 @@
 .convrow-preview { font-size: var(--fs-sm); color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .convrow-preview.is-unread { color: var(--color-text); }
 .convrow-prefix { color: var(--color-text-faint); }
-.convrow-unread { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-full); background: var(--color-primary); color: var(--color-text-on-primary); font-size: 11px; font-weight: var(--fw-bold); line-height: 20px; text-align: center; }
+.convrow-unread { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-full); background: var(--color-primary); color: var(--color-text-on-primary); font-size: var(--fs-xs); font-weight: var(--fw-bold); line-height: 20px; text-align: center; }

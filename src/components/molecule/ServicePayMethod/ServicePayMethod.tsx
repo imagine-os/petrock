@@ -1,4 +1,4 @@
-import { RadioGroup } from '../../atom/Radio/Radio';
+import { RadioGroup } from '../../atom/RadioGroup/RadioGroup';
 import { Input } from '../../atom/Input/Input';
 import { Icon } from '../../atom/Icon/Icon';
 import './ServicePayMethod.css';

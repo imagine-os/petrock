@@ -43,7 +43,7 @@ export function TimelinePage() {
   const [showDaycare, setShowDaycare] = useState(true);
   const [showUnassigned, setShowUnassigned] = useState(true);
   const [move, setMove] = useState<{ row: ReservationRow; room: RoomRow | null; dayIn: string; dayOut: string } | null>(null);
-  const [roomFor, setRoomFor] = useState<ReservationRow | null>(null);
+  const [roomFor, setRoomFor] = useState<{ row: ReservationRow; checkIn: boolean } | null>(null);
   const days = Number(span);
 
   const groups = useMemo<TimelineGroup[]>(() => {
@@ -123,8 +123,8 @@ export function TimelinePage() {
             {r.kind === 'hotel' && r.booking && (
               <div className="fdr-inline-actions" style={{ justifyContent: 'flex-start' }}>
                 <Button size="sm" onClick={() => nav(`/desk/reservations/${r.id}`)}>Open</Button>
-                <Button size="sm" variant="secondary" icon="bed" onClick={() => { close(); setRoomFor(r); }}>{r.roomId ? 'Change room' : 'Assign room'}</Button>
-                <BookingStatusMenu status={r.status} align="left" onSelect={(to) => { close(); if (to === 'checked_in' && !r.roomId) { setRoomFor(r); return; } actions.changeStatus(r.booking!, to); }} />
+                <Button size="sm" variant="secondary" icon="bed" onClick={() => { close(); setRoomFor({ row: r, checkIn: false }); }}>{r.roomId ? 'Change room' : 'Assign room'}</Button>
+                <BookingStatusMenu status={r.status} align="left" onSelect={(to) => { close(); if (to === 'checked_in' && !r.roomId) { setRoomFor({ row: r, checkIn: true }); return; } actions.changeStatus(r.booking!, to); }} />
               </div>
             )}
             {r.kind === 'daycare' && <Button size="sm" variant="secondary" onClick={() => nav('/desk/reservations')}>Open in table</Button>}
@@ -138,7 +138,7 @@ export function TimelinePage() {
           <p className="xs muted">Nights stay the same (R-X07); the rate is not re-quoted here - edit the booking to re-price a date change.</p>
         </div>}
       </Modal>
-      {roomFor?.booking && <RoomPickModal booking={roomFor.booking} rooms={rooms} roomTypes={roomTypes} bookings={bookings} heaviestLbs={roomFor.heaviestLbs} onClose={() => setRoomFor(null)} onPick={(roomId, code) => { const b = roomFor.booking!; setRoomFor(null); void actions.assignRoom(b, roomId, code); }} />}
+      {roomFor?.row.booking && <RoomPickModal booking={roomFor.row.booking} rooms={rooms} roomTypes={roomTypes} bookings={bookings} heaviestLbs={roomFor.row.heaviestLbs} title={roomFor.checkIn ? `Check in ${roomFor.row.code}` : undefined} confirmLabel={roomFor.checkIn ? 'Assign & check in' : 'Assign room'} onClose={() => setRoomFor(null)} onPick={(roomId, code) => { const { row, checkIn } = roomFor; setRoomFor(null); if (checkIn) actions.changeStatus(row.booking!, 'checked_in', { roomId }); else void actions.assignRoom(row.booking!, roomId, code); }} />}
       {actions.modal}
     </div>
   );

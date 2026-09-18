@@ -1,8 +1,8 @@
 .bottomnav { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; height: calc(var(--h-bottomnav) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--color-surface); border-top: 1px solid var(--color-border); }
-.bottomnav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--color-text-faint); font-size: 11px; font-weight: var(--fw-medium); text-decoration: none; min-width: 0; }
+.bottomnav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--color-text-faint); font-size: var(--fs-xs); font-weight: var(--fw-medium); text-decoration: none; min-width: 0; }
 .bottomnav-item:hover { text-decoration: none; }
 .bottomnav-item.is-active { color: var(--color-primary-text); }
 .bottomnav-icon { position: relative; display: inline-flex; padding: 4px 12px; border-radius: var(--r-pill); }
 .bottomnav-item.is-active .bottomnav-icon { background: var(--color-primary-soft); }
-.bottomnav-badge { position: absolute; top: 0; right: 6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: var(--r-full); background: var(--color-danger); color: #fff; font-size: 10px; line-height: 16px; text-align: center; font-weight: var(--fw-bold); }
+.bottomnav-badge { position: absolute; top: 0; right: 6px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--r-full); background: var(--color-danger); color: #fff; font-size: var(--fs-xs); line-height: 18px; text-align: center; font-weight: var(--fw-bold); }
 .bottomnav-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }

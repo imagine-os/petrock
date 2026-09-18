@@ -98,7 +98,7 @@ export function seed(ctx: SeedCtx) {
 
   // ---- staff notifications ----
   const staffNtf: [string, string, string, string, string, number, boolean][] = [
-    ['usr_desk', 'new_booking', 'New app booking', 'Grace Nakamura requested a Suite for Daisy and Apollo (PR-1028)', '/desk/customers/cus_8', 1, false],
+    ['usr_desk_ww', 'new_booking', 'New app booking', 'Grace Nakamura requested a Suite for Daisy and Apollo (PR-1028)', '/desk/customers/cus_8', 1, false],
     ['usr_desk', 'message', 'New message from Sofia Marchetti', 'Can Nala get a nail trim during daycare tomorrow?', '/desk/messages?conversation=conv_6', 2, false],
     ['usr_desk', 'vaccine_expiring', 'Vaccine expiring', "Bruno's Bordetella expired; flag on today's groom", '/desk/pets/pet_4', 4, true],
     ['usr_desk', 'appointment_requested', 'Groom request', 'Avery Thompson asked for a Platinum Groom for Biscuit today 1:00 PM', '/desk/grooming/ap_605', 3, false],
@@ -115,4 +115,7 @@ export function seed(ctx: SeedCtx) {
   // ---- a couple of mock attachments ----
   add('attachments', { id: 'att_1', subject_table: 'pets', subject_id: 'pet_6', name: 'max-vet-letter.pdf', url: 'mock://uploads/max-vet-letter.pdf', size_bytes: 184_320, mime: 'application/pdf', uploaded_by: 'usr_desk' });
   add('attachments', { id: 'att_2', subject_table: 'customers', subject_id: 'cus_1', name: 'thompson-intake-form.pdf', url: 'mock://uploads/thompson-intake-form.pdf', size_bytes: 96_100, mime: 'application/pdf', uploaded_by: 'usr_desk' });
+
+  // ---- saved groomer column order for the Encino groomer (F-30 context menu) ----
+  add('groomer_column_prefs', { id: 'gcp_seed_1', location_id: 'loc_encino', user_id: 'usr_groomer', groomer_id: 'emp_theo', color: null, sort_order: 0, hidden: false });
 }

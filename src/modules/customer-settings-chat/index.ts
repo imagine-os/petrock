@@ -20,7 +20,7 @@ import { ChangePasswordPage } from './ChangePasswordPage';
 import * as S from './specs';
 export { strings } from './useCustomerAccount';
 
-const roles: Role[] = ['customer', 'super_admin'];
+const roles: Role[] = ['customer']; // super admin passes hasRole() when not viewing as another role
 const page = (path: string, el: () => JSX.Element, spec: RouteDef['spec'], nav?: RouteDef['nav']): RouteDef => ({ path, element: h(el), spec, roles, surface: 'customer', layout: 'mobile', nav });
 
 export const routes: RouteDef[] = [

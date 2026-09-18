@@ -1,12 +1,12 @@
 # Petrock - rulebook for agents
 
-Petrock is the all-in-one software for **Petrock Hotel** (dog hotel & spa; Encino and Westwood, Los Angeles). One codebase, four surfaces: customer app (390 phone design, Capacitor later), front desk web (1440), owner/admin web, and a super-admin **builder tool** on every page. Read `docs/build-plan.md`, `docs/decisions.md` (D-001..D-019 are binding; D-020..D-174 are the module build decisions, rows marked proposed need Justin), `docs/figma/screen-catalog.md` (what each screen shows), `docs/data/entities-from-designs.md`, `docs/rules/business-rules-from-designs.md`, `docs/design/tokens-draft.md` before building anything.
+Petrock is the all-in-one software for **Petrock Hotel** (dog hotel & spa; Encino and Westwood, Los Angeles). One codebase, four surfaces: customer app (390 phone design, Capacitor later), front desk web (1440), owner/admin web, and a super-admin **builder tool** on every page. Read `docs/build-plan.md`, `docs/decisions.md` (D-001..D-019 are binding; D-020..D-182 are the module build and QA-fix decisions, rows marked proposed need Justin), `docs/figma/screen-catalog.md` (what each screen shows), `docs/data/entities-from-designs.md`, `docs/rules/business-rules-from-designs.md`, `docs/design/tokens-draft.md` before building anything.
 
 Live: https://imagine-os.github.io/petrock/ (GitHub Pages, deployed from `main` by `.github/workflows/pages.yml`). Local: `npm install && npm run dev`, hub at `http://localhost:5173/#/`.
 
 ## Stack (binding)
 
-Vite 5 + React 18 + TypeScript strict; `react-router-dom` **HashRouter**; plain CSS with tokens as CSS custom properties (no Tailwind); `base: './'`. Mock data (localStorage) behind the `DataProvider` interface with `CompanyOsProvider` as the REST adapter seam (`docs/reference/company-os.md`). Payments behind `PaymentProvider` (`MockPaymentProvider` now, `StripePaymentProvider` stub; no keys in the repo). Scripts: `dev`, `build` (= tokens + tsc + vite), `typecheck`, `tokens`, `sql`, `specs`, `screenshots`, `test:pricing`. Chromium is preinstalled at `/opt/pw-browsers`; never run `playwright install`.
+Vite 5 + React 18 + TypeScript strict; `react-router-dom` **HashRouter**; plain CSS with tokens as CSS custom properties (no Tailwind); `base: './'`. Mock data (localStorage) behind the `DataProvider` interface with `CompanyOsProvider` as the REST adapter seam (`docs/reference/company-os.md`). Payments behind `PaymentProvider` (`MockPaymentProvider` now, `StripePaymentProvider` stub; no keys in the repo). Scripts: `dev`, `build` (= tokens + tsc + vite), `typecheck`, `tokens`, `sql`, `specs`, `screenshots`, `qa:responsive` (full D-016 matrix, `docs/qa/responsive-report.*`), `test:pricing`; `node scripts/qa-fixes-e2e.mjs` re-runs the fixed journeys. Chromium is preinstalled at `/opt/pw-browsers`; never run `playwright install`.
 
 ## Folder map
 

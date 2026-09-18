@@ -4,7 +4,7 @@
  * notifications. Runs after core (order 100). All data fictional.
  */
 import type { SeedCtx } from './index';
-import { addDays, at } from './rng';
+import { addDays, at, isoDay } from './rng';
 import { NOTIFICATION_CATEGORIES } from '../schema/customer-settings-chat';
 import type { BaseRow } from '../schema/types';
 
@@ -140,4 +140,7 @@ export function seed(ctx: SeedCtx) {
 
   // ---- one support request answered, for the help page history ----
   if (demo) add('support_requests', { id: 'sr_1', location_id: demo.home_location_id ?? 'loc_encino', customer_id: demo.id, user_id: demoUserId, user_name: 'Avery Thompson', email: 'avery.thompson@demo.petrock.test', topic: 'payment', message: 'Can I get a receipt for last month\'s stay emailed to me?', status: 'resolved', staff_reply: 'Sent! You can also open it any time under Bookings > receipt.' });
+
+  // ---- one pending deletion request from a fictional secondary customer (R-M05 / R-M21) ----
+  add('account_deletion_requests', { id: 'adr_seed_1', user_id: 'usr_cust_riley', customer_id: null, reason: 'moving', details: 'Relocating to Portland next month.', status: 'requested', requested_at: at(D(-2), 18, 5), scheduled_for: isoDay(D(28)), completed_at: null });
 }

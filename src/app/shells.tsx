@@ -9,8 +9,9 @@ export function withShell(route: RouteDef, children: ReactNode): ReactNode {
   const allRoutes = getRoutes();
   switch (route.surface) {
     case 'customer': return <PhoneShell surface="customer" routes={allRoutes} homeTo="/app">{children}</PhoneShell>;
-    case 'frontdesk': return <DesktopShell surfaces={['frontdesk', 'manual']} routes={allRoutes} title="Front desk">{children}</DesktopShell>;
-    case 'admin': return <DesktopShell surfaces={['admin', 'frontdesk', 'manual']} routes={allRoutes} title="Owner / admin">{children}</DesktopShell>;
+    // one staff shell: the menu is filtered per role (hasRole), so a manager sees the admin pages they may open from any desk page (D-014)
+    case 'frontdesk':
+    case 'admin': return <DesktopShell surfaces={['admin', 'frontdesk', 'manual']} routes={allRoutes} title="Front desk" titleByRole>{children}</DesktopShell>;
     // dev keeps the admin nav beside the developer group so a super admin can go back
     case 'dev': return <DesktopShell surfaces={['dev', 'docs', 'admin']} routes={allRoutes} title="Developer">{children}</DesktopShell>;
     case 'docs': return <DesktopShell surfaces={['docs', 'dev']} routes={allRoutes} title="Docs" feedback={false}>{children}</DesktopShell>;

@@ -74,7 +74,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const can = useCallback((p: Permission) => roleCan(role, p), [role]);
   const hasRole = useCallback((roles: Role[]) => roles.includes('public') || roles.includes(role) || (isSuperAdmin && !state.viewAs), [role, isSuperAdmin, state.viewAs]);
 
-  const value = useMemo<SessionCtx>(() => ({ user, role, isSuperAdmin, devMode, viewAs: state.viewAs, switchUser, signOut, setDevMode, setViewAs, can, hasRole }),
+  const value = useMemo<SessionCtx>(() => ({ user, role, isSuperAdmin, devMode, viewAs: isSuperAdmin ? state.viewAs : null, switchUser, signOut, setDevMode, setViewAs, can, hasRole }),
     [user, role, isSuperAdmin, devMode, state.viewAs, switchUser, signOut, setDevMode, setViewAs, can, hasRole]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

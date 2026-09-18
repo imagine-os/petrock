@@ -21,7 +21,7 @@ export const routes: RouteDef[] = [
   { path: '/desk', element: h(TodayPage), spec: todaySpec, roles: STAFF_ROLES, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Today', icon: 'home', order: 0, group: 'overview' } },
   { path: '/desk/reservations', element: h(ReservationsTablePage), spec: tableSpec, roles: DESK, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Table', icon: 'table', order: 10, group: 'reservations' } },
   { path: '/desk/reservations/timeline', element: h(TimelinePage), spec: timelineSpec, roles: DESK, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Timeline', icon: 'calendar', order: 20, group: 'reservations' } },
-  { path: '/desk/reservations/board', element: h(BoardPage), spec: boardSpec, roles: STAFF_ROLES, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Board', icon: 'grid', order: 20, group: 'grooming' } },
+  { path: '/desk/reservations/board', element: h(BoardPage), spec: boardSpec, roles: DESK, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Board', icon: 'grid', order: 20, group: 'grooming' } },
   { path: '/desk/reservations/availability', element: h(AvailabilityPage), spec: availabilitySpec, roles: DESK, surface: 'frontdesk', layout: 'desktop', nav: { label: 'Availability', icon: 'search', order: 30, group: 'reservations' } },
   { path: '/desk/reservations/new', element: h(BookingFormPage), spec: formSpec, roles: DESK, surface: 'frontdesk', layout: 'desktop', nav: { label: 'New booking', icon: 'plus', order: 40, group: 'reservations' } },
   { path: '/desk/reservations/:id/edit', element: h(BookingFormPage), spec: formSpec, roles: DESK, surface: 'frontdesk', layout: 'desktop' },

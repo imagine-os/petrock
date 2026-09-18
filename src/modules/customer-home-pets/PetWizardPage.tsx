@@ -13,7 +13,7 @@ import { PetPhotoPicker } from '../../components/molecule/PetPhotoPicker/PetPhot
 import { Input } from '../../components/atom/Input/Input';
 import { Select } from '../../components/atom/Select/Select';
 import { Checkbox } from '../../components/atom/Checkbox/Checkbox';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { Textarea } from '../../components/atom/Textarea/Textarea';
 import { Toggle } from '../../components/atom/Toggle/Toggle';
 import { Card } from '../../components/molecule/Card/Card';

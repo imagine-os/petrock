@@ -17,7 +17,7 @@ import '../module.css';
 export function PetsPage() {
   const nav = useNavigate();
   const { can } = useSession();
-  const { locationId, allLocations, location } = useLocation();
+  const { locationId, allLocations, location, canSwitch } = useLocation();
   const { pets, customerById, vaccineOf } = usePeople();
   const [scopeAll, setScopeAll] = useState(allLocations);
   const rows = useMemo(() => pets.map((p) => ({ ...p, owner: customerById.get(p.customer_id), vaccine: vaccineOf.get(p.id)! })).filter((r) => scopeAll || !r.owner?.home_location_id || r.owner.home_location_id === locationId), [pets, customerById, vaccineOf, scopeAll, locationId]);
@@ -44,7 +44,7 @@ export function PetsPage() {
       </div>
       <DataTable<Row> columns={columns} rows={rows} rowKey={(r) => r.id} searchable onRowClick={(r) => nav(`/desk/pets/${r.id}`)} emptyText="No pets match"
         filters={[{ key: 'approval', label: 'Approval', options: [{ value: 'approved', label: 'Approved' }, { value: 'pending', label: 'Pending' }, { value: 'needs_details', label: 'Needs details' }], test: (r, v) => r.approval_status === v }, { key: 'vax', label: 'Vaccines', options: [{ value: 'ok', label: 'OK' }, { value: 'issue', label: 'Any issue' }, { value: 'pending', label: 'To verify' }, { value: 'expired', label: 'Expired' }, { value: 'missing', label: 'Missing' }], test: (r, v) => (v === 'issue' ? r.vaccine.overall !== 'ok' : r.vaccine.overall === v) }, { key: 'size', label: 'Size', options: Object.entries(sizeLabel).map(([k, l]) => ({ value: k, label: l })), test: (r, v) => r.size === v }]}
-        toolbar={<Button size="sm" variant={scopeAll ? 'primary' : 'secondary'} icon="location" onClick={() => setScopeAll((s) => !s)}>{scopeAll ? 'All locations' : `${location.short_name} only`}</Button>} />
+        toolbar={canSwitch ? <Button size="sm" variant={scopeAll ? 'primary' : 'secondary'} icon="location" onClick={() => setScopeAll((s) => !s)}>{scopeAll ? 'All locations' : `${location.short_name} only`}</Button> : undefined} />
     </div>
   );
 }

@@ -220,14 +220,16 @@ export function seed(ctx: SeedCtx) {
   });
 
   // ---- conversations & messages ----
+  // Relative to seeding time (conv_1 ended ~3 h ago, older threads one day apart) so a fresh staff reply always sorts last.
+  const chatAt = (i: number, j: number) => new Date(Date.now() - (i * 24 * 60 + 180) * 60000 + j * 7 * 60000).toISOString();
   customers.slice(0, 5).forEach((c, i) => {
     const locId = c.home_location_id ?? DEFAULT_LOCATION_ID;
-    const conv = add('conversations', { id: `conv_${i + 1}`, location_id: locId, customer_id: c.id, last_message_at: at(D(-i), 14, 10), last_preview: i === 0 ? 'Thanks! See you Friday.' : 'How much is the Gold package?', unread_staff: i === 1 ? 2 : 0, unread_customer: 0, status: 'open' });
+    const conv = add('conversations', { id: `conv_${i + 1}`, location_id: locId, customer_id: c.id, last_message_at: chatAt(i, 5), last_preview: i === 0 ? 'Thanks! See you Friday.' : 'How much is the Gold package?', unread_staff: i === 1 ? 2 : 0, unread_customer: 0, status: 'open' });
     const thread: [('customer' | 'staff' | 'system'), string][] = [
       ['system', 'Session start'], ['customer', `Hi! Quick question about ${custPets(c.id)[0]?.name ?? 'my dog'}'s stay.`], ['staff', 'Of course, happy to help. What would you like to know?'],
-      ['customer', 'How much is the Gold package for a large dog?'], ['staff', 'The Gold Groom is $50-$135 depending on size; large is $80. We generally do grooms at the end of hotel stays.'], ['customer', i === 0 ? 'Thanks! See you Friday.' : 'Great, please add it to the booking.'],
+      ['customer', 'How much is the Gold package for a large dog?'], ['staff', 'Gold pricing depends on size; the app estimate shows the exact amount for your dog. We generally do grooms at the end of hotel stays.'], ['customer', i === 0 ? 'Thanks! See you Friday.' : 'Great, please add it to the booking.'],
     ];
-    thread.forEach(([sender, text], j) => add('messages', { id: `msg_${i + 1}_${j}`, conversation_id: conv.id, sender, sender_user_id: sender === 'staff' ? 'usr_desk' : sender === 'customer' ? c.user_id : null, text, image_url: null, sent_at: at(D(-i), 13, j * 7), read: !(i === 1 && j >= 4) }));
+    thread.forEach(([sender, text], j) => add('messages', { id: `msg_${i + 1}_${j}`, conversation_id: conv.id, sender, sender_user_id: sender === 'staff' ? 'usr_desk' : sender === 'customer' ? c.user_id : null, text, image_url: null, sent_at: chatAt(i, j), read: !(i === 1 && j >= 4) }));
   });
 
   // ---- notifications (customer + staff) ----

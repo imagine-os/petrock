@@ -1,0 +1,351 @@
+{
+ "results": [
+  {
+   "flow": "F1",
+   "step": "C-03 sign-up form renders",
+   "ok": true,
+   "note": "",
+   "shot": "F1-01-signup.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-03 create account",
+   "ok": true,
+   "note": "",
+   "shot": "F1-02-signup-submitted.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-04 verify emailed code (demo hint)",
+   "ok": true,
+   "note": "code 247710",
+   "shot": "F1-03-verified.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-08 account created screen shows verified badge",
+   "ok": true,
+   "note": "",
+   "shot": "F1-04-welcome.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-10 home for a brand-new customer (no pets yet)",
+   "ok": true,
+   "note": "",
+   "shot": "F1-05-home-empty.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-12 add pet Rex with 3 required vaccines",
+   "ok": true,
+   "note": "pet_w0r0k6ia size L, 3 submitted records",
+   "shot": "F1-07-pet-Rex-profile.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-12 add pet Luna with 3 required vaccines",
+   "ok": true,
+   "note": "pet_ty7z5cwk size L, 3 submitted records",
+   "shot": "F1-09-pet-Luna-profile.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-13 pet profile shows Pending verification",
+   "ok": true,
+   "note": "",
+   "shot": ""
+  },
+  {
+   "flow": "F1",
+   "step": "C-30 choose 2 pets + 3 nights",
+   "ok": true,
+   "note": "2026-09-25 -> 2026-09-28",
+   "shot": "F1-10-hotel-pets-dates.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-31 room type cards priced from rates; pick Penthouse",
+   "ok": true,
+   "note": "penthouse card price label: $135.00 avg per night / pet",
+   "shot": "F1-11-hotel-room.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-32 pet details -> C-33 skip grooming",
+   "ok": true,
+   "note": "",
+   "shot": "F1-12-hotel-grooming.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-34 customer details",
+   "ok": true,
+   "note": "",
+   "shot": "F1-13-hotel-customer.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-35 estimate shows engine lines (3 nights x 2 dogs, multi-dog discount, tax, card fee)",
+   "ok": true,
+   "note": "base rates weekday=120 weekend=135",
+   "shot": "F1-14-hotel-estimate.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-36 pay deposit with mock card",
+   "ok": true,
+   "note": "Pay $228.89 -> booking PR-5240 pending_vaccines, deposit 228.89, total 742.97, payment paid",
+   "shot": "F1-15-hotel-paid.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-37 confirmation says Almost there (pending vaccines)",
+   "ok": true,
+   "note": "",
+   "shot": "F1-16-hotel-done.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-39 reservation detail shows Pending verification",
+   "ok": true,
+   "note": "",
+   "shot": "F1-17-reservation-detail.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-38 my reservations lists the stay",
+   "ok": true,
+   "note": "",
+   "shot": "F1-18-my-reservations.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-56 queue lists the 6 submitted proofs for the new pets",
+   "ok": true,
+   "note": "6 rows",
+   "shot": "F2-19-vaccine-queue.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-56 verify all 6 -> pets approved, booking auto-confirmed",
+   "ok": true,
+   "note": "booking PR-5240 -> confirmed; queue row still listed after its Verify click (no reload): true",
+   "shot": "F2-20-vaccines-verified.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-12 booking detail opens for an app-created booking",
+   "ok": false,
+   "note": "white screen (no error boundary); last page error: [pageerror] E.lines is not iterable",
+   "shot": "F2-21-FAIL-desk-booking-detail.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 timeline shows the stay block (before check-in it sits in the unassigned row)",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-22-FAIL-timeline.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 fallback check-in from the timeline popover (Check in -> room pick -> Check in again)",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-23-FAIL-timeline-checkin.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 timeline block now shows checked_in",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-24-FAIL-timeline-checked-in.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-12 PIN approval modal on a gated transition (confirmed -> No show) writes an approvals row",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-25-FAIL-pin-approved.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-10 reservations table lists the booking (All upcoming + search)",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-26-FAIL-table.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-01 today view renders after the changes",
+   "ok": false,
+   "note": "page.waitForSelector: Timeout 8000ms exceeded.",
+   "shot": "F2-27-FAIL-desk-today.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-51 pick Rex (L) + Platinum priced from packages.price_l",
+   "ok": false,
+   "note": "locator.innerText: Error: strict mode violation: locator('.pkgcard').filter({ hasText: 'Platinum' }) resolved to 2 elements:",
+   "shot": "F3-28-FAIL-groom-package.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "flow aborted",
+   "ok": false,
+   "note": "critical step failed: C-51 pick Rex (L) + Platinum priced from packages.price_l",
+   "shot": ""
+  },
+  {
+   "flow": "F4",
+   "step": "A-20 edit Suite Mon-Thu base rate 85 -> 99",
+   "ok": true,
+   "note": "was 85 (Suite Mon-Thu Base $85 Edit), now 99; audit_log rows for rates: 2",
+   "shot": "F4-29-rates-edited.jpg"
+  },
+  {
+   "flow": "F4",
+   "step": "A-20 table shows $99.00 after save",
+   "ok": false,
+   "note": "locator.waitFor: Timeout 4000ms exceeded.",
+   "shot": "F4-30-FAIL-rates-table.jpg"
+  },
+  {
+   "flow": "F4",
+   "step": "C-30/C-31 new quote: Suite avg nightly = $99.00 for 2026-09-28 -> 2026-09-30",
+   "ok": true,
+   "note": "Book now Suite 42 of 42 free Petrock Suites offer a premium bed, toys, potty pads, playtime, 2 walks per day and a bedtime tuck-in. $99.00 avg per night / pet",
+   "shot": "F4-31-quote-room-99.jpg"
+  },
+  {
+   "flow": "F4",
+   "step": "C-35 estimate = 2 x $99 + 2% boarding tax",
+   "ok": true,
+   "note": "subtotal $198 total $201.96",
+   "shot": "F4-32-quote-estimate-99.jpg"
+  },
+  {
+   "flow": "F5",
+   "step": "F-57 staff opens Avery thread and sends a reply",
+   "ok": true,
+   "note": "messages row sender=staff, conv.unread_customer=3, notification link=/app/chat",
+   "shot": "F5-33-desk-reply.jpg"
+  },
+  {
+   "flow": "F5",
+   "step": "C-81 inbox shows the thread with the new preview",
+   "ok": false,
+   "note": "locator.waitFor: Timeout 4000ms exceeded.",
+   "shot": "F5-34-FAIL-customer-inbox.jpg"
+  },
+  {
+   "flow": "F5",
+   "step": "C-82 customer sees the staff reply in the thread",
+   "ok": true,
+   "note": "read=true after opening",
+   "shot": "F5-35-customer-thread.jpg"
+  },
+  {
+   "flow": "F5",
+   "step": "C-80 notification link target /app/chat resolves",
+   "ok": false,
+   "note": "/app/chat renders \"Nothing here\" (route missing; F-57 notify() and C-55 link use /app/chat)",
+   "shot": "F5-36-FAIL-app-chat-route.jpg"
+  },
+  {
+   "flow": "F6",
+   "step": "A-41 add location (4 steps)",
+   "ok": true,
+   "note": "loc_syda6zjn \"Petrock Santa Monica\" active=true, 4 capacities rows, landed on /admin/locations/loc_syda6zjn",
+   "shot": "F6-38-location-created.jpg"
+  },
+  {
+   "flow": "F6",
+   "step": "TopBar location switcher lists the new location",
+   "ok": true,
+   "note": "options: Encino | Westwood | Santa Monica | All locations; topbar now \"Owner / admin Encino Westwood Santa Monica All locations 1 JB Jordan Blake Owner\"",
+   "shot": "F6-39-location-switcher.jpg"
+  },
+  {
+   "flow": "F6",
+   "step": "A-10 company page lists 3 locations",
+   "ok": true,
+   "note": "",
+   "shot": "F6-40-company-locations.jpg"
+  },
+  {
+   "flow": "F6",
+   "step": "Customer sign-up \"usual location\" select includes it",
+   "ok": true,
+   "note": "Petrock Encino · Encino, Los Angeles | Petrock Westwood · Westwood, Los Angeles | Petrock Santa Monica · Santa Monica, Los Angeles",
+   "shot": ""
+  },
+  {
+   "flow": "F7",
+   "step": "F-01 FeedbackButton opens and submits",
+   "ok": true,
+   "note": "feedback row page_code=F-01 route=/desk role=front_desk status=new",
+   "shot": "F7-42-feedback-sent.jpg"
+  },
+  {
+   "flow": "F7",
+   "step": "A-36 owner sees it in the inbox and opens it (new -> seen)",
+   "ok": true,
+   "note": "status now seen",
+   "shot": "F7-43-feedback-inbox.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "TopBar Dark mode toggle sets data-theme=dark",
+   "ok": true,
+   "note": "body background rgb(14, 12, 17)",
+   "shot": "F8-44-desk-dark.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "dark persists across reload (localStorage petrock.theme)",
+   "ok": true,
+   "note": "{\"theme\":\"dark\",\"brand\":\"petrock\",\"skin\":\"styled\"}",
+   "shot": "F8-45-desk-dark-reloaded.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "toggle back to light persists too",
+   "ok": true,
+   "note": "",
+   "shot": ""
+  },
+  {
+   "flow": "F8",
+   "step": "C-72 dark mode switch persists for the customer app",
+   "ok": false,
+   "note": "locator.check: Timeout 8000ms exceeded.",
+   "shot": "F8-46-FAIL-app-settings-dark.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "hub reflects the same stored theme",
+   "ok": false,
+   "note": "light",
+   "shot": "F8-47-FAIL-hub-dark.jpg"
+  }
+ ],
+ "errors": [
+  "[console] TypeError: E.lines is not iterable\n    at goe (http://localhost:4325/assets/index-C5Mc16ac.js:18319:176535)\n    at Cy (http://localhost:4325/assets/index-C5Mc16ac.js:38:17018)\n    at r8 (http://localh",
+  "[pageerror] E.lines is not iterable"
+ ],
+ "state": {
+  "email": "qa.parent.mu6mjs6x@example.com",
+  "customerUserId": "use_rxv56fpw",
+  "customerId": "cus_88ypqrsz",
+  "petIds": [
+   "pet_w0r0k6ia",
+   "pet_ty7z5cwk"
+  ],
+  "bookingId": "boo_jwawrbvc",
+  "bookingCode": "PR-5240",
+  "orderId": null,
+  "f56Stale": true
+ },
+ "ranAt": "2026-09-18T07:17:57.645Z"
+}

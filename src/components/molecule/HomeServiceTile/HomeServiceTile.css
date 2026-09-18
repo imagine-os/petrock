@@ -4,5 +4,5 @@
 .svctile.is-disabled { background: var(--color-surface-3); color: var(--color-text-muted); box-shadow: none; cursor: not-allowed; }
 .svctile-icon { display: inline-flex; }
 .svctile-label { font-size: var(--fs-xs); font-weight: var(--fw-semibold); line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
-.svctile-hint { font-size: 10px; opacity: .8; }
+.svctile-hint { font-size: var(--fs-xs); opacity: .8; }
 :root[data-theme="dark"] .svctile { color: var(--color-bg); }

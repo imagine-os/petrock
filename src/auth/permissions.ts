@@ -1,6 +1,6 @@
 import type { Role } from './roles';
 
-/** String permissions (R-L05 seeds the staff set). Pages ask `can('bookings.status')`, never `role === ...`. */
+/** String permissions (R-L05 seeds the staff set). Pages ask `can('bookings.status')`, never `role === ...`. bookings.status enables the status menu (front desk+); PIN_GATED_TRANSITIONS still need a manager PIN. */
 export type Permission =
   | 'bookings.read' | 'bookings.write' | 'bookings.write_any' | 'bookings.status' | 'bookings.cancel' | 'bookings.delete'
   | 'appointments.read' | 'appointments.write' | 'daycare.write'
@@ -25,7 +25,7 @@ const ALL: Permission[] = [
 ];
 
 const FRONT_DESK: Permission[] = [
-  'bookings.read', 'bookings.write_any', 'appointments.read', 'appointments.write', 'daycare.write', 'customers.read', 'customers.write',
+  'bookings.read', 'bookings.write_any', 'bookings.status', 'appointments.read', 'appointments.write', 'daycare.write', 'customers.read', 'customers.write',
   'pets.read', 'pets.write', 'vaccines.verify', 'payments.read', 'payments.write', 'invoices.write', 'messages.read', 'messages.write',
   'feedback.write', 'docs.read', 'cash_drawer.open',
 ];
@@ -33,7 +33,7 @@ const FRONT_DESK: Permission[] = [
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   super_admin: ALL,
   owner: ALL.filter((p) => p !== 'dev.tools'),
-  manager: [...FRONT_DESK, 'bookings.status', 'bookings.cancel', 'bookings.delete', 'customers.delete', 'payments.refund', 'discounts.apply', 'employees.read', 'reports.read', 'reports.employees', 'reviews.moderate', 'approvals.grant', 'feedback.read', 'audit.read', 'tables.read'],
+  manager: [...FRONT_DESK, 'bookings.cancel', 'bookings.delete', 'customers.delete', 'payments.refund', 'discounts.apply', 'employees.read', 'reports.read', 'reports.employees', 'reviews.moderate', 'approvals.grant', 'feedback.read', 'audit.read', 'tables.read'],
   front_desk: FRONT_DESK,
   groomer: ['appointments.read', 'appointments.write', 'pets.read', 'customers.read', 'messages.read', 'feedback.write', 'docs.read'],
   customer: ['bookings.read', 'bookings.write', 'appointments.read', 'pets.read', 'pets.write', 'payments.read', 'messages.read', 'messages.write', 'docs.read'],

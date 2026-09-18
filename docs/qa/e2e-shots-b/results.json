@@ -1,0 +1,246 @@
+{
+ "results": [
+  {
+   "flow": "F1",
+   "step": "C-03 sign-up form renders",
+   "ok": true,
+   "note": "",
+   "shot": "F1-01-signup.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-03 create account",
+   "ok": true,
+   "note": "",
+   "shot": "F1-02-signup-submitted.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-04 verify emailed code (demo hint)",
+   "ok": true,
+   "note": "code 874737",
+   "shot": "F1-03-verified.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-08 account created screen shows verified badge",
+   "ok": true,
+   "note": "",
+   "shot": "F1-04-welcome.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-10 home for a brand-new customer (no pets yet)",
+   "ok": true,
+   "note": "",
+   "shot": "F1-05-home-empty.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-12 add pet Rex with 3 required vaccines",
+   "ok": true,
+   "note": "pet_kkzxnprz size L, 3 submitted records",
+   "shot": "F1-07-pet-Rex-profile.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-12 add pet Luna with 3 required vaccines",
+   "ok": true,
+   "note": "pet_yej23r3q size L, 3 submitted records",
+   "shot": "F1-09-pet-Luna-profile.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-13 pet profile shows Pending verification",
+   "ok": true,
+   "note": "",
+   "shot": ""
+  },
+  {
+   "flow": "F1",
+   "step": "C-30 choose 2 pets + 3 nights",
+   "ok": true,
+   "note": "2026-09-25 -> 2026-09-28",
+   "shot": "F1-10-hotel-pets-dates.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-31 room type cards priced from rates; pick Penthouse",
+   "ok": true,
+   "note": "penthouse card price label: $135.00 avg per night / pet",
+   "shot": "F1-11-hotel-room.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-32 pet details -> C-33 skip grooming",
+   "ok": true,
+   "note": "",
+   "shot": "F1-12-hotel-grooming.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-34 customer details",
+   "ok": true,
+   "note": "",
+   "shot": "F1-13-hotel-customer.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-35 estimate shows engine lines (3 nights x 2 dogs, multi-dog discount, tax, card fee)",
+   "ok": true,
+   "note": "base rates weekday=120 weekend=135",
+   "shot": "F1-14-hotel-estimate.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-36 pay deposit with mock card",
+   "ok": true,
+   "note": "Pay $228.89 -> booking PR-5240 pending_vaccines, deposit 228.89, total 742.97, payment paid",
+   "shot": "F1-15-hotel-paid.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-37 confirmation says Almost there (pending vaccines)",
+   "ok": true,
+   "note": "",
+   "shot": "F1-16-hotel-done.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-39 reservation detail shows Pending verification",
+   "ok": true,
+   "note": "",
+   "shot": "F1-17-reservation-detail.jpg"
+  },
+  {
+   "flow": "F1",
+   "step": "C-38 my reservations lists the stay",
+   "ok": true,
+   "note": "",
+   "shot": "F1-18-my-reservations.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-56 queue lists the 6 submitted proofs for the new pets",
+   "ok": true,
+   "note": "6 rows",
+   "shot": "F2-19-vaccine-queue.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-56 verify all 6 -> pets approved, booking auto-confirmed",
+   "ok": true,
+   "note": "booking PR-5240 -> confirmed; queue row still listed after its Verify click (no reload): true",
+   "shot": "F2-20-vaccines-verified.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-12 booking detail opens for an app-created booking",
+   "ok": false,
+   "note": "white screen (no error boundary); last page error: [pageerror] E.lines is not iterable",
+   "shot": "F2-21-FAIL-desk-booking-detail.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 timeline shows the stay block (before check-in it sits in the unassigned row)",
+   "ok": true,
+   "note": "title=\"Quinn Tester · Rex, Luna · 2026-09-25 → 2026-09-28\" data-status=confirmed",
+   "shot": "F2-22-timeline.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 fallback check-in from the timeline popover (Check in -> room pick -> Check in again)",
+   "ok": true,
+   "note": "popover quick Check in button: 0; modal \"Room for PR-5240\" confirm button \"Assign room\"; after first Checked in pick status=confirmed (room PH(B) 102 assigned); second click -> checked_in; approvals rows: 0 (check-in is not PIN-gated in PIN_GATED_TRANSITIONS)",
+   "shot": "F2-23-timeline-checkin.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-13 timeline block now shows checked_in",
+   "ok": true,
+   "note": "",
+   "shot": "F2-24-timeline-checked-in.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-12 PIN approval modal on a gated transition (confirmed -> No show) writes an approvals row",
+   "ok": true,
+   "note": "front-desk PIN rejected (\"Marcus Lee is Front desk; a manager or owner PIN is needed\"), manager PIN 2222 approved by Priya Natarajan (manager); PR-1010 -> no_show",
+   "shot": "F2-26-pin-approved.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-10 reservations table lists the booking (All upcoming + search)",
+   "ok": true,
+   "note": "row status Checked in",
+   "shot": "F2-27-table.jpg"
+  },
+  {
+   "flow": "F2",
+   "step": "F-01 today view renders after the changes",
+   "ok": true,
+   "note": "",
+   "shot": "F2-28-desk-today.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-51 pick Rex (L) + Platinum priced from packages.price_l",
+   "ok": true,
+   "note": "Platinum L = $95.00",
+   "shot": "F3-29-groom-package.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-52 add Furminator add-on",
+   "ok": true,
+   "note": "",
+   "shot": "F3-30-groom-addons.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-53 date + start time",
+   "ok": true,
+   "note": "2026-09-21",
+   "shot": "F3-31-groom-time.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-54 checkout total $127.16 = 95 + 25 + tax 2% + card fee 3.89%",
+   "ok": true,
+   "note": "order GS-9820 status confirmed total 127.16 payment paid",
+   "shot": "F3-32-groom-checkout.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-55 order confirmation shows totals from the invoice",
+   "ok": true,
+   "note": "",
+   "shot": "F3-33-groom-order.jpg"
+  },
+  {
+   "flow": "F3",
+   "step": "C-10 home lists the grooming order with a working link (known gap #5)",
+   "ok": true,
+   "note": "no grooming link on home",
+   "shot": "F3-34-home-grooming-link.jpg"
+  }
+ ],
+ "errors": [
+  "[console] TypeError: E.lines is not iterable\n    at goe (http://localhost:4330/assets/index-C5Mc16ac.js:18319:176535)\n    at Cy (http://localhost:4330/assets/index-C5Mc16ac.js:38:17018)\n    at r8 (http://localh",
+  "[pageerror] E.lines is not iterable"
+ ],
+ "state": {
+  "email": "qa.parent.mu6mqza0@example.com",
+  "customerUserId": "use_cjen2sxb",
+  "customerId": "cus_eg80ygyd",
+  "petIds": [
+   "pet_kkzxnprz",
+   "pet_yej23r3q"
+  ],
+  "bookingId": "boo_a0p242ug",
+  "bookingCode": "PR-5240",
+  "orderId": "gro_1k9agjtf",
+  "f56Stale": true
+ },
+ "ranAt": "2026-09-18T07:22:27.468Z"
+}

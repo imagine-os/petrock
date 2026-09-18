@@ -47,15 +47,35 @@ export async function fetchManifest(browser, base, attempts = 3) {
   throw new Error(`could not read the route manifest after ${attempts} attempts: ${last?.message}`);
 }
 
-export const PARAMS = { ':table': 'bookings', ':code': 'D-03', ':id': 'bk_1001', ':petId': 'pet_1', ':customerId': 'cus_1', '*': '' };
+export const PARAMS = { ':table': 'bookings', ':code': 'D-03', ':id': 'bk_1001', ':petId': 'pet_1', ':customerId': 'cus_1', ':slug': 'privacy-policy', ':conversationId': 'conv_1', '*': '' };
 export const fillParams = (path) => path.replace(/:\w+|\*/g, (p) => PARAMS[p] ?? 'x').replace(/\/$/, '') || '/';
 export const routeFilter = (only, codes) => (r) => (!only.length || only.some((p) => (p.endsWith('$') ? r.path === p.slice(0, -1) : r.path === p || r.path.startsWith(p.endsWith('/') ? p : `${p}/`)))) && (!codes.length || codes.includes(r.code));
 export const NOISE = /Failed to load resource|ERR_CERT|fonts\.g(oogleapis|static)|net::|favicon/;
 
-export function initScript(theme) {
-  return [([th]) => {
+/** Demo user per surface (D-016 brief: customer routes as the customer, staff routes as the super admin, dev mode off). */
+export function userFor(path) {
+  if (path.startsWith('/app')) return 'usr_customer';
+  if (path.startsWith('/site') || path === '/' || path.startsWith('/no-access') || path.startsWith('/staff')) return 'usr_public';
+  return 'usr_super';
+}
+
+/**
+ * Init script for a QA context: theme, session (per surface, devMode off unless `devMode`), location, and the three customer
+ * wizard drafts (hotel, grooming, daycare) so C-31..C-36, C-52..C-54, C-62 / C-63 render their own step instead of redirecting.
+ */
+export function initScript(theme, path = '/', opts = {}) {
+  const userId = opts.userId ?? userFor(path);
+  const devMode = opts.devMode ?? false;
+  return [([th, uid, dev, seedDrafts]) => {
     localStorage.setItem('petrock.theme', JSON.stringify({ theme: th, brand: 'petrock', skin: 'styled' }));
-    localStorage.setItem('petrock.session', JSON.stringify({ userId: 'usr_super', devMode: true, viewAs: null }));
+    localStorage.setItem('petrock.session', JSON.stringify({ userId: uid, devMode: dev, viewAs: null }));
     localStorage.setItem('petrock.location', JSON.stringify({ locationId: 'loc_encino', all: false }));
-  }, [theme]];
+    if (!seedDrafts) return;
+    const day = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+    const customer = { first_name: 'Avery', last_name: 'Thompson', mobile: '(818) 555-0142', alt_phone: '', email: 'avery@demo.petrock.test', address: '1412 Ventura Blvd', apt_suite: '', city: 'Encino', state: 'CA', zip: '91436' };
+    const details = { feeding: '1 cup kibble', mealsPerDay: 'AM & PM', ownFood: true, takesMedication: false, medicationCount: '1', medication: '', dosing: '1 daily (AM only)', fleaMedication: true, fleaBrand: 'NexGard', fleaDate: day(-10), belongings: 'Blue blanket', medicalAlert: '', notes: '' };
+    localStorage.setItem('petrock.hotelDraft.v1', JSON.stringify({ locationId: 'loc_encino', petIds: ['pet_1', 'pet_2'], shareRoom: true, checkIn: day(7), checkInTime: '10:00', checkOut: day(10), checkOutTime: '11:00', roomTypeId: 'rt_suite', petDetails: { pet_1: details, pet_2: details }, grooming: { pet_1: { packageId: 'pkg_gold', addonIds: ['add_1'] } }, groomingDecided: true, customer, payPlan: 'deposit', payMethod: 'card', startedAt: new Date().toISOString() }));
+    localStorage.setItem('petrock.draft.grooming', JSON.stringify({ items: [{ petId: 'pet_1', packageId: 'pkg_gold', addonIds: ['add_1'] }], current: 0, locationId: 'loc_encino', date: day(7), time: '10:00', groomerId: null, notes: '', source: 'app' }));
+    localStorage.setItem('petrock.draft.daycare', JSON.stringify({ petIds: ['pet_1'], locationId: 'loc_encino', date: day(7), checkIn: '08:00', checkOut: '16:00', details: { pet_1: { fleaMedication: true, fleaBrand: 'NexGard', fleaDate: day(-10), medicalAlert: '' } }, addGrooming: false, notes: '' }));
+  }, [theme, userId, devMode, path.startsWith('/app')]];
 }

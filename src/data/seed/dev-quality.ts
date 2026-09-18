@@ -155,4 +155,7 @@ export function seed(ctx: SeedCtx) {
 
   // ---- a first QA run so D-12 has a row before scripts run ----
   add('qa_runs', { id: 'qa_seed_1', kind: 'responsive', label: 'Foundation responsive check', started_at: at(D(-1), 9), finished_at: at(D(-1), 9, 12), routes: 21, widths: [360, 390, 768, 1280, 1920], issues: 0, result: 'pass', report_path: 'docs/qa/responsive-report.md', triggered_by: 'script', summary: null });
+
+  // ---- one saved D-11 layout (F-01 with the attention list first) so page_layouts has a demo row ----
+  add('page_layouts', { id: 'pl_seed_1', page_code: 'F-01', order: ['Attention list', 'KPI tiles', 'Arrivals', 'Departures', 'Grooms today', 'Daycare today'], hidden: [] });
 }

@@ -77,7 +77,7 @@ export function GroomingOrderPage() {
       {invoice && <Card padding="md"><div className="field-label" style={{ marginBottom: 8 }}>Totals</div><ServiceQuoteLines lines={invoice.lines.map((l) => ({ ...l, kind: l.label.toLowerCase().includes('tax') ? 'tax' as const : l.label.toLowerCase().includes('fee') ? 'fee' as const : 'service' as const }))} total={invoice.total} /></Card>}
       <div className="cgd-inline-actions">
         <Button variant="secondary" icon="refresh" onClick={recreate}>{t('cgd.recreate')}</Button>
-        {cancellable ? <Button variant="danger" icon="close" onClick={() => setConfirm(true)}>{t('cgd.cancelBooking')}</Button> : !['cancelled', 'checked_out', 'no_show'].includes(order.status) && <Link to="/app/chat"><Button variant="secondary" icon="message" block>{t('cgd.messageDesk')}</Button></Link>}
+        {cancellable ? <Button variant="danger" icon="close" onClick={() => setConfirm(true)}>{t('cgd.cancelBooking')}</Button> : !['cancelled', 'checked_out', 'no_show'].includes(order.status) && <Link to="/app/inbox"><Button variant="secondary" icon="message" block>{t('cgd.messageDesk')}</Button></Link>}
       </div>
       {!cancellable && order.status === 'confirmed' && <p className="xs muted">Confirmed bookings are changed by the front desk (a manager approves cancellations).</p>}
       <Modal open={confirm} onClose={() => setConfirm(false)} title="Cancel this booking?" size="sm" footer={<><Button variant="secondary" onClick={() => setConfirm(false)}>Keep it</Button><Button variant="danger" loading={busy} onClick={cancel}>Cancel booking</Button></>}>

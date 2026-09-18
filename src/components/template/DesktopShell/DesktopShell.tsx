@@ -10,7 +10,9 @@ import { IconButton } from '../../atom/IconButton/IconButton';
 import type { IconName } from '../../atom/Icon/Icon';
 import './DesktopShell.css';
 
-export interface DesktopShellProps { surfaces: Surface[]; routes: RouteDef[]; title: string; children: ReactNode; feedback?: boolean }
+export interface DesktopShellProps { surfaces: Surface[]; routes: RouteDef[]; title: string; children: ReactNode; feedback?: boolean; /** Staff shell: title follows the effective role instead of the current route's surface. */ titleByRole?: boolean }
+
+const ROLE_SHELL_TITLE: Partial<Record<string, string>> = { super_admin: 'Owner / admin', owner: 'Owner / admin', manager: 'Manager', front_desk: 'Front desk', groomer: 'Grooming' };
 
 const RAIL_KEY = 'petrock.shell.rail';
 function useNarrow(bp = 900) {
@@ -20,8 +22,9 @@ function useNarrow(bp = 900) {
 }
 
 /** Staff / admin / dev / docs shell: per-role categorised Sidebar + TopBar + content + FeedbackButton. Sidebar becomes an overlay drawer under 900 px. */
-export function DesktopShell({ surfaces, routes, title, children, feedback = true }: DesktopShellProps) {
+export function DesktopShell({ surfaces, routes, title: titleProp, children, feedback = true, titleByRole = false }: DesktopShellProps) {
   const { role, hasRole } = useSession();
+  const title = titleByRole ? ROLE_SHELL_TITLE[role] ?? titleProp : titleProp;
   const { pathname } = useRouterLocation();
   const narrow = useNarrow();
   const [rail, setRail] = useState(() => { try { return localStorage.getItem(RAIL_KEY) === '1'; } catch { return false; } });

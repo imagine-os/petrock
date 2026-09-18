@@ -6,4 +6,4 @@
 .iconbtn-primary { background: var(--color-primary); color: var(--color-text-on-primary); }
 .iconbtn-primary:hover { background: var(--color-primary-hover); color: var(--color-text-on-primary); }
 .iconbtn:disabled { opacity: .5; cursor: not-allowed; }
-.iconbtn-badge { position: absolute; top: 4px; right: 4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: var(--r-full); background: var(--color-danger); color: #fff; font-size: 10px; font-weight: var(--fw-bold); line-height: 16px; text-align: center; }
+.iconbtn-badge { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--r-full); background: var(--color-danger); color: #fff; font-size: var(--fs-xs); font-weight: var(--fw-bold); line-height: 18px; text-align: center; }

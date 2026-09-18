@@ -32,7 +32,8 @@ export function PinLoginPage() {
     setBusy(true);
     await new Promise((r) => setTimeout(r, 300));
     const h = findByPin(pin, holders);
-    if (!h || !users.some((u) => u.id === h.userId) && !demoPinHolders.some((d) => d.userId === h.userId)) { setError('PIN not recognised. Try again.'); setBusy(false); return; }
+    if (!h) { setError('PIN not recognised. Try again.'); setBusy(false); return; }
+    if (!users.some((u) => u.id === h.userId) && !demoPinHolders.some((d) => d.userId === h.userId)) { setError(`${h.name.split(' ')[0]} has no login yet - ask a manager to create one in Employees (A-30).`); setBusy(false); return; }
     switchUser(h.userId);
     const loc = locations.find((l) => l.id === h.locationId);
     toast({ tone: 'success', title: `Welcome, ${h.name.split(' ')[0]}`, body: `${ROLE_LABEL[h.role]}${loc ? ` · ${loc.short_name}` : ''}` });

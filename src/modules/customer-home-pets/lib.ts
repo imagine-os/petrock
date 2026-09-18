@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { useSession } from '../../auth/SessionProvider';
 import { useTable } from '../../data/DataContext';
 import type { CustomerRow, PetRow, VaccineRecordRow, VaccineTypeRow, BookingRow, BookingPetRow, AppointmentRow, DaycareBookingRow, PackageRow, RoomTypeRow, LocationRow } from '../../data/schema/core';
+import type { BaseRow } from '../../data/schema/types';
 import type { VaccineChipStatus } from '../../components/atom/VaccineStatusChip/VaccineStatusChip';
 import type { CustomerBookingKind } from '../../components/molecule/CustomerBookingCard/CustomerBookingCard';
 import type { BookingStatus } from '../../domain/booking';
@@ -130,6 +131,7 @@ export function useCustomerBookings(customerId: string | null | undefined): Cust
   const { rows: daycare } = useTable<DaycareBookingRow>('daycare_bookings', q);
   const { rows: packages } = useTable<PackageRow>('packages');
   const { rows: roomTypes } = useTable<RoomTypeRow>('room_types');
+  const { rows: orders } = useTable<{ id: string; appointment_ids: string[] } & BaseRow>('grooming_orders', q);
   return useMemo(() => {
     if (!customerId) return [];
     const now = Date.now();
@@ -141,14 +143,20 @@ export function useCustomerBookings(customerId: string | null | undefined): Cust
     for (const a of appointments) {
       const pkg = packages.find((p) => p.id === a.package_id);
       const status: string = a.status === 'done' ? 'checked_out' : a.status === 'in_progress' ? 'checked_in' : a.status;
-      items.push({ id: a.id, kind: 'grooming', title: pkg?.name ?? 'Grooming & Spa', petIds: [a.pet_id], status, startsAt: a.starts_at, locationId: a.location_id ?? null, link: `/app/grooming/${a.id}`, past: FINAL.has(a.status) || new Date(a.starts_at).getTime() + a.duration_min * 60000 < now });
+      items.push({ id: a.id, kind: 'grooming', title: pkg?.name ?? 'Grooming & Spa', petIds: [a.pet_id], status, startsAt: a.starts_at, locationId: a.location_id ?? null, link: orderLink(a.id, orders), past: FINAL.has(a.status) || new Date(a.starts_at).getTime() + a.duration_min * 60000 < now });
     }
     for (const d of daycare) {
       const start = `${d.date}T${d.check_in_time}:00`, end = `${d.date}T${d.check_out_time}:00`;
-      items.push({ id: d.id, kind: 'daycare', title: d.item === 'half_day' ? 'Daycare half day' : d.item === 'hour' ? 'Daycare play hour' : 'Daycare full day', petIds: d.pet_ids, status: d.status, startsAt: start, endsAt: end, locationId: d.location_id ?? null, link: `/app/daycare/${d.id}`, past: FINAL.has(d.status) || new Date(end).getTime() < now });
+      items.push({ id: d.id, kind: 'daycare', title: d.item === 'half_day' ? 'Daycare half day' : d.item === 'hour' ? 'Daycare play hour' : 'Daycare full day', petIds: d.pet_ids, status: d.status, startsAt: start, endsAt: end, locationId: d.location_id ?? null, link: `/app/daycare/bookings/${d.id}`, past: FINAL.has(d.status) || new Date(end).getTime() < now });
     }
     return items.sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  }, [customerId, bookings, bookingPets, appointments, daycare, packages, roomTypes]);
+  }, [customerId, bookings, bookingPets, appointments, daycare, packages, roomTypes, orders]);
+}
+
+/** C-55 shows a grooming order (one per booking, several appointments); appointments booked at the desk without an order fall back to the grooming hub. */
+function orderLink(appointmentId: string, orders: { id: string; appointment_ids: string[] }[]): string {
+  const o = orders.find((x) => Array.isArray(x.appointment_ids) && x.appointment_ids.includes(appointmentId));
+  return o ? `/app/grooming/orders/${o.id}` : '/app/grooming';
 }
 
 export const petNames = (ids: string[], pets: PetRow[]) => ids.map((id) => pets.find((p) => p.id === id)?.name).filter(Boolean).join(', ') || '-';

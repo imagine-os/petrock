@@ -55,3 +55,4 @@ Checked at 360, 390, 768, 1280, 1920 on 2026-09-18 (Playwright): no horizontal s
 ## Changelog
 
 - `docs/changelog/0007-foundation.md`
+- 0019 - QA fixes: Spec cites R-X88 (route guard).

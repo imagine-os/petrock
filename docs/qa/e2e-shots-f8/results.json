@@ -1,0 +1,50 @@
+{
+ "results": [
+  {
+   "flow": "F8",
+   "step": "TopBar Dark mode toggle sets data-theme=dark",
+   "ok": true,
+   "note": "body background rgb(14, 12, 17)",
+   "shot": "F8-01-desk-dark.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "dark persists across reload (localStorage petrock.theme)",
+   "ok": true,
+   "note": "{\"theme\":\"dark\",\"brand\":\"petrock\",\"skin\":\"styled\"}",
+   "shot": "F8-02-desk-dark-reloaded.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "toggle back to light persists too",
+   "ok": true,
+   "note": "",
+   "shot": ""
+  },
+  {
+   "flow": "F8",
+   "step": "C-72 dark mode switch persists for the customer app",
+   "ok": true,
+   "note": "",
+   "shot": "F8-03-app-settings-dark.jpg"
+  },
+  {
+   "flow": "F8",
+   "step": "hub reflects the same stored theme",
+   "ok": true,
+   "note": "",
+   "shot": "F8-04-hub-dark.jpg"
+  }
+ ],
+ "errors": [],
+ "state": {
+  "email": "qa.parent.mu6mowtg@example.com",
+  "customerUserId": null,
+  "customerId": null,
+  "petIds": [],
+  "bookingId": null,
+  "bookingCode": null,
+  "orderId": null
+ },
+ "ranAt": "2026-09-18T07:19:57.276Z"
+}

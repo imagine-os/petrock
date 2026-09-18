@@ -5,7 +5,7 @@ import { RulesPage } from '../dev/RulesPage';
 import { rulesSpec } from '../dev/specs';
 
 export const strings = {};
-export const settingsRulesSpec = { ...rulesSpec, code: 'A-40', name: 'Settings › Rules', roles: ['owner' as const, 'super_admin' as const, 'manager' as const] };
+export const settingsRulesSpec = { ...rulesSpec, code: 'A-40', name: 'Settings › Rules', roles: ['owner' as const, 'super_admin' as const, 'manager' as const], rules: ['R-X80', 'R-X41'], data: ['rules', 'audit_log'] };
 export const routes: RouteDef[] = [
   { path: '/admin/settings/rules', element: h(RulesPage, { code: 'A-40' }), spec: settingsRulesSpec, roles: ['owner', 'super_admin', 'manager'], surface: 'admin', layout: 'desktop', nav: { label: 'Rules', icon: 'flag', order: 90, group: 'settings' } },
 ];

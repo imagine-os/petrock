@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import type { BookingStatus } from '../../../domain/booking';
-import { BOOKING_STATUS_LABEL } from '../../../domain/booking';
 import './Badge.css';
 
 export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warn' | 'danger' | 'info' | 'accent';
@@ -11,12 +9,8 @@ export function Badge({ tone = 'neutral', dot = false, size = 'md', children, cl
   return <span className={`badge badge-${tone} badge-${size} ${className}`} title={title}>{dot && <span className="badge-dot" aria-hidden />}{children}</span>;
 }
 
-/** Booking status badge; the one vocabulary every surface uses. */
-export function StatusBadge({ status, customer = false, size }: { status: BookingStatus | string; customer?: boolean; size?: 'sm' | 'md' }) {
-  const s = status as BookingStatus;
-  const label = BOOKING_STATUS_LABEL[s] ?? status;
-  return <span className={`badge badge-status badge-${size ?? 'md'}`} data-status={status} title={customer ? label : undefined}><span className="badge-dot" aria-hidden />{label}</span>;
-}
+/** Re-exported for compatibility; the component lives in atom/StatusBadge. */
+export { StatusBadge } from '../StatusBadge/StatusBadge';
 
 /** Generic tone for other enums (payment, vaccine, employee, rule status). */
 export function toneFor(value: string): BadgeTone {

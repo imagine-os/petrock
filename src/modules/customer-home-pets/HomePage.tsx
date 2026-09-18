@@ -17,7 +17,7 @@ import { IconButton } from '../../components/atom/IconButton/IconButton';
 import { Icon } from '../../components/atom/Icon/Icon';
 import { Card } from '../../components/molecule/Card/Card';
 import { Modal } from '../../components/organism/Modal/Modal';
-import { RadioGroup } from '../../components/atom/Radio/Radio';
+import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { EmptyState } from '../../components/molecule/EmptyState/EmptyState';
 import { useToast } from '../../components/molecule/Toast/Toast';
 import { useCurrentCustomer, useCustomerPets, useVaccineData, useCustomerBookings, petVaccineSummary, petApproval, fmtDate, fmtTime, petNames, locationShort, hoursToday } from './lib';

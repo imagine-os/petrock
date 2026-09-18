@@ -58,3 +58,19 @@ export function sizeFromWeightLbs(lbs: number): PetSize {
   if (lbs < 100) return 'XL';
   return 'Giant';
 }
+
+/** Minimal shape of a priced line; mirrors QuoteLine in src/pricing/engine.ts without importing it (domain stays dependency-free). */
+export interface StoredQuoteLine { label: string; qty: number; unit: number; amount: number; kind: 'room' | 'discount' | 'fee' | 'tax' | 'service' | 'addon' }
+/** bookings.quote may be a full Quote (desk / seed) or the app's { hotel, grooming, fee, plan, method } bundle (C-36). One reader for every surface (F-12, F-59, C-39). */
+export function quoteLinesOf(quote: unknown): StoredQuoteLine[] {
+  if (!quote || typeof quote !== 'object') return [];
+  const q = quote as { lines?: unknown; hotel?: unknown; grooming?: unknown; fee?: unknown };
+  const arr = (x: unknown): StoredQuoteLine[] => (Array.isArray(x) ? (x as StoredQuoteLine[]) : []);
+  if (Array.isArray(q.lines)) return arr(q.lines);
+  return [...arr(q.hotel), ...arr(q.grooming), ...arr(q.fee)];
+}
+/** Notes stored with a quote, if any. */
+export function quoteNotesOf(quote: unknown): string[] {
+  const n = (quote as { notes?: unknown } | null)?.notes;
+  return Array.isArray(n) ? (n as string[]) : [];
+}

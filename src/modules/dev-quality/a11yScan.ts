@@ -59,3 +59,35 @@ export function overflowScan(doc: Document, innerWidth: number): { hscroll: bool
   }
   return { hscroll: scrollWidth > innerWidth + 1, scrollWidth, offenders };
 }
+
+export interface LayoutScan { smallText: number; smallTextSamples: string[]; overlaps: { fixed: string; over: string; area: number }[]; blank: boolean }
+/**
+ * D-016 layout checks shared by D-13 and scripts/qa-responsive.mjs: visible text under 12 px (R-X82), fixed elements
+ * (feedback button, spec chip, toasts) covering sticky elements (sidebar, table headers, timeline group headers), and a blank page.
+ */
+export function layoutScan(doc: Document, minFont = 12): LayoutScan {
+  const smallTextSamples: string[] = []; let smallText = 0;
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+  let n: Node | null;
+  while ((n = walker.nextNode())) {
+    const t = (n.textContent ?? '').trim(); if (!t) continue;
+    const el = n.parentElement; if (!el) continue;
+    const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none') continue;
+    const r = el.getBoundingClientRect(); if (r.width === 0 || r.height === 0) continue;
+    if (parseFloat(cs.fontSize) < minFont) { smallText++; if (smallTextSamples.length < 6) smallTextSamples.push(`${cssPath(el)} ${cs.fontSize} "${t.slice(0, 24)}"`); }
+  }
+  const all = [...doc.body.querySelectorAll<HTMLElement>('*')];
+  const fixed = all.filter((el) => getComputedStyle(el).position === 'fixed' && el.getBoundingClientRect().width > 0 && !/scrim|overlay|toasts/.test(el.className));
+  // a sticky element counts only while it is actually stuck (pinned at its top / left offset); a table header sitting in its natural place is ordinary content
+  const stuck = (el: HTMLElement) => { const cs = getComputedStyle(el); const r = el.getBoundingClientRect(); const top = parseFloat(cs.top), left = parseFloat(cs.left); return (Number.isFinite(top) && Math.abs(r.top - top) <= 1 && el.parentElement!.getBoundingClientRect().top < r.top - 1) || (Number.isFinite(left) && Math.abs(r.left - left) <= 1 && el.parentElement!.getBoundingClientRect().left < r.left - 1) || r.height >= innerHeight * 0.5; };
+  const sticky = all.filter((el) => getComputedStyle(el).position === 'sticky' && el.getBoundingClientRect().width > 0 && stuck(el));
+  const overlaps: LayoutScan['overlaps'] = [];
+  for (const f of fixed) for (const s of sticky) {
+    if (f === s || f.contains(s) || s.contains(f)) continue;
+    const a = f.getBoundingClientRect(), b = s.getBoundingClientRect();
+    const w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    if (w > 4 && h > 4) overlaps.push({ fixed: cssPath(f), over: cssPath(s), area: Math.round(w * h) });
+  }
+  const blank = (doc.body.innerText ?? '').trim().length < 20;
+  return { smallText, smallTextSamples, overlaps: overlaps.slice(0, 8), blank };
+}

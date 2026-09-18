@@ -3,7 +3,7 @@
 .step:last-child { flex: 0 0 auto; }
 .step-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; border: 0; background: none; padding: 0; color: var(--color-text-faint); font-size: var(--fs-xs); cursor: default; }
 .step-btn:not(:disabled) { cursor: pointer; }
-.step-dot { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--color-border-strong); background: var(--color-surface); font-weight: var(--fw-semibold); font-size: 11px; }
+.step-dot { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--color-border-strong); background: var(--color-surface); font-weight: var(--fw-semibold); font-size: var(--fs-xs); }
 .step.is-done .step-dot { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
 .step.is-current .step-dot { border-color: var(--color-primary); color: var(--color-primary-text); }
 .step.is-current .step-btn { color: var(--color-primary-text); font-weight: var(--fw-semibold); }

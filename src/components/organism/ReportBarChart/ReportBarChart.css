@@ -8,8 +8,8 @@
 .rbar-hit { fill: transparent; }
 .rbar-bar.is-hover .rbar-fill { fill: var(--color-primary-hover); }
 .rbar-bar:focus { outline: none; } .rbar-bar:focus .rbar-fill { stroke: var(--color-focus); stroke-width: 1.5; }
-.rbar-val { font-size: 10px; fill: var(--color-text-muted); font-family: var(--font-sans); }
-.rbar-x { font-size: 10px; fill: var(--color-text-faint); font-family: var(--font-sans); }
+.rbar-val { font-size: var(--fs-xs); fill: var(--color-text-muted); font-family: var(--font-sans); }
+.rbar-x { font-size: var(--fs-xs); fill: var(--color-text-faint); font-family: var(--font-sans); }
 .rbar-tip { position: absolute; top: 0; transform: translate(-50%, -110%); background: var(--color-heading); color: var(--color-bg); font-size: var(--fs-xs); padding: 4px 8px; border-radius: var(--r-sm); display: flex; flex-direction: column; white-space: nowrap; pointer-events: none; z-index: 2; box-shadow: var(--shadow-md); }
 .rbar-tablewrap { overflow-x: auto; }
 .rbar-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); } .rbar-table th, .rbar-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--color-border); } .rbar-num { text-align: right !important; font-variant-numeric: tabular-nums; }

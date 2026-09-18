@@ -19,9 +19,13 @@
 
 No blockers. 2 major, 7 minor findings below.
 
+> Fix status per finding: `docs/qa/fix-status.md` (changelog 0019).
+
 ## Findings (most severe first)
 
 ### 1. MAJOR - Pinned staff can open and mutate the other location's booking / customer by URL
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/modules/frontdesk-reservations/BookingDetailPage.tsx:45` (`useRow<BookingRow>('bookings', id)` - no location check), `src/modules/frontdesk-grooming-people/pages/CustomerDetailPage.tsx` (same for customers). Contrast: `src/modules/frontdesk-grooming-people/hooks.ts:34` scopes appointments, so F-34 `/desk/grooming/:id` correctly shows "not found" for the other location.
 - **Repro**: session `usr_desk` (Encino). Open `#/desk/reservations/bk_1003` (a Westwood booking, `PR-1003`) -> the page renders the booking with the full action bar. Open `#/desk/reservations/bk_1011` (Westwood, confirmed) -> Set status -> No show -> PIN 2222 -> status becomes `no_show`; the `approvals` row is written with `location_id = loc_encino` (the actor's UI location, not the booking's). Open `#/desk/customers/cus_3` (Diego Fernandez, home Westwood) -> renders.
@@ -30,11 +34,15 @@ No blockers. 2 major, 7 minor findings below.
 
 ### 2. MAJOR - Manager's side menu omits the admin pages the manager may use (D-014)
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **Where**: `src/app/shells.tsx` (`frontdesk` shell uses `surfaces: ['frontdesk', 'manual']`; `admin` shell uses `['admin', 'frontdesk', 'manual']`), `src/modules/admin-control-panel/index.ts:52` (`OWN_MGR` routes: A-27, A-35, A-36, A-37, A-38, A-40, A-42).
 - **Repro**: session `usr_manager`, open `#/desk`. Sidebar codes: `F-01 F-10 F-13 F-15 F-11 F-30 ... F-68 M-01 M-03` - no `A-*`. Open `#/admin/approvals` directly: it renders (guard passes) and *now* the menu shows `A-35 A-36 A-42 A-37 A-38 A-27 A-40`, and the shell title flips to "Owner / admin". The manager has no link to the Approvals log, Feedback inbox, Reviews moderation, Pricing hub or Reports from any page they land on (`ROLE_HOME.manager = '/desk'`).
 - **Fix**: pick the menu surfaces by role rather than by the current route's surface (e.g. `DesktopShell` includes `admin` routes whenever `hasRole` passes for at least one admin route), or give the manager a "Reports & approvals" group on the frontdesk shell. Keep one shell title per role.
 
 ### 3. MINOR - Customers and Pets lists let pinned staff toggle to "All locations"
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/modules/frontdesk-grooming-people/pages/CustomersPage.tsx:26,55`, `PetsPage.tsx:22`.
 - **Repro**: `usr_desk` -> `#/desk/customers` -> button "Encino only" -> click -> "All locations · 9 pet parents", Westwood customers (Fernandez, Kim, Marchetti, Nakamura) appear. Same on `/desk/pets`. `/desk/vaccines` has no such toggle.
@@ -42,30 +50,42 @@ No blockers. 2 major, 7 minor findings below.
 
 ### 4. MINOR - Groomer may open the hotel reservations board (F-14) but not the table, timeline or detail
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **Where**: `src/modules/frontdesk-reservations/index.ts` (F-14 `/desk/reservations/board` roles include `groomer`; F-10, F-12, F-13, F-15 use `DESK = STAFF_ROLES minus groomer`).
 - **Repro**: `usr_groomer` -> `#/desk/reservations/board` renders; `#/desk/reservations`, `#/desk/reservations/timeline`, `#/desk/reservations/bk_1011` -> `/no-access`. The board exposes hotel bookings (codes, pets, statuses) the groomer cannot otherwise see. Decide one way (probably remove `groomer` from F-14).
 
 ### 5. MINOR - `bookings.status` permission is never checked; status menu keys off `bookings.write_any`
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/auth/permissions.ts` (only manager+ hold `bookings.status`), `src/modules/frontdesk-reservations/BookingDetailPage.tsx:116` (`disabled={!can('bookings.write_any')}`), no `can('bookings.status')` call anywhere in `src/`.
 - **Effect**: today the PIN gate (`PIN_GATED_TRANSITIONS`) is the only control, which matches R-I06, but the permission string is dead and the A-32 roles matrix shows it as if it mattered. Either wire the non-gated transitions (`requested -> confirmed`, check-in / check-out) to `can('bookings.write_any')` and the gated ones to "PIN or `can('bookings.status')`", or drop the permission.
 
 ### 6. MINOR - View-as staff is not pinned to a location and cannot change it
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **Where**: `src/tenant/LocationProvider.tsx:38` (`pinned = user.locationId`; the super admin's is `null`).
 - **Repro**: `usr_super` with `petrock.location = { loc_westwood, all: true }`, view as front desk, open `#/desk/reservations`: TopBar says "Westwood" as a fixed label, no select, 3 bookings. To look at Encino you must leave view-as, switch, and re-enter. Suggest: when `viewAs` is a pinned role, pin to `demoUserByRole(viewAs).locationId` or keep the select enabled for the underlying super admin.
 
 ### 7. MINOR - PIN login rejects an active employee whose PIN exists but who has no login user
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/modules/auth/PinLoginPage.tsx:35` (`!users.some(u => u.id === h.userId)` -> "PIN not recognised. Try again."), seed `src/data/seed/core.ts:52` (`emp_jessica`, PIN 6666, `user_id: null`).
 - **Repro**: `#/staff/pin`, type 6666 -> "PIN not recognised". The PIN *is* recognised; the person has no `users` row. Say so ("Jessica has no login yet - ask a manager") or create the login from A-30 when a PIN is set.
 
 ### 8. MINOR - "(view as)" suffix shown for non-super users with a stale `viewAs`
 
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
+
 - **Where**: `src/components/organism/TopBar/TopBar.tsx:41` (`{viewAs ? ' (view as)' : ''}` uses raw `state.viewAs`), `SessionProvider.tsx` exposes `viewAs` even when `!isSuperAdmin`.
 - **Repro**: `petrock.session = { userId: 'usr_owner', viewAs: 'customer' }` -> `/admin` renders as Owner (correct, `role` ignores it) but the TopBar reads "Jordan Blake · Owner (view as)". Only reachable through storage today (`switchUser` clears `viewAs`), so cosmetic. Expose `viewAs: isSuperAdmin ? state.viewAs : null`.
 
 ### 9. MINOR - Seed notification for the Encino desk points at a Westwood booking
+
+**Status: Fixed** (changelog 0019, see `fix-status.md`).
 
 - **Where**: `src/data/seed/frontdesk-grooming-people.ts:101` (`usr_desk`, "Grace Nakamura requested a Suite ... (PR-1028)", link `/desk/customers/cus_8`).
 - **Effect**: the only cross-location leak in the 25-route sweep (F-60 `/desk/notifications` shows `PR-1028`), and it is the deep link that exercises finding 1. Move it to `usr_desk_ww` or use an Encino booking.

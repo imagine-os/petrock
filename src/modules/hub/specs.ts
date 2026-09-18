@@ -16,5 +16,5 @@ export const noAccessSpec = defineSpec({
   code: 'HUB-02', name: 'No access',
   purpose: 'Friendly page when the current role cannot open a route; offers the hub to switch demo user or the PIN login.',
   layout: ['Illustration', 'Title', 'Body (role name, target route)', 'Actions (hub, PIN login)'], data: ['users'], roles: EVERYONE,
-  logic: ['RequireRole redirects here with ?from=<path>.'], integrations: [], components: ['EmptyState', 'Button'], states: ['default'], checkedAt: [360, 390, 768, 1280],
+  logic: ['RequireRole redirects here with ?from=<path>.'], integrations: [], components: ['EmptyState', 'Button'], rules: ['R-X88'], states: ['default'], checkedAt: [360, 390, 768, 1280],
 });

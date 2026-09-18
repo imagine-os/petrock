@@ -1,7 +1,7 @@
 .datepicker { display: inline-flex; flex-direction: column; gap: 8px; padding: var(--sp-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-card); width: 100%; max-width: 340px; }
 .datepicker-head { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-sm); }
 .datepicker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-.datepicker-dow { text-align: center; font-size: 11px; color: var(--color-text-faint); padding: 4px 0; font-weight: var(--fw-medium); }
+.datepicker-dow { text-align: center; font-size: var(--fs-xs); color: var(--color-text-faint); padding: 4px 0; font-weight: var(--fw-medium); }
 .datepicker-day { aspect-ratio: 1; border: 0; border-radius: var(--r-md); background: transparent; color: var(--color-text); font-size: var(--fs-sm); min-height: 36px; }
 .datepicker-day:hover:not(:disabled) { background: var(--color-surface-tint); }
 .datepicker-day:disabled { color: var(--color-text-faint); opacity: .5; cursor: not-allowed; }
