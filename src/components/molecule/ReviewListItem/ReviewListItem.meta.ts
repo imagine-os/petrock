@@ -1,0 +1,12 @@
+import { createElement as h } from 'react';
+import { defineMeta } from '../../../design/meta';
+import { ReviewListItem } from './ReviewListItem';
+
+export default defineMeta({
+  tier: 'molecule', name: 'ReviewListItem', description: 'A customer review as a list row: date, avatar + customer, title, stars, sentiment tags, body. With onApprove / onArchive it becomes the moderation row of reviews.jpg; compact renders a public card for the website.',
+  props: [{ name: 'rating', type: 'number', required: true, description: '0..5' }, { name: 'title', type: 'string', description: 'Review title' }, { name: 'body', type: 'string', description: 'Review text' }, { name: 'tags', type: 'string[]', description: 'Excellent / Amazing / Normal / Not good' }, { name: 'status', type: 'string', description: 'pending | published | archived' }, { name: 'customerName', type: 'string', required: true, description: 'Customer' }, { name: 'customerCode', type: 'string', description: '#C01234' }, { name: 'when', type: 'string', description: 'Formatted date' }, { name: 'onApprove / onArchive', type: '() => void', description: 'Moderation actions' }, { name: 'compact', type: 'boolean', description: 'Public card layout' }],
+  states: ['public card', 'moderation pending', 'moderation published'],
+  usages: [{ title: 'Moderation rows', render: () => h('div', null, h(ReviewListItem, { rating: 4, title: 'Friendly service', body: 'Biscuit came home happy and tired. The nightly photos are the best part.', tags: ['Excellent', 'Amazing'], status: 'pending', customerName: 'Avery Thompson', customerCode: '#C01234', when: '22 Mar 2026 · 12:00 PM', onApprove: () => {}, onArchive: () => {} }), h(ReviewListItem, { rating: 3, title: 'Pickup took a while', body: 'Front desk was busy at 6pm; otherwise fine.', tags: ['Normal'], status: 'published', customerName: 'Robin Park', customerCode: '#C01434', when: '11 Apr 2026 · 12:45 PM', onApprove: () => {}, onArchive: () => {} })) }, { title: 'Public card', render: () => h('div', { style: { maxWidth: 360 } }, h(ReviewListItem, { compact: true, rating: 5, title: 'Best boarding in the Valley', body: 'The nightly photos are the best part.', tags: ['Excellent'], customerName: 'Avery T.', when: 'March 2026', locationName: 'Encino' })) }],
+  a11y: ['Article landmark per review; action buttons are real buttons and disable when the state is already reached.'],
+  usedBy: ['P-01', 'P-07', 'F-65'], figma: ['reviews.jpg'],
+});

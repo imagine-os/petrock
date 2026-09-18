@@ -1,0 +1,7 @@
+.stars { display: inline-flex; align-items: center; gap: 6px; }
+.stars-value { font-size: var(--fs-sm); color: var(--color-heading); }
+.stars-row { display: inline-flex; gap: 1px; }
+.stars-star { position: relative; display: inline-block; color: var(--color-warn); }
+.stars-bg { opacity: .35; }
+.stars-fill { position: absolute; inset: 0; overflow: hidden; }
+.stars-fg { fill: currentColor; }

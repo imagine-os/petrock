@@ -1,0 +1,22 @@
+.shero { padding: var(--sp-16) 0 var(--sp-12); }
+.shero.is-compact { padding: var(--sp-10) 0 var(--sp-8); }
+.shero-brand { background: var(--color-primary); color: var(--color-text-on-primary); background-image: radial-gradient(ellipse at 80% 10%, color-mix(in srgb, var(--color-text-on-primary) 14%, transparent), transparent 55%); }
+.shero-brand .shero-title, .shero-brand .shero-eyebrow { color: var(--color-text-on-primary); } .shero-brand .shero-lead { color: color-mix(in srgb, var(--color-text-on-primary) 82%, transparent); }
+.shero-soft { background: var(--color-surface-tint); }
+.shero-plain { background: var(--color-bg); }
+.shero-inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-8); align-items: center; }
+.shero.has-aside .shero-inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.shero-center .shero-inner { text-align: center; justify-items: center; }
+.shero-text { display: flex; flex-direction: column; gap: var(--sp-4); max-width: 640px; }
+.shero-eyebrow { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); font-weight: var(--fw-semibold); color: var(--color-primary-text); }
+.shero-title { font-size: clamp(2rem, 1.2rem + 2.6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: var(--fw-bold); }
+.shero-lead { font-size: var(--fs-md); line-height: 1.6; color: var(--color-text-muted); }
+.shero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.shero-center .shero-actions { justify-content: center; }
+.shero-brand .btn-secondary { background: transparent; border-color: color-mix(in srgb, var(--color-text-on-primary) 55%, transparent); color: var(--color-text-on-primary); }
+.shero-brand .btn-secondary:hover { background: color-mix(in srgb, var(--color-text-on-primary) 12%, transparent); }
+.shero-brand .btn-primary { background: var(--color-text-on-primary); color: var(--color-primary); }
+.shero-brand .btn-ghost { color: var(--color-text-on-primary); }
+.shero-aside { min-width: 0; color: var(--color-text); }
+.shero-aside .card { color: var(--color-text); }
+@media (max-width: 900px) { .shero.has-aside .shero-inner { grid-template-columns: 1fr; } .shero { padding: var(--sp-10) 0 var(--sp-8); } }
