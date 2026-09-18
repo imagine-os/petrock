@@ -17,11 +17,11 @@ export const todaySpec = defineSpec({
 export const tableSpec = defineSpec({
   code: 'F-10', name: 'Hotel & Daycare reservations (table)',
   purpose: 'The reservations table of the design (18 columns) grouped by Arriving / Departing / Staying / Daycare / Checked out for the selected day, with filters, search, a date navigator and the switch to the Timeline and Board views (D-008). Rows open the booking detail.',
-  layout: ['PageHeader (view switch, day navigator, New booking)', 'FilterBar (status, kind, room type, search, show cancelled)', 'ModeTabs (By day / All)', 'GroupSections (collapsible, count) each with ReservationsTable', 'DaycareDrawer'],
+  layout: ['TopLine (view switch, + Hotel Reservation)', 'ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out group rows; head + row checkboxes)', 'DaycareDrawer'],
   data: ['bookings', 'booking_pets', 'daycare_bookings', 'customers', 'pets', 'rooms', 'room_types', 'vaccine_records', 'vaccine_types'], roles: DESK,
   logic: ['18 design columns: ID, Status, Customer, Hotel room, Date in, Time in, Date out, Time out, Nbr days, Pet(s), Breed, Pet count, Mobile, Home, Total charge, Deposits, Balance, Booking notes.', 'Balance = total - deposits (R-D14).', 'Nbr days = nights for hotel, 1 for daycare.', 'Cancelled and no-show rows hidden unless the toggle is on.'],
-  integrations: [], components: ['PageHeader', 'SegmentedControl', 'ReservationDayNav', 'Select', 'Input', 'Toggle', 'Tabs', 'Section', 'DataTable', 'StatusBadge', 'PetVaccineStatus', 'Drawer', 'BookingInfoGrid', 'Button', 'EmptyState'],
-  rules: ['R-I05', 'R-I02', 'R-I01', 'R-D14', 'R-H08', 'R-I08', 'R-K01'], states: ['by day', 'all', 'filtered', 'group collapsed', 'empty group', 'daycare drawer'], figma: ['Frame 1171276264-10.png', 'front desk-10.jpg', 'front desk-11.jpg'], checkedAt: W,
+  integrations: [], components: ['SegmentedControl', 'ReservationDayNav', 'FilterPopover', 'Select', 'Input', 'Toggle', 'DataTable', 'Checkbox', 'StatusBadge', 'PetVaccineStatus', 'Drawer', 'BookingInfoGrid', 'Button', 'IconButton', 'EmptyState'],
+  rules: ['R-I05', 'R-I02', 'R-I01', 'R-D14', 'R-H08', 'R-I08', 'R-K01'], states: ['by day', 'all', 'filtered', 'group collapsed', 'empty group', 'rows selected', 'daycare drawer'], figma: ['front desk.jpg', 'front desk-9.jpg', 'Frame 1171276264-10.png', 'front desk-10.jpg', 'front desk-11.jpg'], checkedAt: W,
 });
 
 export const formSpec = defineSpec({
@@ -47,10 +47,10 @@ export const detailSpec = defineSpec({
 export const timelineSpec = defineSpec({
   code: 'F-13', name: 'Room timeline',
   purpose: 'Rooms as rows, days as columns, stays as blocks coloured by status: see occupancy at a glance, spot vaccine and balance flags, move a stay to another room or day by dragging, and act on a stay from its popover.',
-  layout: ['PageHeader (view switch, week navigator, 1 / 2 weeks, New booking)', 'FilterBar (room type, status, show daycare, show unassigned)', 'Legend', 'RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups)', 'BlockPopover (summary, Open, Set status, Assign room)', 'MoveModal', 'RoomModal', 'PinApprovalModal'],
+  layout: ['TopLine (view switch, New Booking)', 'TimelineBar (range pill centred; 1 / 2 weeks + Filter popover right: room type, status, unassigned, daycare, cancelled)', 'RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; alternating day columns, TODAY pill, flat status blocks)', 'BlockPopover (summary, Open, Set status, Assign room)', 'MoveModal', 'RoomModal', 'PinApprovalModal'],
   data: ['bookings', 'booking_pets', 'daycare_bookings', 'customers', 'pets', 'rooms', 'room_types', 'vaccine_records', 'vaccine_types', 'booking_events', 'approvals'], roles: DESK,
   logic: ['Block = [check-in day, check-out day) starting at the check-in half-day; same-day stays take one cell.', 'Colour from booking status tokens (R-I09); flags: vaccine issue, balance due, notes, medication.', 'Drop onto (room, day): nights kept, target room must be the booked type, fit the heaviest dog (R-E09) and be free (R-X03); confirmed in a modal, logged as a booking event (R-X07).', 'Empty cell click starts a new booking for that room and day.'],
-  integrations: [], components: ['PageHeader', 'SegmentedControl', 'ReservationDayNav', 'Select', 'Toggle', 'RoomTimeline', 'StatusBadge', 'Badge', 'PetVaccineStatus', 'BookingStatusMenu', 'Button', 'Modal', 'RoomAssignmentPicker', 'PinApprovalModal', 'EmptyState'],
+  integrations: [], components: ['SegmentedControl', 'ReservationDayNav', 'FilterPopover', 'Select', 'Toggle', 'RoomTimeline', 'StatusBadge', 'Badge', 'PetVaccineStatus', 'BookingStatusMenu', 'Button', 'Modal', 'RoomAssignmentPicker', 'PinApprovalModal', 'EmptyState'],
   rules: ['R-I09', 'R-I01', 'R-I07', 'R-X07', 'R-X03', 'R-E09', 'R-I06', 'R-X05'], states: ['week', 'two weeks', 'today in view', 'popover open', 'dragging', 'move confirm', 'filtered', 'phone scroll'], figma: ['all reservation grooming-1.jpg', 'all reservation grooming-2.jpg', 'all reservation grooming-3.jpg', 'all reservation grooming.jpg'], checkedAt: W,
 });
 

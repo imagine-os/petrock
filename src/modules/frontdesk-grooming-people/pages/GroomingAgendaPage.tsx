@@ -50,7 +50,7 @@ export function GroomingAgendaPage() {
         </GroomingDateNav>
         <GroomingViewToggle day={day} />
       </div>
-      <DataTable<Row> columns={columns} rows={rows} rowKey={(r: AppointmentView) => r.ap.id} onRowClick={(r) => nav(`/desk/grooming/${r.ap.id}`)} emptyText={`No grooming appointments on ${fmtDate(day)}`} />
+      <DataTable<Row> framed title="Grooming Agenda" columns={columns} rows={rows} rowKey={(r: AppointmentView) => r.ap.id} onRowClick={(r) => nav(`/desk/grooming/${r.ap.id}`)} emptyText={`No grooming appointments on ${fmtDate(day)}`} />
     </div>
   );
 }

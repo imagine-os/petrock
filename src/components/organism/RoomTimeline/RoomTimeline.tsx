@@ -43,9 +43,12 @@ const DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const FLAG_ICON: Record<TimelineFlag, { icon: 'warning' | 'dollar' | 'info' | 'plus'; title: string }> = { vaccine: { icon: 'warning', title: 'Vaccine issue' }, unpaid: { icon: 'dollar', title: 'Balance due' }, note: { icon: 'info', title: 'Has notes' }, medication: { icon: 'plus', title: 'Medication' } };
 
 /**
- * Rooms x days Gantt for hotel stays (D-008: designed fresh around rooms and stays). Blocks start at the check-in
- * half-day and end at the check-out half-day, coloured by booking status; overlapping blocks stack in lanes. Drag a
- * block onto a cell to move it. Degrades to horizontal scrolling with a sticky room column on phones (D-016).
+ * Rooms x days Gantt for hotel stays (D-008). Skin per Figma `all reservation grooming.jpg` / `front desk-9.jpg`: full week
+ * range headers, 54 px day heads with green weekend labels and a black TODAY pill, alternating white / #EEF2F5 day columns,
+ * a dashed today line, grey #D9D9D9 group rows with a caret, 54 px room rows with a 32 px grey disc, flat square blocks in
+ * the status hue with the flag icons left and a clock right. Blocks start at the check-in half-day and end at the check-out
+ * half-day; overlapping blocks stack in lanes. Drag a block onto a cell to move it. Degrades to horizontal scrolling with a
+ * sticky room column on phones (D-016).
  */
 export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId, onBlockClick, onCellClick, onBlockMove, renderDetail, dayMinWidth = 56 }: RoomTimelineProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -63,13 +66,15 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
   }, [active]);
 
   // week header cells (Sunday-Saturday spans)
-  const weeks: { label: string; span: number }[] = [];
+  const weeks: { label: string; span: number; from: Date; to: Date }[] = [];
   for (const d of dayList) {
     const dt = new Date(d + 'T00:00:00');
     const last = weeks[weeks.length - 1];
-    if (last && dt.getDay() !== 0) last.span++;
-    else weeks.push({ label: `Week of ${dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, span: 1 });
+    if (last && dt.getDay() !== 0) { last.span++; last.to = dt; }
+    else weeks.push({ label: '', span: 1, from: dt, to: dt });
   }
+  const longDay = (dt: Date) => dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  for (const w of weeks) w.label = w.span > 1 ? `${longDay(w.from)} - ${longDay(w.to)}` : longDay(w.from);
   const todayIdx = today ? diff(startDay, today) : -1;
   const showToday = todayIdx >= 0 && todayIdx < days;
 
@@ -103,7 +108,7 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
           </div>
           <div className="rtl-head rtl-dayhead" role="row">
             <div className="rtl-corner rtl-corner-label">All rooms</div>
-            <div className="rtl-track rtl-daytrack">{dayList.map((d, i) => { const dt = new Date(d + 'T00:00:00'); const we = dt.getDay() === 0 || dt.getDay() === 6; return <div key={d} className={`rtl-day ${d === today ? 'is-today' : ''} ${we ? 'is-weekend' : ''}`} role="columnheader" aria-label={d}><span className="rtl-dow">{DOW[dt.getDay()]}</span><span className="rtl-dnum">{dt.getDate()}</span>{d === today && <span className="rtl-todaytag">TODAY</span>}{i === 0 && false}</div>; })}</div>
+            <div className="rtl-track rtl-daytrack">{dayList.map((d, i) => { const dt = new Date(d + 'T00:00:00'); const we = dt.getDay() === 0 || dt.getDay() === 6; return <div key={d} className={`rtl-day ${d === today ? 'is-today' : ''} ${we ? 'is-weekend' : ''} ${i % 2 ? 'is-alt' : ''}`} role="columnheader" aria-label={d}><span className="rtl-dow">{DOW[dt.getDay()]}</span>{d === today ? <span className="rtl-todaytag">TODAY</span> : null}<span className="rtl-dnum">{dt.getDate()}</span></div>; })}</div>
           </div>
           {groups.map((g) => {
             const isCollapsed = !!collapsed[g.key];
@@ -111,7 +116,7 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
             return (
               <div key={g.key} className="rtl-group">
                 <button type="button" className="rtl-grouphead" onClick={() => setCollapsed((c) => ({ ...c, [g.key]: !c[g.key] }))} aria-expanded={!isCollapsed}>
-                  <Icon name={isCollapsed ? 'chevron-right' : 'chevron-down'} size={14} /> {g.label} <span className="rtl-groupcount">{g.rows.length} rows · {count} in view</span>
+                  {g.label} <Icon name="chevron-down" size={16} strokeWidth={2.5} className={`rtl-groupcaret ${isCollapsed ? 'is-collapsed' : ''}`} /><span className="rtl-groupcount">{g.rows.length} rows · {count} in view</span>
                 </button>
                 {!isCollapsed && g.rows.map((row) => {
                   const rowBlocks = blocks.filter((b) => b.rowId === row.id && b.startDay < endDay && (b.endDay > startDay || (b.endDay === b.startDay && b.startDay >= startDay)));
@@ -119,10 +124,10 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
                   const laneCount = laid[0]?.lanes ?? 1;
                   return (
                     <div key={row.id} className="rtl-row" role="row" style={{ ['--rtl-lanes' as string]: laneCount }}>
-                      <div className="rtl-label" role="rowheader"><span className="rtl-labeltext">{row.label}</span>{row.sub && <span className="rtl-labelsub">{row.sub}</span>}</div>
+                      <div className="rtl-label" role="rowheader" title={row.sub}><span className="rtl-disc" aria-hidden /><span className="rtl-labeltext">{row.label}</span>{row.sub && <span className="rtl-labelsub">{row.sub}</span>}</div>
                       <div className="rtl-track rtl-cells">
-                        {dayList.map((d) => { const dt = new Date(d + 'T00:00:00'); const key = `${row.id}|${d}`; return (
-                          <div key={d} role="gridcell" className={`rtl-cell ${dt.getDay() === 0 || dt.getDay() === 6 ? 'is-weekend' : ''} ${d === today ? 'is-today' : ''} ${dragOver === key ? 'is-over' : ''}`}
+                        {dayList.map((d, i) => { const dt = new Date(d + 'T00:00:00'); const key = `${row.id}|${d}`; return (
+                          <div key={d} role="gridcell" className={`rtl-cell ${dt.getDay() === 0 || dt.getDay() === 6 ? 'is-weekend' : ''} ${d === today ? 'is-today' : ''} ${i % 2 ? 'is-alt' : ''} ${dragOver === key ? 'is-over' : ''}`}
                             onClick={onCellClick ? () => onCellClick(row.id, d) : undefined}
                             onDragOver={onBlockMove ? (e) => { e.preventDefault(); if (dragOver !== key) setDragOver(key); } : undefined}
                             onDragLeave={onBlockMove ? () => setDragOver((k) => (k === key ? null : k)) : undefined}
@@ -141,8 +146,9 @@ export function RoomTimeline({ groups, blocks, startDay, days, today, selectedId
                               draggable={!!onBlockMove && b.draggable !== false}
                               onDragStart={(ev) => { ev.dataTransfer.setData('text/petrock-block', b.id); ev.dataTransfer.effectAllowed = 'move'; setActive(null); }}
                               onClick={(ev) => openBlock(b, ev.currentTarget)}>
-                              <span className="rtl-blocktext">{b.label}{b.sub && <span className="rtl-blocksub"> · {b.sub}</span>}</span>
-                              {b.flags?.length ? <span className="rtl-flags">{b.flags.map((f) => <Icon key={f} name={FLAG_ICON[f].icon} size={11} title={FLAG_ICON[f].title} />)}</span> : null}
+                              {b.flags?.length ? <span className="rtl-flags">{b.flags.map((f) => <Icon key={f} name={FLAG_ICON[f].icon} size={14} title={FLAG_ICON[f].title} className={`rtl-flag rtl-flag-${f}`} />)}</span> : null}
+                              <span className="rtl-blocktext">{b.label}{b.sub && <span className="rtl-blocksub">, {b.sub}</span>}</span>
+                              <Icon name="clock-filled" size={12} className="rtl-blockclock" />
                             </button>
                           );
                         })}

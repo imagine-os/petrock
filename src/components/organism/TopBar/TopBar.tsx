@@ -35,8 +35,8 @@ export interface TopBarProps {
 
 /**
  * Staff / admin top bar (Figma 593:16049): 80 tall white with a 1 px #EDEDED rule; search 320x48 left, then the current
- * location (binding rule, Figma has none); right cluster gap 15: New booking button, chat, Help, bell, avatar 32 + name
- * + chevron. The user menu holds the demo role switcher, appearance (theme / brand) and the builder-tool toggle.
+ * location (binding rule, Figma has none); right cluster gap 15: "New Booking" 172x47 purple button (text only, as the
+ * `front desk.jpg` export shows it), chat, Help, bell, avatar 32 + name + chevron. The user menu holds the demo role switcher, appearance (theme / brand) and the builder-tool toggle.
  */
 export function TopBar({ title, onMenu, children, showLocation = true, notificationsTo = '/desk/notifications', searchTo, newBookingTo, chatTo, helpTo }: TopBarProps) {
   const { user, role, isSuperAdmin, devMode, setDevMode, viewAs, signOut } = useSession();
@@ -63,7 +63,7 @@ export function TopBar({ title, onMenu, children, showLocation = true, notificat
       </div>
       <div className="topbar-mid">{children}</div>
       <div className="topbar-right">
-        {newBookingTo && <Button icon="user" iconRight="arrow-right" onClick={() => nav(newBookingTo)} className="topbar-new">New booking</Button>}
+        {newBookingTo && <Button onClick={() => nav(newBookingTo)} className="topbar-new">New Booking</Button>}
         {chatTo && <IconButton icon="chat-notification" label="Front desk chat" onClick={() => nav(chatTo)} className="topbar-hide-sm" />}
         {helpTo && <Link to={helpTo} className="topbar-help topbar-hide-sm"><Icon name="question" size={24} />Help</Link>}
         <IconButton icon="bell" label="Notifications" badge={unread.length} onClick={() => nav(notificationsTo)} />
