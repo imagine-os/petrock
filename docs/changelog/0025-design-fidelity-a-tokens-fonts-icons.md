@@ -1,4 +1,4 @@
-# pending - Figma fidelity part (a): tokens, fonts, icons, core components
+# 0025 - Figma fidelity part (a): tokens, fonts, icons, core components
 
 version: 0.2.0
 date: 2026-09-18

@@ -1,9 +1,9 @@
-# pending - Figma fidelity part (b): customer screens
+# 0026 - Figma fidelity part (b): customer screens
 
 version: 0.2.0
 date: 2026-09-18
 prompt: 0012
-branch: fidelity/customer-screens (not merged; integrator merges onto main after part c)
+branch: fidelity/customer-screens (merged to main as b71c534 in part d)
 intent: Make the customer app match the Figma exports block by block (Justin: "especially the homepage on mobile ... everything needs to match the exact styling from before"), using only the restyled shared components and tokens from part (a): C-10 home first, then My Pets, Pet Profile, Add Pet, the hotel flow, Settings, Notification and the grooming frame.
 decision: D-189 (home layout), D-190 (filled pointer stepper, five circles), D-191 (no stepper on the hotel flow) applied as defaults. New: the Chat tab leaves the bottom nav (Figma has four tabs); chat is reached from Notification > Front Desk Chat and Settings > Front Desk Chat. `Section band` variant for the home label-row + grey-band pattern. `AccountProfileHero` serves pets too (dashed coral ring + pencil disc). `HotelBookingFrame` is built on `CustomerScreenHeader`. Location on home moved into the hotel flow (xs select) per D-189.
 rejected: Hand-rolled home cards (kept PetAvatarCard / CustomerBookingCard); a licensed pool photo (none in the exports: HomeHero ships a brand-gradient placeholder with the logo, open question 116); room photos (none in the exports: HotelRoomTypeCard keeps a tinted line-art placeholder with the exact 239 px footprint); reordering the wizard into two Figma steps (five internal steps stay, D-190); per-page colour overrides (everything is tokens / component CSS).

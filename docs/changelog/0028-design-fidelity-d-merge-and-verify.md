@@ -1,4 +1,4 @@
-# pending - Figma fidelity part (d): merge, tokens asked by part (c), side-by-side composites, two fix rounds
+# 0028 - Figma fidelity part (d): merge, tokens asked by part (c), side-by-side composites, two fix rounds
 
 version: 0.2.0
 date: 2026-09-18

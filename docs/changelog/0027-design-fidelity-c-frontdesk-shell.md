@@ -1,4 +1,4 @@
-# pending - Figma fidelity part (c): front desk shell, tables, timeline, KPI cards, desk forms
+# 0027 - Figma fidelity part (c): front desk shell, tables, timeline, KPI cards, desk forms
 
 version: 0.2.0
 date: 2026-09-18

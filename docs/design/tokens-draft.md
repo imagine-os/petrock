@@ -2,6 +2,9 @@
 
 > **Status: derived, not designer-authored.** Extracted 2026-09-17 from 1,458 scanned nodes on the Figma page `new(justin + Mark)` (see `docs/figma/deep-dive.md`, section 6). Figma has no authored token set; per D-007 the design system is rebuilt fresh, with light/dark mode and easy new themes. Values here are the observed starting point and are expected to change when the real token set is authored. Coverage is partial (Figma API quota exhausted mid-pass; second pass after ~2026-09-22).
 
+> **Superseded (2026-09-18, D-217).** The values below were the 2026-09-17 extraction. The design system now lives in `src/design/tokens.ts` (the only source; `npm run tokens` writes `src/styles/tokens.css`) and the Figma-derived values with node ids are in [`fidelity-audit.md`](fidelity-audit.md); the measured result per screen is in [`fidelity/README.md`](fidelity/README.md). Keep this file for history; do not add tokens here.
+
+
 ## 6. Draft tokens (DERIVED - from 1,458 scanned nodes, not from a designer-authored system)
 
 ### Colors observed (solid fills, top 30, with usage counts)

@@ -1,6 +1,6 @@
-# pending - Figma fidelity audit (design system)
+# 0024 - Figma fidelity audit (design system)
 
-version: 0.2.2 (docs only)
+version: 0.2.0 (docs only)
 date: 2026-09-18
 prompt: 0009
 intent: Audit v0.1.0 against the Figma customer-app and front-desk artwork so the design fix lands in tokens, fonts, icons and shared components (not per-page overrides): exact colour / type / radius / spacing / shadow tokens with node ids, icon inventory and mapping to the exported SVGs, component-by-component CSS deltas, screen layout deltas (C-10 first), and a numbered plan (a) shared, (b) customer screens, (c) front desk shell.
