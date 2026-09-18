@@ -1,0 +1,5 @@
+.locswitch { display: inline-flex; align-items: center; gap: 6px; color: var(--color-text); font-weight: var(--fw-medium); font-size: var(--fs-sm); min-width: 0; }
+.locswitch.is-pinned { padding: 0 12px; height: var(--h-control-sm); border-radius: var(--r-md); background: var(--color-surface-tint); color: var(--color-primary-text); }
+.locswitch-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.locswitch .field { min-width: 150px; } .locswitch.is-compact .field { min-width: 120px; }
+.locswitch-icon { color: var(--color-primary-text); }

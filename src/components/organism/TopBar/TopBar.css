@@ -1,0 +1,17 @@
+.topbar { display: flex; align-items: center; gap: var(--sp-3); height: var(--h-topbar); padding: 0 var(--sp-4); background: var(--color-surface); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 50; }
+.topbar-left { display: flex; align-items: center; gap: var(--sp-3); min-width: 0; flex: 1 1 auto; }
+.topbar-title { font-weight: var(--fw-semibold); color: var(--color-heading); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-mid { display: flex; align-items: center; gap: var(--sp-2); }
+.topbar-right { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.topbar-menu { display: none; }
+.topbar-user { position: relative; margin-left: var(--sp-2); }
+.topbar-userbtn { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 4px 8px 4px 4px; border-radius: var(--r-pill); color: inherit; text-align: left; }
+.topbar-userbtn:hover { background: var(--color-surface-tint); }
+.topbar-username { display: flex; flex-direction: column; line-height: 1.15; font-size: var(--fs-sm); }
+.topbar-pop { position: absolute; right: 0; top: calc(100% + 8px); width: min(340px, calc(100vw - 32px)); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-xl); box-shadow: var(--shadow-xl); padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); z-index: 60; }
+.topbar-pop-head { display: flex; gap: 12px; align-items: center; } .topbar-pop-head > div { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.topbar-pop-section { display: flex; flex-direction: column; gap: 6px; padding-top: var(--sp-3); border-top: 1px solid var(--color-border); }
+.topbar-pop-links { display: flex; gap: var(--sp-3); flex-wrap: wrap; padding-top: var(--sp-3); border-top: 1px solid var(--color-border); font-size: var(--fs-sm); }
+.topbar-signout { border: 0; background: none; color: var(--color-danger); padding: 0; font-weight: var(--fw-medium); margin-left: auto; }
+@media (max-width: 900px) { .topbar-menu { display: inline-flex; } .topbar-title { display: none; } }
+@media (max-width: 600px) { .topbar { padding: 0 var(--sp-2); gap: var(--sp-2); } .topbar-username, .topbar-hide-sm, .topbar-mid { display: none; } .topbar-loc .field { min-width: 100px; } }

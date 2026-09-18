@@ -17,4 +17,15 @@ How the Petrock documentation is organized. Conventions follow imagine-os/hoy (`
 
 Numbering: prompts and changelogs share a counter per folder (`0001`, `0002`, ...). A changelog's `prompt:` line points at the prompt number that caused it.
 
-Planned later (when app code exists, mirroring hoy): `pages/<CODE>.md` per page, `screenshots/<CODE>/`, `ops-manual/`, `data-model.md`, `design/design-system.md`, `roles.md`.
+Added with the app (v0.1.0, changelog 0007):
+
+| Path | What goes there |
+|---|---|
+| `build-plan.md` | Phases, module list with page-code ranges and stubs to replace, definition of done. |
+| `pages/<CODE>.md` | One doc per page from `pages/_TEMPLATE.md` (purpose, screenshots, sections, data, rules, logic, components, real vs mock, responsive check). |
+| `screenshots/<CODE>/<width>[-dark].jpg` | Playwright captures (`npm run screenshots`), plus `routes.json` (route manifest). |
+| `changelog/_pending/<module>.md` | Module drafts, merged into the next numbered entry by the integrator. |
+| `data-model.md` | GENERATED from `src/data/schema/*.ts` by `npm run sql` (with `supabase/schema.sql`). |
+| `specs.md` | GENERATED route / spec index by `npm run specs`. |
+
+The app renders all of this at `/#/docs` (D-06) and `/#/dev/knowledge` (D-07). Planned later: `ops-manual/` chapters (M-xx module), `roles.md`.

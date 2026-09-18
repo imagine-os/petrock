@@ -1,0 +1,3 @@
+.select-wrap { position: relative; display: flex; align-items: center; }
+.select { appearance: none; padding-right: 36px; cursor: pointer; }
+.select-chevron { position: absolute; right: 12px; color: var(--color-text-muted); pointer-events: none; }

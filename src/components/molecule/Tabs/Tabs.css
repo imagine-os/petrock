@@ -1,0 +1,11 @@
+.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs-underline { border-bottom: 1px solid var(--color-border); }
+.tab { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 0; background: none; color: var(--color-text-muted); font-weight: var(--fw-medium); font-size: var(--fs-sm); white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--dur-fast), border-color var(--dur-fast); }
+.tabs-sm .tab { padding: 8px 10px; font-size: var(--fs-xs); }
+.tab:hover:not(:disabled) { color: var(--color-primary-text); }
+.tab:disabled { opacity: .5; cursor: not-allowed; }
+.tabs-underline .tab.is-active { color: var(--color-primary-text); border-bottom-color: var(--color-primary); }
+.tabs-pills { padding: 4px; background: var(--color-surface-3); border-radius: var(--r-card); width: fit-content; max-width: 100%; }
+.tabs-pills .tab { border-radius: var(--r-md); margin-bottom: 0; border-bottom: 0; }
+.tabs-pills .tab.is-active { background: var(--color-surface); color: var(--color-primary-text); box-shadow: var(--shadow-sm); }

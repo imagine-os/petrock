@@ -1,0 +1,2 @@
+.pinapproval { display: flex; flex-direction: column; gap: var(--sp-4); align-items: stretch; }
+.pinapproval p:last-child { text-align: center; }

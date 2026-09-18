@@ -1,0 +1,5 @@
+.figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.figure img { border-radius: var(--r-card); border: 1px solid var(--color-border); box-shadow: var(--shadow-md); background: var(--color-surface); }
+.figure-ph { border: 1px dashed var(--color-border-strong); border-radius: var(--r-card); padding: var(--sp-8); text-align: center; color: var(--color-text-faint); font-size: var(--fs-xs); background: var(--color-surface-2); }
+.figure figcaption { display: flex; gap: 8px; align-items: center; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.figure-code { font-family: var(--font-mono); font-size: 11px; background: var(--color-primary-soft); color: var(--color-primary-text); padding: 2px 6px; border-radius: var(--r-sm); }

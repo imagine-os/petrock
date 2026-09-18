@@ -1,0 +1,17 @@
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-xs); font-weight: var(--fw-semibold); line-height: 1; white-space: nowrap; background: var(--color-surface-3); color: var(--color-text-muted); }
+.badge-sm { height: 20px; padding: 0 8px; font-size: 11px; }
+.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+.badge-primary { background: var(--color-primary-soft); color: var(--color-primary-text); }
+.badge-success { background: var(--color-success-bg); color: var(--color-success); }
+.badge-warn { background: var(--color-warn-bg); color: var(--color-warn); }
+.badge-danger { background: var(--color-danger-bg); color: var(--color-danger); }
+.badge-info { background: var(--color-info-bg); color: var(--color-info); }
+.badge-accent { background: var(--color-accent-soft); color: var(--color-heading); }
+.badge-status[data-status="requested"] { background: var(--status-requested-bg); color: var(--status-requested-fg); }
+.badge-status[data-status="pending_vaccines"] { background: var(--status-pending_vaccines-bg); color: var(--status-pending_vaccines-fg); }
+.badge-status[data-status="confirmed"] { background: var(--status-confirmed-bg); color: var(--status-confirmed-fg); }
+.badge-status[data-status="checked_in"] { background: var(--status-checked_in-bg); color: var(--status-checked_in-fg); }
+.badge-status[data-status="checked_out"] { background: var(--status-checked_out-bg); color: var(--status-checked_out-fg); }
+.badge-status[data-status="cancelled"] { background: var(--status-cancelled-bg); color: var(--status-cancelled-fg); }
+.badge-status[data-status="no_show"] { background: var(--status-no_show-bg); color: var(--status-no_show-fg); }
+:root[data-theme="dark"] .badge-status { filter: saturate(.9) brightness(1.15); }

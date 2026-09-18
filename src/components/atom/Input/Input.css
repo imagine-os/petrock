@@ -1,0 +1,15 @@
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field-label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--color-heading); }
+.field-req { color: var(--color-danger); }
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input, .select, .textarea { width: 100%; height: var(--h-control); padding: 0 var(--sp-3); border: 1px solid var(--color-border-strong); border-radius: var(--r-md); background: var(--color-surface); color: var(--color-text); font-size: var(--fs-sm); transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+.input-sm .input, .select-sm .select { height: var(--h-control-sm); font-size: var(--fs-xs); }
+.input::placeholder, .textarea::placeholder { color: var(--color-text-faint); }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: var(--shadow-focus); }
+.input:disabled, .select:disabled, .textarea:disabled { background: var(--color-surface-2); color: var(--color-text-muted); cursor: not-allowed; }
+.has-icon .input { padding-left: 40px; }
+.input-icon { position: absolute; left: 12px; color: var(--color-text-faint); pointer-events: none; }
+.input-suffix { position: absolute; right: 12px; color: var(--color-text-muted); font-size: var(--fs-xs); pointer-events: none; }
+.has-error .input, .has-error .select, .has-error .textarea { border-color: var(--color-danger); }
+.field-help { display: flex; justify-content: space-between; gap: var(--sp-2); font-size: var(--fs-xs); }
+.field-hint { color: var(--color-text-muted); } .field-error { color: var(--color-danger); } .field-count { color: var(--color-text-faint); margin-left: auto; }

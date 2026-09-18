@@ -1,0 +1,4 @@
+.pinlogin { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--sp-4); background: var(--color-bg); }
+.pinlogin-card { width: 100%; max-width: 420px; gap: var(--sp-5); align-items: stretch; }
+.pinlogin-brand { display: flex; gap: 12px; align-items: center; } .pinlogin-brand h1 { font-size: var(--fs-lg); }
+.pinlogin-help { text-align: center; display: flex; gap: 4px; align-items: center; justify-content: center; flex-wrap: wrap; }

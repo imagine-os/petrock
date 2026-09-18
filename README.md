@@ -1,37 +1,38 @@
 # Petrock
 
-Software for **Petrock Hotel** (dog hotel and spa, two locations, [petrockhotel.com](https://petrockhotel.com)).
+Software for **Petrock Hotel** (dog hotel and spa, two locations: Encino and Westwood, Los Angeles; [petrockhotel.com](https://petrockhotel.com)).
 
-## Purpose
+**Live:** https://imagine-os.github.io/petrock/ (GitHub Pages, deployed from `main`; enable Pages > Source "GitHub Actions" once). The hub at `/#/` opens every surface with demo users per role.
 
-One system that runs the whole business: customers book boarding, daycare, grooming and spa from a mobile app; front-desk staff run the day from a desktop web app (check-ins, check-outs, timelines, grooming agenda, messages); owners and admins manage locations, staff, roles, pricing and settings from an admin web app. Everything shares one design system, one component library, one table library and one role/permission model, with a super-admin **builder tool** on every page that exposes the tables, roles, components, rules and integrations behind it.
+## Run
 
-## Planned surfaces
+```
+npm install
+npm run dev          # http://localhost:5173/#/
+npm run build        # tokens + tsc --noEmit + vite build (must be green before every push)
+npm run preview      # serve dist on :4173
+npm run test:pricing # pricing engine assertions
+npm run sql          # regenerate supabase/schema.sql + docs/data-model.md
+npm run screenshots  # Playwright captures into docs/screenshots (needs a build first)
+npm run specs        # docs/specs.md from the route manifest
+```
 
-| Surface | Platform | Users |
+## What is inside (v0.1.0, foundation)
+
+| Surface | Route | Users |
 |---|---|---|
-| Customer app | iOS + Android (390 wide mobile design, locked from Figma) | Pet owners |
-| Front desk | Desktop web (1440) | On-location staff, scoped to their own location |
-| Admin / owner | Desktop web | Owners and admins, see all locations |
-| Builder tool | Overlay on every page | Super admins |
+| Testing hub | `/#/` | everyone (HUB-01) |
+| Customer app | `/#/app` (PhoneShell, 390 design, Capacitor later) | pet parents |
+| Front desk | `/#/desk` (DesktopShell, pinned to one location) | front desk, groomer, manager |
+| Owner / admin | `/#/admin` | owner, super admin |
+| Staff PIN login | `/#/staff/pin` (A-00) | staff |
+| Dev | `/#/dev/tokens` `components` `specs` `tables` `rules` `knowledge` | super admin |
+| Docs | `/#/docs` | super admin, owner, manager |
 
-All in one codebase. Stripe from the start; push notifications, automated emails and Supabase later (data layer via [Playset-LLC/Company-OS](https://github.com/Playset-LLC/Company-OS)).
+Stack: Vite + React 18 + TypeScript strict, HashRouter, CSS tokens (light / dark, brands `petrock` and `sunset`), mock data in localStorage behind a `DataProvider` with a Company-OS REST adapter seam, payments behind a `PaymentProvider` (Stripe stub). 42 library components, 39 tables, 76 business rules, one booking lifecycle, a tested pricing engine, a super-admin builder tool on every page (Ctrl+.).
 
-## Status
+Demo PINs: 0000 super admin · 1111 owner · 2222 manager · 3333 Encino desk · 4444 Westwood desk · 5555 groomer. All people and pets are fictional.
 
-**Analysis phase, no app code yet.** The Figma file has been inventoried and the project brief written; the stack and the Figma scope still need to be decided (see `docs/kanban.md` and `docs/figma/analysis.md`).
+## For agents
 
-The intended stack is not yet decided. The reference architecture is [imagine-os/hoy](https://github.com/imagine-os/hoy) (Vite + React + TypeScript, HashRouter, plain CSS tokens, GitHub Pages via Actions); see `docs/reference/hoy-patterns.md`.
-
-## Documentation
-
-Everything lives in [`docs/`](docs/README.md):
-
-- `docs/project-brief.md` - what Justin asked for, organized
-- `docs/figma/` - Figma inventory, renders, decisions needed
-- `docs/reference/` - digests of reference repos (hoy, Company-OS, Santa Maria os)
-- `docs/prompts/` - every prompt and reply, numbered, append-only
-- `docs/changelog/` - every change, numbered, append-only
-- `docs/kanban.md` - Backlog / Doing / Done
-
-Rules: every prompt, reply and change is documented in the repo in the same turn as the work. Projects are published with GitHub repos + GitHub Pages.
+Read [`CLAUDE.md`](CLAUDE.md) (rulebook + exact module contract) and [`docs/build-plan.md`](docs/build-plan.md) (modules, page-code ranges, definition of done). Documentation lives in [`docs/`](docs/README.md): brief, decisions, Figma catalog, entities, rules, prompts, changelog, page docs, screenshots, data model.
