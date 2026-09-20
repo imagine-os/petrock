@@ -5,6 +5,20 @@ export type Surface = 'public' | 'customer' | 'frontdesk' | 'admin' | 'dev' | 'd
 export type LayoutMode = 'mobile' | 'desktop' | 'auto';
 
 /**
+ * One machine-drivable action a page offers (D-196, D-197). `id` is `<module>.<verb>`; `intent` is the phrase a voice or
+ * agent controller matches; `params` maps a parameter name to its type (`string`, `number`, `id`, `date`, `enum:a,b`).
+ * The registry is the WebMCP surface: one tool per action, `name = id`, `description = intent`, schema from `params`.
+ * Adding or removing a control updates the page's `spec.actions` in the same change.
+ */
+export interface ActionDef {
+  id: string;
+  label: string;
+  intent: string;
+  permission?: string;
+  params?: Record<string, string>;
+}
+
+/**
  * The builder-tool contract. Every routed page carries one of these and the InspectorPanel shows it.
  * `layout` = ordered section names the page renders; `data` = table names from src/data/schema (linked to the
  * table manager); `rules` = rule ids from src/rules (linked to the registry); `components` = library names
@@ -20,6 +34,8 @@ export interface PageSpec {
   logic: string[];
   integrations: string[];
   components: string[];
+  /** Machine-drivable actions (D-197). Not scored by specCompleteness yet. */
+  actions?: ActionDef[];
   /** Rule ids this page implements or displays (see src/rules). */
   rules?: string[];
   states?: string[];

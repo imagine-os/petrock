@@ -79,3 +79,29 @@ export function initScript(theme, path = '/', opts = {}) {
     localStorage.setItem('petrock.draft.daycare', JSON.stringify({ petIds: ['pet_1'], locationId: 'loc_encino', date: day(7), checkIn: '08:00', checkOut: '16:00', details: { pet_1: { fleaMedication: true, fleaBrand: 'NexGard', fleaDate: day(-10), medicalAlert: '' } }, addGrooming: false, notes: '' }));
   }, [theme, userId, devMode, path.startsWith('/app')]];
 }
+
+/**
+ * Chromium does not paint off-screen images during a full-page capture, so scroll the whole document
+ * (step ~600 px) back to the top and then poll until every `img` is decoded (`complete && naturalWidth > 0`)
+ * or `timeoutMs` passes. Call this right before a `fullPage` screenshot.
+ */
+export async function settleImages(page, timeoutMs = 8000) {
+  const t0 = Date.now();
+  try {
+    await page.evaluate(async () => {
+      const height = () => Math.max(document.body?.scrollHeight ?? 0, document.documentElement?.scrollHeight ?? 0);
+      for (let y = 0; y < height(); y += 600) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 60));
+      }
+      window.scrollTo(0, 0);
+      await new Promise((r) => setTimeout(r, 60));
+    });
+  } catch { /* navigation or detached frame: still give the images a chance below */ }
+  while (Date.now() - t0 < timeoutMs) {
+    let done = false;
+    try { done = await page.evaluate(() => [...document.images].every((i) => i.complete && i.naturalWidth > 0)); } catch { return; }
+    if (done) return;
+    await page.waitForTimeout(100);
+  }
+}

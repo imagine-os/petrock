@@ -1,7 +1,7 @@
 {
   "name": "petrock",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Petrock - all-in-one software for Petrock Hotel (dog hotel & spa, Encino and Westwood)",
   "scripts": {
@@ -13,6 +13,7 @@
     "sql": "node --experimental-strip-types scripts/gen-sql.mjs",
     "specs": "node scripts/gen-specs.mjs",
     "screenshots": "node scripts/screenshots.mjs",
+    "thumbs": "node scripts/hub-thumbs.mjs",
     "test:pricing": "node --experimental-strip-types scripts/test-pricing.mjs",
     "qa:responsive": "node scripts/qa-responsive.mjs",
     "qa:bundle": "node scripts/qa-bundle.mjs",

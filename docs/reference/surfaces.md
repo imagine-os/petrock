@@ -1,12 +1,12 @@
 # Surfaces: routes, data, scripts, MCP / CLI / API
 
-Every surface a machine (script, agent, voice controller, MCP client) can drive, recorded every pass (principle P-10, D-203). Update this file in the same turn as any change to a route, `DataProvider` method, npm script, action or API. Last full pass: 2026-09-18 (prompt 0014).
+Every surface a machine (script, agent, voice controller, MCP client) can drive, recorded every pass (principle P-10, D-203). Update this file in the same turn as any change to a route, `DataProvider` method, npm script, action or API. Last full pass: 2026-09-20 (prompt 0016).
 
 ## 1. What exists today
 
 ### 1.1 Route manifest (in the running app)
 
-`src/app/manifest.ts` publishes `window.__petrock = { routes, version }` on load. Each entry: `{ path, code, surface, status: 'built' | 'stub', roles, spec }` where `spec` is the full `PageSpec` (`src/specs/types.ts`: code, name, purpose, layout, data, roles, logic, integrations, components, rules, states, notes, figma, checkedAt, tone). Consumers: `scripts/screenshots.mjs`, `scripts/qa-responsive.mjs`, `scripts/gen-specs.mjs`, the D-19 route manifest page (download as JSON), D-03 / D-09 spec pages. Routing is `react-router-dom` HashRouter, so every page is `/#/<path>`; parameterised routes use `:id`, `:table`, `:code`. Planned field: `spec.actions` (section 2.1).
+`src/app/manifest.ts` publishes `window.__petrock = { routes, version }` on load. Each entry: `{ path, code, surface, status: 'built' | 'stub', roles, spec }` where `spec` is the full `PageSpec` (`src/specs/types.ts`: code, name, purpose, layout, data, roles, logic, integrations, components, rules, states, notes, figma, checkedAt, tone). Consumers: `scripts/screenshots.mjs`, `scripts/qa-responsive.mjs`, `scripts/gen-specs.mjs`, the D-19 route manifest page (download as JSON), D-03 / D-09 spec pages. Routing is `react-router-dom` HashRouter, so every page is `/#/<path>`; parameterised routes use `:id`, `:table`, `:code`. `spec.actions?: ActionDef[]` now exists (D-221, shape in section 2.1) and is published with the rest of the spec; HUB-01 is the first page to declare actions (7): `hub.enterAs`, `hub.openTool`, `hub.setLang`, `hub.toggleTheme`, `hub.setBrand`, `hub.toggleDevMode` (permission `dev.tools`), `hub.switchLocation`. Every other page's `actions` is still empty and the bus that runs them is not built (section 2.1).
 
 ### 1.2 Data: `DataProvider` (`src/data/provider.ts`)
 
@@ -38,7 +38,8 @@ Other seams: `PaymentProvider` (`src/payments/`, `MockPaymentProvider` now, `Str
 | `npm run tokens` | `src/design/tokens.ts` -> `src/styles/tokens.css` | |
 | `npm run sql` | schema -> `supabase/schema.sql` + `docs/data-model.md` | |
 | `npm run specs` | manifest -> `docs/specs.md` | |
-| `npm run screenshots` | Playwright captures into `docs/screenshots/<CODE>/` | `-- --codes=C-10,F-01 --label=before` |
+| `npm run screenshots` | Playwright captures into `docs/screenshots/<CODE>/`; full-page shots call `settleImages` (qa-lib) first so off-screen images are painted (D-223) | `-- --codes=C-10,F-01 --dark --widths=390,1280,3840 --label=before --quality=72 --port=4173 --only=/dev --smoke`; env `QA_PORT`, `QA_NO_SERVER=1` |
+| `npm run thumbs` | `node scripts/hub-thumbs.mjs`: hub-card thumbnails into `docs/screenshots/<CODE>/thumb[-dark][-<label>].jpg`, dev mode off, as each card's demo person and location (D-218) | `-- --codes=C-10,P-01 --theme=light\|dark\|both --quality=68 --port=4173`; env `QA_PORT`, `QA_NO_SERVER=1` |
 | `npm run test:pricing` | pricing engine assertions | |
 | `npm run qa:responsive` | D-016 matrix, writes `docs/qa/responsive-report.*` | `-- --only=/dev --codes=D-08 --widths=360,1280 --themes=light --port=4174`; env `QA_PORT`, `QA_NO_SERVER=1` (D-172) |
 | `npm run qa:bundle` | bundle sizes vs `perf_budgets` -> `docs/qa/bundle-report.*` | |
@@ -57,7 +58,9 @@ Chromium is preinstalled at `/opt/pw-browsers`; never run `playwright install`.
 
 ## 2. Planned
 
-### 2.1 Actions manifest -> WebMCP tools (P-05, D-197 proposed)
+### 2.1 Actions manifest -> WebMCP tools (P-05, D-197; the type has landed, the bus has not)
+
+**Landed (D-221):** `PageSpec.actions?: ActionDef[]` is in `src/specs/types.ts` and HUB-01 declares its 7 actions (section 1.1), so the manifest already carries them. **Still planned:** the bus, the D-20 page and the `specCompleteness` check below.
 
 Each `PageSpec` gains `actions: ActionDef[]` with `{ id: '<module>.<verb>', label, intent, permission?, params?: Record<string, 'string' | 'number' | 'id' | 'date' | 'enum:...'> }`. While mounted, a page registers `run(id, params)` handlers on an actions bus (`src/actions/`); `/#/dev/actions` (D-20) lists every action across routes with its page, permission and whether a handler is live. The WebMCP surface is generated from this registry: one tool per action (`name = id`, `description = intent`, `inputSchema` from `params`), permission checked through the session's `can()`. Voice control (P-06) speaks the same intents. Recorded here when it lands: the tool list, the bus API, how a page registers handlers.
 
@@ -76,3 +79,4 @@ The `feedback` table extended with `kind`, `element_path`, `component`, `viewpor
 ## 3. Change log of this file
 
 - 2026-09-18 (prompt 0014): initial version.
+- 2026-09-20 (prompt 0016): `spec.actions` landed as a type with HUB-01's 7 actions (D-221); new `npm run thumbs` script (D-218); `settleImages` noted on `npm run screenshots` (D-223); section 2.1 split into landed vs planned.

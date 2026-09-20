@@ -8,10 +8,11 @@
 //   --dark       dark captures for every listed route (default: KEY_PAGES only)
 //   --widths     comma list of widths (default 390,1280); --label tags the file name (baseline for D-17)
 // Hardened (dev-quality): waits for the preview server to answer instead of sleeping, retries the manifest read,
-// fills every known route param (scripts/qa-lib.mjs PARAMS), never captures the same code twice, and prints a summary.
+// fills every known route param (scripts/qa-lib.mjs PARAMS), never captures the same code twice, settles every image
+// before a full-page capture (qa-lib `settleImages`, D-223), and prints a summary.
 // Chromium is preinstalled at /opt/pw-browsers; PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1; never run `playwright install`.
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { arg, list, startPreview, launch, fetchManifest, fillParams, routeFilter, NOISE, initScript } from './qa-lib.mjs';
+import { arg, list, startPreview, launch, fetchManifest, fillParams, routeFilter, NOISE, initScript, settleImages } from './qa-lib.mjs';
 
 const args = process.argv.slice(2);
 const SMOKE = args.includes('--smoke');
@@ -60,6 +61,7 @@ async function main() {
           if (!SMOKE) {
             const dir = new URL(`../docs/screenshots/${safe(code)}/`, import.meta.url);
             mkdirSync(dir, { recursive: true });
+            if (width >= 600) await settleImages(page); // full-page shots: Chromium skips off-screen images (D-223)
             await page.screenshot({ path: new URL(fileName(width, theme, LABEL), dir).pathname, fullPage: width >= 600, type: 'jpeg', quality: QUALITY });
             captured++;
           }
