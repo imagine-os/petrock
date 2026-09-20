@@ -4,6 +4,7 @@ import { useData, useTable } from '../../../data/DataContext';
 import type { EmployeeRow } from '../../../data/schema/core';
 import type { SiteFaqRow } from '../../../data/schema/extras-manual-website';
 import { company } from '../../../tenant/locations';
+import { useT } from '../../../i18n/I18nProvider';
 import { BOOKING_STATUSES, BOOKING_STATUS_CUSTOMER_LABEL } from '../../../domain/booking';
 import { SiteLayout } from '../../../components/template/SiteLayout/SiteLayout';
 import { SiteHero } from '../../../components/molecule/SiteHero/SiteHero';
@@ -18,8 +19,11 @@ import { Tabs } from '../../../components/molecule/Tabs/Tabs';
 import { EmptyState } from '../../../components/molecule/EmptyState/EmptyState';
 import { Avatar } from '../../../components/atom/Avatar/Avatar';
 import { useToast } from '../../../components/molecule/Toast/Toast';
-import { SectionHead, CtaBand, Art } from './siteBits';
-import { cardFee, useLocations, usePricingTables, useVaccineTypes } from './teasers';
+import { SectionHead, CtaBand, Art, CheckList } from './siteBits';
+import { SitePhoto } from './siteImages';
+import { cardFee, tel, useLocations, usePricingTables, useVaccineTypes } from './teasers';
+
+const K = 'extras-manual-website.site';
 
 /** P-08 Vaccines & policies: required / recommended vaccines, how verification works, the booking statuses a parent sees, payment and cancellation notes. */
 export function SitePolicies() {
@@ -112,7 +116,7 @@ export function SiteContact() {
               </form>
             )}
           </Card>
-          <div className="stack">{locations.map((l) => <Card key={l.id} padding="lg" className="stack-sm"><h3><Icon name="location" size={16} /> {l.name}</h3><p className="small">{l.address}</p>{l.phone && <a href={`tel:${l.phone.replace(/[^\d+]/g, '')}`} className="small"><Icon name="phone" size={14} /> {l.phone}</a>}<Link to={`/site/locations#${l.slug}`} className="xs">Hours & directions →</Link></Card>)}<Card padding="lg" tint className="stack-sm"><h3>Already a customer?</h3><p className="small muted">Open the app and tap Front Desk chat: one thread, real people, and your dog's file already open on our side.</p><Link to="/app"><Button size="sm" variant="secondary">Open the app</Button></Link></Card></div>
+          <div className="stack">{locations.map((l) => <Card key={l.id} padding="lg" className="stack-sm"><h3><Icon name="location" size={16} /> {l.name}</h3><p className="small">{l.address}</p>{l.phone && <a href={tel(l.phone)} className="small"><Icon name="phone" size={14} /> {l.phone}</a>}<Link to={`/site/locations#${l.slug}`} className="xs">Hours & directions →</Link></Card>)}<Card padding="lg" tint className="stack-sm"><h3>Already a customer?</h3><p className="small muted">Open the app and tap Front Desk chat: one thread, real people, and your dog's file already open on our side.</p><Link to="/app"><Button size="sm" variant="secondary">Open the app</Button></Link></Card></div>
         </div>
       </div>
     </SiteLayout>
@@ -141,22 +145,43 @@ export function SiteFaq() {
   );
 }
 
-/** P-12 About: the story, values, the team (active staff first names and roles from employees), the tech behind the app. */
+/** P-12 About: the client's own "established 2011" story, what we believe, the team from active employees, the legal entity. */
 export function SiteAbout() {
+  const t = useT();
   const locations = useLocations();
   const { rows: staff } = useTable<EmployeeRow>('employees', { where: { status: 'active' } });
   return (
     <SiteLayout>
-      <SiteHero tone="soft" compact eyebrow="About" title={`${company.name}: a hotel with a spa, run by dog people`} lead={`We started in ${locations[0]?.short_name ?? 'Encino'} because our own dogs deserved better than a kennel run. ${locations.length > 1 ? `${locations[1].short_name} followed.` : ''} Two buildings, one team, one promise: your dog comes home happy and tired.`} />
+      <SiteHero tone="soft" compact eyebrow={t(`${K}.about.eyebrow`)} title={t(`${K}.about.title`)} lead={t(`${K}.about.lead`)} />
       <div className="container ps">
-        <section className="ps-section"><div className="ps-room"><Art icon="paw" label="The Petrock team with dogs" /><div className="stack"><SectionHead eyebrow="What we believe" title="Small, known, photographed" /><ul className="ps-inclusions">{['Every dog has a file we actually read', 'Vaccines verified by people, not a checkbox', 'Rooms, not runs', 'Photos every night, no exceptions', 'A front desk you can chat with', 'Prices you can see before you book'].map((t) => <li key={t}><Icon name="check" size={16} />{t}</li>)}</ul></div></div></section>
+        <section className="ps-section">
+          <div className="ps-room">
+            <SitePhoto slug="dsc06642" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" />
+            <div className="stack">
+              <SectionHead eyebrow={t(`${K}.why.eyebrow`)} title={t(`${K}.why.title`)} />
+              <p className="small muted">{t(`${K}.about.story1`)}</p>
+              <p className="small muted">{t(`${K}.about.story2`)}</p>
+              <p className="small muted">{t(`${K}.about.story3`)}</p>
+            </div>
+          </div>
+        </section>
+        <section className="ps-section">
+          <div className="ps-room">
+            <div className="stack">
+              <SectionHead eyebrow="What we believe" title="Small, known, photographed" />
+              <CheckList prefix={`${K}.why.item`} count={6} />
+            </div>
+            <SitePhoto slug="dsc06358" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" />
+          </div>
+        </section>
         <section className="ps-section">
           <SectionHead eyebrow="Team" title="The people at the desk and on the floor" lead="First names and roles; you will meet them at drop-off." />
           <div className="ps-team">{staff.map((e) => <Card key={e.id} padding="lg" className="ps-team-card"><Avatar name={e.display_name ?? e.name} size={56} /><strong>{e.display_name ?? e.name.split(' ')[0]}</strong><span className="xs muted">{e.job_title ?? e.department ?? 'Team'} · {locations.find((l) => l.id === e.location_id)?.short_name ?? ''}</span></Card>)}</div>
         </section>
         <section className="ps-section">
           <SectionHead eyebrow="Behind the app" title="One system, built for dogs" lead="The website, the customer app and our front desk run on the same software, so what you book is what the desk sees, and the prices you read here are the ones we charge." />
-          <div className="row wrap"><Link to="/site/pricing"><Button variant="secondary">Pricing</Button></Link><Link to="/site/policies"><Button variant="secondary">Vaccines & policies</Button></Link><Link to="/site/reviews"><Button variant="secondary">Reviews</Button></Link></div>
+          <div className="row wrap"><Link to="/site/pricing"><Button variant="secondary">Pricing</Button></Link><Link to="/site/policies"><Button variant="secondary">Vaccines & policies</Button></Link><Link to="/site/gallery"><Button variant="secondary">{t(`${K}.gallery.eyebrow`)}</Button></Link><Link to="/site/reviews"><Button variant="secondary">Reviews</Button></Link></div>
+          <p className="ps-inline-note">{company.name} is operated by {company.legalName}, {locations.map((l) => l.address).join(' · ')}.</p>
         </section>
         <CtaBand />
       </div>

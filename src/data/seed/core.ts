@@ -112,11 +112,18 @@ export function seed(ctx: SeedCtx) {
   }
 
   // ---- pricing tables ----
-  const seasonRows: SeasonLike[] = [add('seasons', { id: 'sea_winter', name: 'Winter holidays', starts_on: `${today.getFullYear()}-12-18`, ends_on: `${today.getFullYear() + 1}-01-04`, is_holiday: true }), add('seasons', { id: 'sea_summer', name: 'Summer peak', starts_on: `${today.getFullYear()}-06-15`, ends_on: `${today.getFullYear()}-08-31`, is_holiday: false })].map((s) => s as unknown as SeasonLike);
+  // Season bands, nightly rates, multi-dog amounts, daycare prices and the spa menu all come from petrockhotel.com (D-187,
+  // docs/reference/petrockhotel-scrape/pages/home.md). The site names two bands: "Seasonal (Easter - Labor Day)" and
+  // "Holiday (Thanksgiving - New Years)". Month/day below are the 2026 dates (Easter Apr 5, Labor Day Sep 7,
+  // Thanksgiving Nov 26); Easter and Thanksgiving move every year, so the owner adds a season row per year (A-20).
+  const yr = today.getFullYear();
+  const seasonRows: SeasonLike[] = [add('seasons', { id: 'sea_winter', name: "Holiday rates (Thanksgiving - New Year's)", starts_on: `${yr}-11-26`, ends_on: `${yr + 1}-01-01`, is_holiday: true }), add('seasons', { id: 'sea_summer', name: 'Seasonal rates (Easter - Labor Day)', starts_on: `${yr}-04-05`, ends_on: `${yr}-09-07`, is_holiday: false })].map((s) => s as unknown as SeasonLike);
   const rateRows: RateLike[] = [];
   const rate = (rt: string, kind: 'weekday' | 'weekend', season: string | null, price: number) => rateRows.push(add('rates', { id: `rate_${rt}_${kind}_${season ?? 'base'}`, room_type_id: rt, day_kind: kind, season_id: season, price_per_night: price, location_id: null }) as unknown as RateLike);
-  rate(rtPh.id, 'weekday', null, 120); rate(rtPh.id, 'weekend', null, 135); rate(rtSu.id, 'weekday', null, 85); rate(rtSu.id, 'weekend', null, 95);
-  for (const s of seasonRows) { rate(rtPh.id, 'weekday', s.id, 140); rate(rtPh.id, 'weekend', s.id, 155); rate(rtSu.id, 'weekday', s.id, 100); rate(rtSu.id, 'weekend', s.id, 110); }
+  // Per dog per night, Mon-Thu / Fri-Sun (petrockhotel.com Hotel Menu).
+  rate(rtPh.id, 'weekday', null, 135); rate(rtPh.id, 'weekend', null, 150); rate(rtSu.id, 'weekday', null, 100); rate(rtSu.id, 'weekend', null, 110);
+  const SEASON_RATES: Record<string, { ph: [number, number]; su: [number, number] }> = { sea_summer: { ph: [145, 160], su: [110, 120] }, sea_winter: { ph: [165, 175], su: [120, 130] } };
+  for (const s of seasonRows) { const sr = SEASON_RATES[s.id]; rate(rtPh.id, 'weekday', s.id, sr.ph[0]); rate(rtPh.id, 'weekend', s.id, sr.ph[1]); rate(rtSu.id, 'weekday', s.id, sr.su[0]); rate(rtSu.id, 'weekend', s.id, sr.su[1]); }
   const discountRows: DiscountLike[] = [
     { id: 'dis_ph2', name: '2 dogs in a penthouse', kind: 'multi_dog', room_type_id: rtPh.id, dog_count: 2, min_nights: null, amount_off: 15, percent_off: null, requires_paid_in_full: false, excludes_holidays: false, active: true },
     { id: 'dis_ph3', name: '3 dogs in a penthouse', kind: 'multi_dog', room_type_id: rtPh.id, dog_count: 3, min_nights: null, amount_off: 20, percent_off: null, requires_paid_in_full: false, excludes_holidays: false, active: true },
@@ -125,6 +132,11 @@ export function seed(ctx: SeedCtx) {
     { id: 'dis_14', name: 'Long stay 14 nights, paid in full', kind: 'long_stay', room_type_id: null, dog_count: null, min_nights: 14, amount_off: 0, percent_off: 7.5, requires_paid_in_full: true, excludes_holidays: true, active: true },
     { id: 'dis_21', name: 'Long stay 21 nights, paid in full', kind: 'long_stay', room_type_id: null, dog_count: null, min_nights: 21, amount_off: 0, percent_off: 10, requires_paid_in_full: true, excludes_holidays: true, active: true },
     { id: 'dis_dc', name: 'Each additional pet (daycare)', kind: 'daycare_extra_pet', room_type_id: null, dog_count: null, min_nights: null, amount_off: 5, percent_off: null, requires_paid_in_full: false, excludes_holidays: false, active: true },
+    // Prepaid daycare packages (site Day Care Menu: 7 days 5%, 14 days 7.5%, 21 days 10%, "when package is pre paid in full").
+    // min_nights carries the number of days in the package; quoteDaycare does not apply these yet (no package flow) - owner Q.
+    { id: 'dis_dcp7', name: 'Daycare 7-day package, prepaid', kind: 'prepay', room_type_id: null, dog_count: null, min_nights: 7, amount_off: 0, percent_off: 5, requires_paid_in_full: true, excludes_holidays: false, active: true },
+    { id: 'dis_dcp14', name: 'Daycare 14-day package, prepaid', kind: 'prepay', room_type_id: null, dog_count: null, min_nights: 14, amount_off: 0, percent_off: 7.5, requires_paid_in_full: true, excludes_holidays: false, active: true },
+    { id: 'dis_dcp21', name: 'Daycare 21-day package, prepaid', kind: 'prepay', room_type_id: null, dog_count: null, min_nights: 21, amount_off: 0, percent_off: 10, requires_paid_in_full: true, excludes_holidays: false, active: true },
   ].map((d) => add('discounts', d) as unknown as DiscountLike);
   const feeRows: FeeLike[] = [
     add('fees', { id: 'fee_card', name: 'Card service fee', kind: 'card', percent: 3.89, amount: null, applies_to: 'card_payments', included: false, active: true }) as unknown as FeeLike,
@@ -133,16 +145,23 @@ export function seed(ctx: SeedCtx) {
   ];
   const taxRows: TaxLike[] = [add('taxes', { id: 'tax_main', name: 'Tax', tax_number: 'US-PETROCK-0001', service_rate: 2, product_rate: 2, boarding_rate: 2, prices_inclusive: false, active: true }) as unknown as TaxLike];
   const pkgRows: PackageLike[] = [
-    { id: 'pkg_gold', name: 'Gold Groom', tier: 'gold', inclusions: 'Bath, blow-dry, brush teeth, four-paw massage and scented spray', price_s: 50, price_m: 65, price_l: 80, price_xl: 95, price_giant: 135, minutes_s: 60, minutes_m: 60, minutes_l: 60, minutes_xl: 90, minutes_giant: 90, notes: null, sort_order: 0, active: true },
-    { id: 'pkg_platinum', name: 'Platinum Groom', tier: 'platinum', inclusions: 'Gold package + nail trim, ear cleanse and gland expression', price_s: 65, price_m: 80, price_l: 95, price_xl: 115, price_giant: 150, minutes_s: 75, minutes_m: 75, minutes_l: 90, minutes_xl: 105, minutes_giant: 120, notes: null, sort_order: 1, active: true },
-    { id: 'pkg_diamond', name: 'Diamond Groom', tier: 'diamond', inclusions: 'Platinum package + shave or clip', price_s: 85, price_m: 100, price_l: 120, price_xl: 145, price_giant: 185, minutes_s: 90, minutes_m: 105, minutes_l: 120, minutes_xl: 135, minutes_giant: 150, notes: 'Specialty breed cuts & Asian fusion: please call. Prices pending confirmation (R-G06).', sort_order: 2, active: true },
+    // Spa Menu prices from petrockhotel.com (D-187). Every listed price already includes the $12 sanitation fee (fee_sanitation).
+    // Where the site shows a range the low end is seeded and the range is in notes; cat prices are not seeded (no species column).
+    { id: 'pkg_gold', name: 'Gold Groom', tier: 'gold', inclusions: 'Spa bath, blow dry, brush out, brush teeth, paw massage', price_s: 55, price_m: 70, price_l: 85, price_xl: 100, price_giant: 140, minutes_s: 60, minutes_m: 60, minutes_l: 60, minutes_xl: 90, minutes_giant: 90, notes: 'Rates are estimates; pets are assessed in person. Extra charge for dematting depending on coat condition.', sort_order: 0, active: true },
+    { id: 'pkg_platinum', name: 'Platinum Groom', tier: 'platinum', inclusions: 'Spa bath, blow dry, brush out, brush teeth, paw massage, nail trim, anal expression, ear clean', price_s: 70, price_m: 85, price_l: 100, price_xl: 120, price_giant: 155, minutes_s: 75, minutes_m: 75, minutes_l: 90, minutes_xl: 105, minutes_giant: 120, notes: 'Site lists Extra Large $120-140 (low end seeded) and Cat $120-130 (cats not in the app yet).', sort_order: 1, active: true },
+    { id: 'pkg_diamond', name: 'Diamond Groom', tier: 'diamond', inclusions: 'Full package haircut, spa bath, blow dry, brush out, brush teeth, paw massage, nail trim, anal expression, ear clean', price_s: 95, price_m: 110, price_l: 130, price_xl: 150, price_giant: 210, minutes_s: 90, minutes_m: 105, minutes_l: 120, minutes_xl: 135, minutes_giant: 150, notes: 'Specialty breed cuts & Asian fusion: please call. Site lists Extra Large $150-175 (low end seeded) and Cat $130-140.', sort_order: 2, active: true },
   ].map((p) => add('packages', p) as unknown as PackageLike);
   const addonRows: AddonLike[] = [
-    ['Furminator', 25, false, 15, 20, null], ['Medicated Shampoo', 20, true, 10, 10, null], ['Flea Shampoo', 20, false, 10, 10, null], ['Frontline Plus', 30, false, 0, 0, null], ['Spa Facial', 25, false, 10, 10, null],
-    ['Nail Trim and File', 16, false, 10, 10, null], ['Nail Polish', 30, true, 15, 15, null], ['Color / Highlights', 15, false, 20, 30, null], ['Express Anal Glands (External)', 30, false, 5, 5, null], ['Express Anal Glands (Internal)', 25, false, 5, 5, 'special employee'], ['Sanitary Trim', 10, true, 10, 15, null],
+    // "On the Side" list from petrockhotel.com (D-187); starting_at = the site shows "+" or a range (low end seeded).
+    // Rows 1-11 keep their ids; 12-18 are the site add-ons the seed was missing. Added minutes are ours (not on the site).
+    ['Furminator', 25, false, 15, 20, null], ['Medicated Shampoo', 25, true, 10, 10, null], ['Flea Shampoo', 20, false, 10, 10, null], ['Frontline Plus', 30, false, 0, 0, null], ['Spa Facial', 25, false, 10, 10, null],
+    ['Nail Trim and File', 18, false, 10, 10, null], ['Nail Polish', 25, false, 15, 15, null], ['Color / Highlights', 35, true, 20, 30, null], ['Express Anal Glands (External)', 15, false, 5, 5, null], ['Express Anal Glands (Internal)', 30, false, 5, 5, 'special employee'], ['Sanitary Trim', 10, true, 10, 15, null],
+    ['Ear Clean', 25, false, 10, 10, null], ['Brush Teeth', 16, false, 10, 10, null], ['Face Trim', 20, false, 10, 15, null], ['Face Trim with Sanitary', 25, true, 15, 20, null], ['Foxtail Removal', 20, true, 10, 15, null],
+    ['Dental Scale / Polish (non-anesthetic)', 175, false, 45, 60, 'special employee'], ['Transportation', 35, true, 0, 0, null],
   ].map(([name, price, starting, sm, l, emp], i) => add('addons', { id: `add_${i + 1}`, name, price, starting_at: starting, added_minutes_sm: sm, added_minutes_l: l, employee_type: emp, description: name === 'Sanitary Trim' ? 'Trim under paws, private areas, between eyes' : null, active: true }) as unknown as AddonLike);
   const dcRows: DaycarePriceLike[] = [
-    { id: 'dc_full', item: 'full_day', name: 'Full Day', price: 45, threshold_hours: 6, active: true }, { id: 'dc_half', item: 'half_day', name: 'Half Day', price: 35, threshold_hours: 6, active: true },
+    // petrockhotel.com Day Care Menu: Full Day (>5 hr) $45, Half Day (<5 hr) $35, Per Hour $15 (D-187; the cutoff was 6 h before).
+    { id: 'dc_full', item: 'full_day', name: 'Full Day', price: 45, threshold_hours: 5, active: true }, { id: 'dc_half', item: 'half_day', name: 'Half Day', price: 35, threshold_hours: 5, active: true },
     { id: 'dc_hour', item: 'hour', name: 'Play Hour', price: 15, threshold_hours: null, active: true }, { id: 'dc_walk', item: 'walk', name: 'Walk', price: 12, threshold_hours: null, active: true },
   ].map((d) => add('daycare_pricing', d) as unknown as DaycarePriceLike);
   [['Veterinary Travel', 'extra', 50], ['Vaccination Fee', 'extra', 40], ['Hotel night', 'hotel', 0], ['Daycare', 'daycare', 0], ['Grooming & Spa', 'grooming', 0]].forEach(([name, cat, price], i) => add('services', { id: `svc_${i + 1}`, name, category: cat, price, taxable_as: cat === 'hotel' ? 'boarding' : 'service', active: true, description: null }));

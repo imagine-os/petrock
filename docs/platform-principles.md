@@ -37,7 +37,7 @@ Start here if you are new: `docs/README.md` (map of the docs), then this file, t
 ## 4. Tables, design system and the component library
 
 **P-07 - Table management, design-system management and the component library are first-class, in the product.** Every table is in the schema registry and editable in the table manager (D-04 / D-10); every design value is a token in `src/design/tokens.ts` and visible in D-01; every component has a `.meta.ts` and shows in `/#/dev/components` (D-02) with states, props, a11y notes and usages (D-08). Pages never hand-roll a table, button, input, modal, card or tooltip. New components are added to the library first, then used. The builder tool (SpecChip + InspectorPanel, Ctrl+.) stays on every page and links spec -> tables -> rules -> components.
-- _Today_: 74 tables, 137 components with metas, D-01..D-19 dev pages; this is already the contract in `CLAUDE.md`.
+- _Today_: 74 tables, 137 components with metas, D-01..D-19 dev pages; this is already the contract in `CLAUDE.md`. The public website uses the library for its photos too: `SitePhoto` (`<picture>` + srcset, intrinsic size, lazy unless `priority`) is a molecule with a meta, so no page hand-rolls an `<img>` (D-225, prompt 0017).
 - _Queued_: keep; the `Placeholder` atom (P-09) and annotation pins (P-08) are library components.
 
 ## 5. Annotations and Submissions in the product
@@ -74,7 +74,7 @@ Start here if you are new: `docs/README.md` (map of the docs), then this file, t
 ## 10. Multilingual
 
 **P-13 - English and Spanish from the start.** Every visible string goes through `useT()` with a namespaced key in the module's `strings` table (`{ en, es? }`); Spanish falls back to English, so a missing translation is never a blocker but always a gap. The language toggle (C-72 for customers, TopBar user menu for staff) is present on every surface. A "Spanish fill" pass translates the `es` side; hard-coded English in JSX is a defect the D-09 report will flag once the strings check exists.
-- _Today_: `src/i18n` (`useT`, `I18nProvider`, `petrock.lang`), module `strings` exports; coverage is partial and mostly English.
+- _Today_: `src/i18n` (`useT`, `I18nProvider`, `petrock.lang`), module `strings` exports; coverage is partial and mostly English. The public site is fully bilingual as of prompt 0017: 130 new `{ en, es }` keys (83 copy, 47 photo alt texts) with real Spanish, so P-01..P-04, P-12 and P-13 carry no hard-coded English.
 - _Queued_: kanban "Spanish fill pass"; a strings-coverage check in the spec report.
 
 ## 11. Multiplayer and realtime

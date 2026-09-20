@@ -3,17 +3,22 @@ import { useTable } from '../../../data/DataContext';
 import type { CapacityRow } from '../../../data/schema/core';
 import { fmtMoney } from '../../../pricing/engine';
 import { PET_SIZES } from '../../../domain/booking';
+import { useT } from '../../../i18n/I18nProvider';
 import { SiteLayout } from '../../../components/template/SiteLayout/SiteLayout';
 import { SiteHero } from '../../../components/molecule/SiteHero/SiteHero';
 import { Button } from '../../../components/atom/Button/Button';
 import { Card } from '../../../components/molecule/Card/Card';
 import { Badge } from '../../../components/atom/Badge/Badge';
-import { Icon } from '../../../components/atom/Icon/Icon';
-import { SectionHead, CtaBand, Art } from './siteBits';
+import { SectionHead, CtaBand, CheckList } from './siteBits';
+import { SitePhoto, type PhotoSlug } from './siteImages';
 import { from, fromNightly, weekendNightly, useLocations, usePricingTables, useVaccineTypes } from './teasers';
 
-/** P-02 Hotel: room types with inclusions and "from" rates, what every stay includes, room-fit and shared-room rules, vaccines, FAQ links. */
+const K = 'extras-manual-website.site';
+const ROOM_PHOTO: Record<string, PhotoSlug> = { penthouse: 'penthouse-photo-layout', suite: 'dsc06426' };
+
+/** P-02 Hotel: room types with the client's own inclusion list and "from" rates, shared-room and long-stay rules, vaccines. */
 export function SiteHotel() {
+  const t = useT();
   const { roomTypes, rates, seasons, discounts } = usePricingTables();
   const locations = useLocations();
   const { rows: caps } = useTable<CapacityRow>('capacities');
@@ -21,12 +26,23 @@ export function SiteHotel() {
   const rooms = caps.filter((c) => c.kind === 'penthouse' || c.kind === 'suite').reduce((s, c) => s + c.max_simultaneous, 0);
   return (
     <SiteLayout>
-      <SiteHero tone="soft" compact eyebrow="Hotel" title="Penthouses and suites, not kennels" lead={`${rooms} rooms across ${locations.length} locations. Every stay includes two walks a day, playtime, meds given on schedule and a photo every night.`} actions={<><Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book a stay</Button></Link><Link to="/site/pricing"><Button size="lg" variant="secondary">Full pricing</Button></Link></>} />
+      <SiteHero tone="soft" compact eyebrow={t(`${K}.services.hotel.title`)} title={t(`${K}.hotel.title`)} lead={`${t(`${K}.hotel.lead`)} ${t(`${K}.hotel.rooms`, { rooms, locations: locations.length })}`}
+        actions={<><Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book a stay</Button></Link><Link to="/site/pricing"><Button size="lg" variant="secondary">Full pricing</Button></Link></>} />
       <div className="container ps">
         <section className="ps-section">
           {roomTypes.map((rt, i) => (
-            <div key={rt.id} className="ps-room"><Art icon={i === 0 ? 'building' : 'bed'} label={`${rt.name} room`} /><div className="stack"><SectionHead eyebrow={`Room type ${i + 1}`} title={rt.name} lead={rt.description} /><div className="row wrap"><span className="ps-from md">{from(fromNightly(rates, rt.id))} / night per pet</span>{weekendNightly(rates, rt.id) != null && <span className="small muted">Fri–Sun {fmtMoney(weekendNightly(rates, rt.id)!)}</span>}{rt.max_weight_lbs != null && <Badge tone="info">up to {rt.max_weight_lbs} lb</Badge>}</div><ul className="ps-inclusions">{['Two walks a day', 'Group or solo playtime', 'Meds and special food on schedule', 'Nightly photo in the app', 'Fresh bedding, climate control', 'Grooming add-on at the end of the stay'].map((t) => <li key={t}><Icon name="check" size={16} />{t}</li>)}</ul><Link to="/site/book"><Button iconRight="arrow-right">Book {rt.name}</Button></Link></div></div>
+            <div key={rt.id} className="ps-room">
+              <SitePhoto slug={ROOM_PHOTO[rt.key] ?? 'dsc06464'} ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" />
+              <div className="stack">
+                <SectionHead eyebrow={`Room type ${i + 1}`} title={rt.name} lead={rt.description} />
+                <div className="row wrap"><span className="ps-from md">{from(fromNightly(rates, rt.id))} / night per pet</span>{weekendNightly(rates, rt.id) != null && <span className="small muted">Fri–Sun {fmtMoney(weekendNightly(rates, rt.id)!)}</span>}{rt.max_weight_lbs != null && <Badge tone="info">up to {rt.max_weight_lbs} lb</Badge>}</div>
+                <CheckList prefix={`${K}.hotel.inc`} count={6} />
+                {rt.key === 'penthouse' && <p className="small muted">{t(`${K}.hotel.penthouseExtra`)}</p>}
+                <Link to="/site/book"><Button iconRight="arrow-right">Book {rt.name}</Button></Link>
+              </div>
+            </div>
           ))}
+          <p className="ps-inline-note">{t(`${K}.hotel.vaccineNote`)} {t(`${K}.hotel.largeDogNote`)}</p>
         </section>
         <section className="ps-section">
           <SectionHead eyebrow="Good to know" title="Rooms, dogs and discounts" />
@@ -42,32 +58,42 @@ export function SiteHotel() {
   );
 }
 
-/** P-03 Grooming & Spa: packages by size table, add-ons, how the size band works, booking CTA. */
+/** P-03 Grooming & Spa: the real Spa Menu in the client's words, packages by size from the tables, add-ons, sanitation and estimate notes. */
 export function SiteGrooming() {
-  const { packages, addons } = usePricingTables();
+  const t = useT();
+  const { packages, addons, fees } = usePricingTables();
+  const sanitation = fees.find((f) => f.kind === 'grooming_sanitation');
   const key = (s: string) => `price_${s.toLowerCase()}` as 'price_s' | 'price_m' | 'price_l' | 'price_xl' | 'price_giant';
   return (
     <SiteLayout>
-      <SiteHero tone="soft" compact eyebrow="Grooming & Spa" title="One spa, three packages, every size" lead="Bath-and-tidy to full spa day. Prices depend on your dog's size band, computed from their weight in the app, so what you see is what you pay." actions={<Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book a groom</Button></Link>} />
+      <SiteHero tone="soft" compact eyebrow={t(`${K}.services.spa.title`)} title={t(`${K}.grooming.title`)} lead={t(`${K}.grooming.lead`)} actions={<Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book a groom</Button></Link>} />
       <div className="container ps">
         <section className="ps-section">
-          <SectionHead eyebrow="Packages" title="Gold, Platinum, Diamond" lead="Live from our price list. Sizes: S under 20 lb, M under 40, L under 70, XL under 100, Giant 100 lb and up." />
+          <div className="ps-room">
+            <SitePhoto slug="grooming" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" />
+            <div className="stack">
+              <SectionHead eyebrow="Packages" title="Gold, Platinum, Diamond" lead="Live from our price list. Sizes: S under 20 lb, M under 40, L under 70, XL under 100, Giant 100 lb and up." />
+              <p className="small muted">{sanitation?.amount ? t(`${K}.grooming.sanitationWithFee`, { amount: fmtMoney(sanitation.amount) }) : t(`${K}.grooming.sanitation`)}</p>
+              <p className="small muted">{t(`${K}.grooming.estimate`)}</p>
+            </div>
+          </div>
           <div className="ps-tiles">{packages.map((p) => <Card key={p.id} padding="lg" className="ps-tile" tint={p.tier === 'platinum'}><div className="row-between"><h3>{p.name}</h3><Badge tone={p.tier === 'diamond' ? 'primary' : 'neutral'}>{p.tier}</Badge></div><p>{p.inclusions}</p><span className="ps-from">{from(p.price_s)} · {p.minutes_s}–{p.minutes_giant} min</span></Card>)}</div>
           <Card padding="none"><div className="ps-scroll"><table className="ps-price-table"><thead><tr><th>Package</th>{PET_SIZES.map((s) => <th key={s} className="num">{s}</th>)}</tr></thead><tbody>{packages.map((p) => <tr key={p.id}><td><strong>{p.name}</strong></td>{PET_SIZES.map((s) => <td key={s} className="num">{fmtMoney(p[key(s)])}</td>)}</tr>)}</tbody></table></div></Card>
         </section>
         <section className="ps-section">
-          <SectionHead eyebrow="Add-ons" title="Little extras" lead="Add-ons add minutes to the appointment and a fixed price; some start at a price and are confirmed by the groomer." />
+          <SectionHead eyebrow="Add-ons" title="On the side" lead="Add-ons add minutes to the appointment and a fixed price; some start at a price and are confirmed by the groomer." />
           <div className="grid grid-3">{addons.map((a) => <Card key={a.id} padding="lg" className="stack-sm"><div className="row-between"><h3>{a.name}</h3><span className="ps-from">{a.starting_at ? 'from ' : ''}{fmtMoney(a.price)}</span></div><p className="small muted">+{a.added_minutes_sm} min (S–M) · +{a.added_minutes_l} min (L and up){a.employee_type ? ` · ${a.employee_type} only` : ''}</p></Card>)}</div>
         </section>
-        <section className="ps-section"><div className="ps-room"><div className="stack"><SectionHead eyebrow="Hotel guests" title="Clean when they go home" lead="We generally do grooms at the end of hotel stays. Add grooming when you book the hotel, or message the front desk during the stay." /><Link to="/site/hotel"><Button variant="secondary">See the hotel</Button></Link></div><Art icon="scissors" label="Grooming room" /></div></section>
+        <section className="ps-section"><div className="ps-room"><div className="stack"><SectionHead eyebrow="Hotel guests" title="Clean when they go home" lead="We generally do grooms at the end of hotel stays. Add grooming when you book the hotel, or message the front desk during the stay." /><Link to="/site/hotel"><Button variant="secondary">See the hotel</Button></Link></div><SitePhoto slug="img-3110" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" /></div></section>
         <CtaBand title="Book a spa day" lead="Choose your dog, the package for their size, add-ons and a time. Pay in the app or at the desk." />
       </div>
     </SiteLayout>
   );
 }
 
-/** P-04 Daycare: price items and thresholds, a typical day, capacity, what to bring, CTA. */
+/** P-04 Daycare: the Play area in the client's words, price items and thresholds, a typical day, capacity. */
 export function SiteDaycare() {
+  const t = useT();
   const { daycare, discounts } = usePricingTables();
   const locations = useLocations();
   const { rows: caps } = useTable<CapacityRow>('capacities');
@@ -75,8 +101,17 @@ export function SiteDaycare() {
   const extra = discounts.find((d) => d.kind === 'daycare_extra_pet');
   return (
     <SiteLayout>
-      <SiteHero tone="soft" compact eyebrow="Daycare" title="A full day of dog" lead={`Drop off, pick up, and know they played. ${half && full && full.threshold_hours != null ? `Visits under ${full.threshold_hours} hours are a half day; longer visits are a full day.` : ''} Play hours and walks can be added.`} actions={<Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book daycare</Button></Link>} />
+      <SiteHero tone="soft" compact eyebrow={t(`${K}.services.daycare.title`)} title={t(`${K}.daycare.title`)} lead={`${t(`${K}.daycare.lead`)}${half && full && full.threshold_hours != null ? ` Visits under ${full.threshold_hours} hours are a half day; longer visits are a full day.` : ''}`} actions={<Link to="/site/book"><Button size="lg" iconRight="arrow-right">Book daycare</Button></Link>} />
       <div className="container ps">
+        <section className="ps-section">
+          <div className="ps-room">
+            <SitePhoto slug="dsc06450" ratio="4 / 3" sizes="(max-width: 900px) 100vw, 40vw" />
+            <div className="stack">
+              <SectionHead eyebrow={t(`${K}.services.daycare.title`)} title={t(`${K}.services.title`)} lead={t(`${K}.services.daycare.body`)} />
+              <p className="small muted">{t(`${K}.hotel.vaccineNote`)}</p>
+            </div>
+          </div>
+        </section>
         <section className="ps-section">
           <SectionHead eyebrow="Pricing" title="Simple by the day" lead="Live from our price list; the app computes the item from your drop-off and pick-up times." />
           <div className="grid grid-4">{daycare.map((d) => <Card key={d.id} padding="lg" className="ps-tile"><h3>{d.name}</h3><span className="ps-from md">{fmtMoney(d.price)}</span><p className="small muted">{d.threshold_hours != null ? (d.item === 'full_day' ? `${d.threshold_hours} h or more` : `under ${d.threshold_hours} h`) : d.item === 'hour' ? 'per hour' : 'per walk'}</p></Card>)}</div>
@@ -84,7 +119,7 @@ export function SiteDaycare() {
         </section>
         <section className="ps-section">
           <SectionHead eyebrow="A typical day" title="Morning to pick-up" />
-          <div className="ps-steps">{[['Drop-off', 'We check vaccines are current, note meds and feeding, and your dog joins the yard.'], ['Play', 'Supervised groups by size and temperament, naps in between.'], ['Walks', 'Logged per dog with the handler and minutes; a walk is a small add-on.'], ['Pick-up', 'We recompute the day from real times if you run late, then you pay in the app or at the desk.']].map(([t, b]) => <div key={t} className="ps-step"><h3>{t}</h3><p>{b}</p></div>)}</div>
+          <div className="ps-steps">{[['Drop-off', 'We check vaccines are current, note meds and feeding, and your dog joins the yard.'], ['Play', 'Supervised groups by size and temperament, naps in between.'], ['Walks', 'Logged per dog with the handler and minutes; a walk is a small add-on.'], ['Pick-up', 'We recompute the day from real times if you run late, then you pay in the app or at the desk.']].map(([t2, b]) => <div key={t2} className="ps-step"><h3>{t2}</h3><p>{b}</p></div>)}</div>
         </section>
         <section className="ps-section">
           <SectionHead eyebrow="Capacity" title="Small groups on purpose" />

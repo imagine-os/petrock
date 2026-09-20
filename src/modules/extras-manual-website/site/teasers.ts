@@ -22,6 +22,8 @@ export const weekendNightly = (rates: RateRow[], roomTypeId: string): number | n
 export const packageRange = (p: PackageRow) => `${fmtMoney(p.price_s)} – ${fmtMoney(p.price_giant)}`;
 export const cardFee = (fees: FeeRow[]) => fees.find((f) => f.kind === 'card') ?? null;
 export const from = (n: number | null) => (n == null ? '—' : `from ${fmtMoney(n)}`);
+/** `tel:` href from a printed phone number. */
+export const tel = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`;
 
 export function useLocations() { return useTable<LocationRow>('locations', { orderBy: { column: 'sort_order' } }).rows.filter((l) => l.active !== false); }
 export function useVaccineTypes() { return useTable<VaccineTypeRow>('vaccine_types', { orderBy: { column: 'sort_order' } }).rows; }

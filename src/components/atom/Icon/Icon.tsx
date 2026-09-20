@@ -31,6 +31,8 @@ export const ICONS = {
   trash: 'M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6',
   info: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',
   question: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01',
+  play: 'M7 4.5l12 7.5-12 7.5z',
+  pause: 'M9 4.5h2.5v15H9zM14.5 4.5H17v15h-2.5z',
   'arrow-right': 'M5 12h14M12 5l7 7-7 7',
   'arrow-left': 'M19 12H5M12 19l-7-7 7-7',
   'chevron-down': 'M6 9l6 6 6-6',

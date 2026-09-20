@@ -11,6 +11,8 @@
 .site2-link.is-active { background: var(--color-primary-soft); color: var(--color-primary-text); }
 .site2-nav-cta { display: none; }
 .site2-tools { display: flex; align-items: center; gap: 6px; }
+.site2-head .iconbtn { width: 44px; height: 44px; }
+.site2-cta .btn { min-height: 44px; }
 .site2-burger { display: none !important; }
 .site2-scrim { display: none; }
 .site2-main { flex: 1 1 auto; }

@@ -10,6 +10,48 @@ Direct fetches of `https://petrockhotel.com` (and `/sitemap.xml`, `?format=json`
 
 Pages discovered (Squarespace title pattern `<Page> — Petrock Hotel and Spa | Encino & Westwood , CA`): `/` (home), `/hotel`, `/spa`, `/spa-gallery`, `/day-care`, `/about`, `/contact`, `/privacy`, plus a training section on `/` or `/about`. Not found in the index: `/pricing`, `/rates`, `/faq`, `/policies`, `/locations`, `/westwood`, `/encino`, `/book`. Hosting: Squarespace (mirror host `petrock.squarespace.com`).
 
+## 0a. Update 2026-09-20
+
+The domain was **reachable on 2026-09-20** and fully crawled (prompt 0017): every page, the copy, the price
+lists and 50 images are in `docs/reference/petrockhotel-scrape/` (INVENTORY.md, `pages/*.md`, `images/`,
+`all_images.json`), D-224. **`petrockhotel-scrape/INVENTORY.md` supersedes Part A below wherever the two
+differ** — Part A is the 2026-09-18 search-index reconstruction and is kept for history, not corrected in
+place.
+
+What the crawl settled: the price rows Part A marks "not indexed" (A11 nightly prices, A15 package tier
+names and prices, A17 daycare prices and cut-offs) are now known and **adopted into the pricing tables**
+per `pricing-adoption-2026-09-20.md` (D-229) — penthouse $135 / $150, suite $100 / $110, a separate
+Seasonal (Easter - Labor Day) and Holiday (Thanksgiving - New Year's) band, a 5 h daycare cut-off, the
+Gold / Platinum / Diamond grid by size, 18 add-ons and the prepaid daycare packages. The legal entity is
+**Petrock Holdings LLC** (D-230). Addresses, phones, SMS numbers, emails and hours for both locations
+matched the seed exactly and were left alone.
+
+Still open for the owner (numbers are the question list at the end of this file):
+
+- **Q1-Q3** rooms - penthouse names / themes per location, how many penthouses and suites, the weight
+  rules. The crawl added no room inventory.
+- **Q6** season dates: the two bands are now known by name, but Easter and Thanksgiving move every year
+  (seeded with the 2026 dates) and every band ends with a per-holiday "Holidays - **please call**" line
+  whose prices are not published. **Q7** (deposit, cancellation, no-show) and **Q8** (check-in / check-out
+  times, late pickup) are still not on the site.
+- **Q9** grooming: the Gold / Platinum / Diamond grid is adopted, but the site quotes **ranges** for
+  Platinum XL ($120-140), Diamond XL ($150-175), Sanitary Trim ($10-20), Face Trim with Sanitary ($25-30)
+  and Foxtail ($20-25) - the low end is seeded, confirm that is the right number to show - and it lists
+  **cat** grooming (Platinum $120-130, Diamond $130-140), which has no species column and is not seeded.
+- **Q11** the vaccination and veterinary-travel fees, webcam, medication and transport: still unanswered,
+  though the spa menu does add Transportation ($35-55, seeded at $35). **Q12** vaccine validity windows
+  and puppy minimum age: still not on the site.
+- **Q13** Westwood Sunday: the conflict stands (site Sa-Su 8 am-5:30 pm, Yelp Sunday closed).
+- **Q14** whether Training & Fitness becomes a bookable service; the prices are recorded in
+  `pricing-adoption-2026-09-20.md` but nothing is seeded until a `training_courses` table exists (D-228).
+- **Q15** keeping phone / SMS booking alongside the app.
+- **New from this crawl**: the "Large Dog Accommodation fee may be applicable" amount (no number on the
+  site), the dematting surcharge, and confirmation of the D-229 **not-adopted** list - hotel long-stay
+  discounts, the 2 % tax and the 3.89 % card fee are not published on the site and were left as they were.
+
+**Q10** (daycare half / full-day cut-off) is **resolved**: the site says Full Day > 5 hr, Half Day < 5 hr,
+so `daycare_pricing.threshold_hours` is 5 and rule R-F01 no longer waits on Justin.
+
 ## Part A. Website facts (indexed snippets)
 
 | # | Fact | Website / public says | Source |

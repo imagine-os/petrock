@@ -39,4 +39,4 @@ export const locations: LocationDef[] = [
 export const DEFAULT_LOCATION_ID = locations[0].id;
 export const locationById = (id: string | null | undefined) => locations.find((l) => l.id === id);
 
-export const company = { name: 'Petrock Hotel', legalName: 'Petrock Hotel LLC', website: 'https://petrockhotel.com', tagline: 'Rock Out With Your Paws Out!', currency: 'USD', locale: 'en-US' } as const;
+export const company = { name: 'Petrock Hotel', legalName: 'Petrock Holdings LLC', website: 'https://petrockhotel.com', tagline: 'Rock Out With Your Paws Out!', currency: 'USD', locale: 'en-US' } as const;

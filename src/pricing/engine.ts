@@ -146,7 +146,7 @@ export interface DaycareQuoteInput { hours: number; pets: number; pricing: Dayca
 export function quoteDaycare(i: DaycareQuoteInput): Quote & { item: 'full_day' | 'half_day' | 'hour' } {
   const p = i.pricing.filter((x) => x.active);
   const full = p.find((x) => x.item === 'full_day'), half = p.find((x) => x.item === 'half_day'), hour = p.find((x) => x.item === 'hour');
-  const threshold = full?.threshold_hours ?? half?.threshold_hours ?? 6;
+  const threshold = full?.threshold_hours ?? half?.threshold_hours ?? 5; // fallback only; the real cutoff is the daycare_pricing row (5 h on petrockhotel.com, D-187)
   let item: 'full_day' | 'half_day' | 'hour' = i.hours >= threshold ? 'full_day' : 'half_day';
   let unit = item === 'full_day' ? full?.price ?? 0 : half?.price ?? 0;
   if (hour && i.hours <= 1 && hour.price < unit) { item = 'hour'; unit = hour.price; }

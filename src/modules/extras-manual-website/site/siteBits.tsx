@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../../components/atom/Button/Button';
 import { Icon, type IconName } from '../../../components/atom/Icon/Icon';
+import { useT } from '../../../i18n/I18nProvider';
 import './site.css';
 
 export function SectionHead({ eyebrow, title, lead, center }: { eyebrow?: string; title: ReactNode; lead?: ReactNode; center?: boolean }) {
@@ -10,6 +11,12 @@ export function SectionHead({ eyebrow, title, lead, center }: { eyebrow?: string
 
 export function CtaBand({ title = 'Ready to book?', lead = 'Create your account in the Petrock app, add your dog and upload the vaccines once. Every booking after that takes a minute.', primary = { to: '/site/book', label: 'Book now' }, secondary = { to: '/site/contact', label: 'Ask a question' } }: { title?: string; lead?: string; primary?: { to: string; label: string }; secondary?: { to: string; label: string } | null }) {
   return <section className="ps-cta"><div className="stack-sm"><h2>{title}</h2><p>{lead}</p></div><div className="row wrap"><Link to={primary.to}><Button size="lg" iconRight="arrow-right">{primary.label}</Button></Link>{secondary && <Link to={secondary.to}><Button size="lg" variant="secondary">{secondary.label}</Button></Link>}</div></section>;
+}
+
+/** The check-marked inclusion list of the site pages; the strings are `<prefix>1`..`<prefix><count>`. */
+export function CheckList({ prefix, count }: { prefix: string; count: number }) {
+  const t = useT();
+  return <ul className="ps-inclusions">{Array.from({ length: count }, (_, i) => i + 1).map((n) => <li key={n}><Icon name="check" size={16} />{t(`${prefix}${n}`)}</li>)}</ul>;
 }
 
 /** Decorative art block (no real photography in the repo yet): brand gradient with an icon. */

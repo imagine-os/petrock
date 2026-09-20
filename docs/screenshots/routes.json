@@ -1332,7 +1332,7 @@
   "spec": {
    "code": "A-23",
    "name": "Daycare pricing",
-   "purpose": "Full day / half day with the hour threshold (6 h chosen, pending Justin), play hour and walk.",
+   "purpose": "Full day / half day with the hour threshold (5 h, from petrockhotel.com per D-187), play hour and walk.",
    "layout": [
     "PageHeader + pricing nav",
     "Daycare items CrudTable"
@@ -7922,12 +7922,15 @@
   "spec": {
    "code": "P-01",
    "name": "Website home",
-   "purpose": "Petrock brand landing: hero with tagline, the three services with live \"from\" teasers, why Petrock, both locations with hours and open-now, published reviews with the average rating, how it works, book-now CTA into the app.",
+   "purpose": "Petrock brand landing built on the client's own content (petrockhotel.com): full-bleed media hero with their background video over their lobby photo, the three services in their words with live \"from\" teasers, Training & Fitness, why Petrock, a photo strip into the gallery, both locations with hours and open-now, published reviews, how it works, book-now CTA.",
    "layout": [
     "SiteLayout header",
-    "SiteHero (tagline, open-now card)",
-    "Services (Hotel, Daycare, Grooming & Spa tiles with teasers)",
+    "SiteHero tone=media (video + poster, scrim, pause / play, Book now + Call per location)",
+    "Open-now strip",
+    "Services (Hotel, Grooming & Spa, Day care photo tiles with teasers)",
+    "Training & Fitness",
     "Why Petrock",
+    "Photo strip -> P-13",
     "Locations strip",
     "Reviews (published)",
     "How it works",
@@ -7945,7 +7948,8 @@
    ],
    "logic": [
     "Teasers = min standard-season nightly rate per room type, Gold price_s, full-day daycare price (R-X71).",
-    "Open now = current time inside locations.hours for today.",
+    "The hero video (YouTube htG1NJsfp24, the client's own sqs-video-background) mounts only when motion is welcome, the viewport is at least 700 px wide and navigator.webdriver is false; the lobby photo is always underneath, so a blocked or slow embed still shows a real photo.",
+    "Open now = current time inside locations.hours for today; Call buttons are tel: links built from locations.phone.",
     "Only reviews with status published are shown (R-X70); customer shown as first name + initial."
    ],
    "components": [
@@ -7954,9 +7958,59 @@
     "Button",
     "Card",
     "Icon",
+    "SitePhoto",
     "Badge",
+    "IconButton",
     "ReviewListItem",
     "ReviewStars"
+   ],
+   "actions": [
+    {
+     "id": "site.book",
+     "label": "Book now",
+     "intent": "start a booking from the website"
+    },
+    {
+     "id": "site.callLocation",
+     "label": "Call a location",
+     "intent": "call Encino or Westwood",
+     "params": {
+      "locationId": "id"
+     }
+    },
+    {
+     "id": "site.hero.playVideo",
+     "label": "Play the hero video",
+     "intent": "play the background video on the home page"
+    },
+    {
+     "id": "site.hero.pauseVideo",
+     "label": "Pause the hero video",
+     "intent": "stop the background video on the home page"
+    },
+    {
+     "id": "site.openService",
+     "label": "Open a service page",
+     "intent": "read about the hotel, the spa or day care",
+     "params": {
+      "service": "enum:hotel,grooming,daycare"
+     }
+    },
+    {
+     "id": "site.openGallery",
+     "label": "Open the gallery",
+     "intent": "see photos of the hotel and the spa"
+    },
+    {
+     "id": "site.openLocations",
+     "label": "Open locations",
+     "intent": "see hours, addresses and phones"
+    },
+    {
+     "id": "site.openReviews",
+     "label": "Open all reviews",
+     "intent": "read every published review"
+    }
    ],
    "rules": [
     "R-X70",
@@ -7966,6 +8020,8 @@
    ],
    "states": [
     "default",
+    "video playing",
+    "video paused / poster only",
     "no published reviews",
     "closed now",
     "dark"
@@ -7973,6 +8029,15 @@
    "figma": [
     "front desk.jpg (brand)",
     "Home Page-1.png (service tiles)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
    ],
    "roles": [
     "super_admin",
@@ -7986,13 +8051,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },
@@ -8013,12 +8071,15 @@
   "spec": {
    "code": "P-01",
    "name": "Website home",
-   "purpose": "Petrock brand landing: hero with tagline, the three services with live \"from\" teasers, why Petrock, both locations with hours and open-now, published reviews with the average rating, how it works, book-now CTA into the app.",
+   "purpose": "Petrock brand landing built on the client's own content (petrockhotel.com): full-bleed media hero with their background video over their lobby photo, the three services in their words with live \"from\" teasers, Training & Fitness, why Petrock, a photo strip into the gallery, both locations with hours and open-now, published reviews, how it works, book-now CTA.",
    "layout": [
     "SiteLayout header",
-    "SiteHero (tagline, open-now card)",
-    "Services (Hotel, Daycare, Grooming & Spa tiles with teasers)",
+    "SiteHero tone=media (video + poster, scrim, pause / play, Book now + Call per location)",
+    "Open-now strip",
+    "Services (Hotel, Grooming & Spa, Day care photo tiles with teasers)",
+    "Training & Fitness",
     "Why Petrock",
+    "Photo strip -> P-13",
     "Locations strip",
     "Reviews (published)",
     "How it works",
@@ -8036,7 +8097,8 @@
    ],
    "logic": [
     "Teasers = min standard-season nightly rate per room type, Gold price_s, full-day daycare price (R-X71).",
-    "Open now = current time inside locations.hours for today.",
+    "The hero video (YouTube htG1NJsfp24, the client's own sqs-video-background) mounts only when motion is welcome, the viewport is at least 700 px wide and navigator.webdriver is false; the lobby photo is always underneath, so a blocked or slow embed still shows a real photo.",
+    "Open now = current time inside locations.hours for today; Call buttons are tel: links built from locations.phone.",
     "Only reviews with status published are shown (R-X70); customer shown as first name + initial."
    ],
    "components": [
@@ -8045,9 +8107,59 @@
     "Button",
     "Card",
     "Icon",
+    "SitePhoto",
     "Badge",
+    "IconButton",
     "ReviewListItem",
     "ReviewStars"
+   ],
+   "actions": [
+    {
+     "id": "site.book",
+     "label": "Book now",
+     "intent": "start a booking from the website"
+    },
+    {
+     "id": "site.callLocation",
+     "label": "Call a location",
+     "intent": "call Encino or Westwood",
+     "params": {
+      "locationId": "id"
+     }
+    },
+    {
+     "id": "site.hero.playVideo",
+     "label": "Play the hero video",
+     "intent": "play the background video on the home page"
+    },
+    {
+     "id": "site.hero.pauseVideo",
+     "label": "Pause the hero video",
+     "intent": "stop the background video on the home page"
+    },
+    {
+     "id": "site.openService",
+     "label": "Open a service page",
+     "intent": "read about the hotel, the spa or day care",
+     "params": {
+      "service": "enum:hotel,grooming,daycare"
+     }
+    },
+    {
+     "id": "site.openGallery",
+     "label": "Open the gallery",
+     "intent": "see photos of the hotel and the spa"
+    },
+    {
+     "id": "site.openLocations",
+     "label": "Open locations",
+     "intent": "see hours, addresses and phones"
+    },
+    {
+     "id": "site.openReviews",
+     "label": "Open all reviews",
+     "intent": "read every published review"
+    }
    ],
    "rules": [
     "R-X70",
@@ -8057,6 +8169,8 @@
    ],
    "states": [
     "default",
+    "video playing",
+    "video paused / poster only",
     "no published reviews",
     "closed now",
     "dark"
@@ -8064,6 +8178,15 @@
    "figma": [
     "front desk.jpg (brand)",
     "Home Page-1.png (service tiles)"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
    ],
    "roles": [
     "super_admin",
@@ -8077,13 +8200,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },
@@ -8104,10 +8220,11 @@
   "spec": {
    "code": "P-02",
    "name": "Website: Hotel",
-   "purpose": "Room types with description, inclusions and \"from\" nightly rate (weekday and weekend), shared-room and long-stay discounts read from discounts, seasons, vaccines required before a stay.",
+   "purpose": "Room types with the client's own inclusion list (premium bed, toys, potty pads, room service, playtime, two walks a day, nightly photos and videos, bedtime tuck in), photos of the real rooms, \"from\" nightly rate (weekday and weekend), shared-room and long-stay discounts read from the tables, vaccines required before a stay.",
    "layout": [
     "SiteHero (soft)",
-    "RoomType blocks (Art + inclusions + from price)",
+    "RoomType blocks (SitePhoto + inclusions + from price)",
+    "Vaccine and large-dog notes",
     "Good to know (sharing, longer stays, vaccines)",
     "CtaBand"
    ],
@@ -8122,7 +8239,8 @@
    ],
    "logic": [
     "from = min(rates where season_id null) per room type; weekend rate shown when present.",
-    "Room count = sum of penthouse + suite capacities across locations."
+    "Room count = sum of penthouse + suite capacities across locations.",
+    "Room photo per room_types.key (penthouse -> the penthouse wall, suite -> the mural corridor), falling back to the glass-front rooms."
    ],
    "components": [
     "SiteLayout",
@@ -8130,7 +8248,33 @@
     "Button",
     "Card",
     "Icon",
+    "SitePhoto",
     "Badge"
+   ],
+   "actions": [
+    {
+     "id": "site.hotel.book",
+     "label": "Book a stay",
+     "intent": "book a hotel stay"
+    },
+    {
+     "id": "site.hotel.bookRoomType",
+     "label": "Book a specific room type",
+     "intent": "book a penthouse or a suite",
+     "params": {
+      "roomTypeId": "id"
+     }
+    },
+    {
+     "id": "site.openPricing",
+     "label": "Open full pricing",
+     "intent": "see every price"
+    },
+    {
+     "id": "site.openPolicies",
+     "label": "Open vaccines & policies",
+     "intent": "read the vaccine rules"
+    }
    ],
    "rules": [
     "R-D01",
@@ -8146,6 +8290,15 @@
    "figma": [
     "Choose Your Room.png"
    ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -8158,13 +8311,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },
@@ -8185,22 +8331,25 @@
   "spec": {
    "code": "P-03",
    "name": "Website: Grooming & Spa",
-   "purpose": "One service: Gold / Platinum / Diamond tiles with inclusions, full package-by-size price table, add-ons with minutes, hotel-guest note, CTA.",
+   "purpose": "One service in the client's own words: spa bath, blow dry, brush out, teeth and paw massage on every package, up to the full Diamond haircut. Gold / Platinum / Diamond tiles with inclusions, full package-by-size price table, add-ons (\"On the side\"), sanitation-fee and in-person-estimate notes, photos of the salon.",
    "layout": [
     "SiteHero (soft)",
+    "Salon photo + packages intro + sanitation / estimate notes",
     "Package tiles",
     "Price table by size",
     "Add-ons grid",
-    "Hotel guests",
+    "Hotel guests (SitePhoto)",
     "CtaBand"
    ],
    "data": [
     "packages",
-    "addons"
+    "addons",
+    "fees"
    ],
    "logic": [
-    "Prices per size column from packages.price_* (S/M/L/XL/Giant); minutes range minutes_s–minutes_giant.",
-    "Add-on \"from\" when starting_at."
+    "Prices per size column from packages.price_* (S/M/L/XL/Giant); minutes range minutes_s-minutes_giant.",
+    "Add-on \"from\" when starting_at.",
+    "The sanitation note reads fees where kind = grooming_sanitation and prints its amount; it falls back to wording without a number when the row is missing (R-G06, R-X71)."
    ],
    "components": [
     "SiteLayout",
@@ -8208,7 +8357,20 @@
     "Button",
     "Card",
     "Icon",
+    "SitePhoto",
     "Badge"
+   ],
+   "actions": [
+    {
+     "id": "site.grooming.book",
+     "label": "Book a groom",
+     "intent": "book a grooming appointment"
+    },
+    {
+     "id": "site.openHotel",
+     "label": "Open the hotel page",
+     "intent": "read about the hotel rooms"
+    }
    ],
    "rules": [
     "R-G02",
@@ -8218,11 +8380,21 @@
    ],
    "states": [
     "default",
+    "no sanitation fee row",
     "dark"
    ],
    "figma": [
     "Spa 12.7 price card",
     "Grooming.png"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
    ],
    "roles": [
     "super_admin",
@@ -8236,13 +8408,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },
@@ -8263,9 +8428,10 @@
   "spec": {
    "code": "P-04",
    "name": "Website: Daycare",
-   "purpose": "Daycare price items with thresholds, extra-pet discount, a typical day, capacity per location, CTA.",
+   "purpose": "Play, the day care area, in the client's own words (interact, exercise, socialize; interactive jungle gym; floors designed for joints and bones), with a photo of the real yard, price items and thresholds, extra-pet discount, a typical day and capacity per location.",
    "layout": [
     "SiteHero (soft)",
+    "Play area (SitePhoto + copy + vaccine note)",
     "Price tiles",
     "A typical day (steps)",
     "Capacity per location",
@@ -8285,7 +8451,15 @@
     "SiteHero",
     "Button",
     "Card",
-    "Icon"
+    "Icon",
+    "SitePhoto"
+   ],
+   "actions": [
+    {
+     "id": "site.daycare.book",
+     "label": "Book daycare",
+     "intent": "book a day of day care"
+    }
    ],
    "rules": [
     "R-F01",
@@ -8300,6 +8474,15 @@
    "figma": [
     "Day Care.png (placeholder screen)"
    ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
+   ],
    "roles": [
     "super_admin",
     "owner",
@@ -8312,13 +8495,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },
@@ -8564,6 +8740,112 @@
     768,
     1280,
     1920
+   ]
+  }
+ },
+ {
+  "path": "/site/gallery",
+  "code": "P-13",
+  "surface": "public",
+  "status": "built",
+  "roles": [
+   "super_admin",
+   "owner",
+   "manager",
+   "front_desk",
+   "groomer",
+   "customer",
+   "public"
+  ],
+  "spec": {
+   "code": "P-13",
+   "name": "Website: Gallery",
+   "purpose": "The client's two photo galleries (petrock-gallery and spa-gallery) rebuilt as one page: Hotel and Spa sections in a responsive grid with a keyboard-driven lightbox, captions from the alt text.",
+   "layout": [
+    "SiteHero (soft)",
+    "Hotel grid (28 photos)",
+    "Spa grid (12 photos)",
+    "Tour note",
+    "Lightbox (Modal: photo, previous / next, counter)",
+    "CtaBand"
+   ],
+   "data": [
+    "locations"
+   ],
+   "logic": [
+    "Photos come from public/site/img, built by npm run site:images from docs/reference/petrockhotel-scrape/images; the manifest gives every srcset width and the source aspect.",
+    "The lightbox walks one flat list across both sections: Left / Right arrows step, Escape closes (Modal), and the caption is the photo's translated alt text.",
+    "Every tile is a 44 px button, so touch, pen, keyboard and a future d-pad all work; nothing is hover-only."
+   ],
+   "integrations": [
+    "Squarespace (current petrockhotel.com/petrock-gallery and /spa-gallery, to be replaced by this page)"
+   ],
+   "components": [
+    "SiteLayout",
+    "SiteHero",
+    "Button",
+    "Card",
+    "Icon",
+    "SitePhoto",
+    "Modal",
+    "IconButton"
+   ],
+   "actions": [
+    {
+     "id": "site.gallery.open",
+     "label": "Open a photo",
+     "intent": "open a photo full size",
+     "params": {
+      "index": "number"
+     }
+    },
+    {
+     "id": "site.gallery.next",
+     "label": "Next photo",
+     "intent": "show the next photo"
+    },
+    {
+     "id": "site.gallery.prev",
+     "label": "Previous photo",
+     "intent": "show the previous photo"
+    },
+    {
+     "id": "site.gallery.close",
+     "label": "Close the photo",
+     "intent": "close the photo viewer"
+    },
+    {
+     "id": "site.book",
+     "label": "Book now",
+     "intent": "start a booking from the website"
+    }
+   ],
+   "rules": [
+    "R-K01"
+   ],
+   "states": [
+    "grid",
+    "lightbox open",
+    "first / last photo (wraps)",
+    "dark"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
+   ],
+   "roles": [
+    "super_admin",
+    "owner",
+    "manager",
+    "front_desk",
+    "groomer",
+    "customer",
+    "public"
    ]
   }
  },
@@ -8873,12 +9155,13 @@
   "spec": {
    "code": "P-12",
    "name": "Website: About",
-   "purpose": "Story and values, the team from active employees (first names and roles), the one-system note, links.",
+   "purpose": "The client's own story: established in 2011 in the heart of Encino, a boutique experience with the Spa, Play and the signature Penthouses and Suites, private training and a tour on request. Plus what we believe, the team from active employees and the legal entity.",
    "layout": [
     "SiteHero (soft)",
-    "What we believe",
+    "Story (SitePhoto + established 2011 copy)",
+    "What we believe (SitePhoto)",
     "Team grid",
-    "Behind the app",
+    "Behind the app + legal entity",
     "CtaBand"
    ],
    "data": [
@@ -8886,7 +9169,8 @@
     "employees"
    ],
    "logic": [
-    "employees where status active; display_name or first name only (no PII)."
+    "employees where status active; display_name or first name only (no PII).",
+    "The legal line reads company.legalName and the location addresses; nothing is typed in the page."
    ],
    "components": [
     "SiteLayout",
@@ -8894,7 +9178,30 @@
     "Button",
     "Card",
     "Icon",
+    "SitePhoto",
     "Avatar"
+   ],
+   "actions": [
+    {
+     "id": "site.openPricing",
+     "label": "Open pricing",
+     "intent": "see every price"
+    },
+    {
+     "id": "site.openPolicies",
+     "label": "Open vaccines & policies",
+     "intent": "read the vaccine rules"
+    },
+    {
+     "id": "site.openGallery",
+     "label": "Open the gallery",
+     "intent": "see photos of the hotel and the spa"
+    },
+    {
+     "id": "site.openReviews",
+     "label": "Open reviews",
+     "intent": "read the reviews"
+    }
    ],
    "rules": [
     "R-L01",
@@ -8903,6 +9210,15 @@
    "states": [
     "default",
     "dark"
+   ],
+   "checkedAt": [
+    360,
+    390,
+    768,
+    1280,
+    1920,
+    2560,
+    3840
    ],
    "roles": [
     "super_admin",
@@ -8916,13 +9232,6 @@
    "integrations": [
     "Squarespace (current petrockhotel.com, to be replaced by these pages)",
     "Customer app deep links (/app, /auth/sign-in)"
-   ],
-   "checkedAt": [
-    360,
-    390,
-    768,
-    1280,
-    1920
    ]
   }
  },

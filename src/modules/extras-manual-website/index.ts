@@ -12,6 +12,7 @@ import { SiteHotel, SiteGrooming, SiteDaycare } from './site/SiteServices';
 import { SitePricing } from './site/SitePricing';
 import { SiteLocations } from './site/SiteLocations';
 import { SiteReviews } from './site/SiteReviews';
+import { SiteGallery } from './site/SiteGallery';
 import { SitePolicies, SiteBook, SiteContact, SiteFaq, SiteAbout } from './site/SiteInfo';
 import { ManualCover, ManualChapterPage, ManualNotFound, ManualPending } from './manual/ManualPages';
 import { chapters, chapterPath } from './manual/manualIndex';
@@ -22,9 +23,13 @@ import { ReviewsModerationPage } from './desk/ReviewsModeration';
 import { EducationPage } from './desk/Education';
 import { WalkingPage } from './desk/Walking';
 import { TasksPage } from './desk/Tasks';
+import { siteStrings } from './site/strings';
+import { photoStrings } from './site/siteImages';
 import * as S from './specs';
 
 export const strings: StringTable = {
+  ...siteStrings,
+  ...photoStrings,
   'extras-manual-website.manual.title': { en: 'Ops manual', es: 'Manual de operaciones' },
   'extras-manual-website.manual.pending': { en: 'Pending decisions', es: 'Decisiones pendientes' },
   'extras-manual-website.site.book': { en: 'Book now', es: 'Reservar' },
@@ -40,7 +45,7 @@ const desk = (path: string, el: () => JSX.Element, spec: RouteDef['spec'], roles
 export const routes: RouteDef[] = [
   // Public website
   site('/site', SiteHome, S.siteHomeSpec), site('/site/home', SiteHome, S.siteHomeSpec), site('/site/hotel', SiteHotel, S.siteHotelSpec), site('/site/grooming', SiteGrooming, S.siteGroomingSpec), site('/site/daycare', SiteDaycare, S.siteDaycareSpec),
-  site('/site/pricing', SitePricing, S.sitePricingSpec), site('/site/locations', SiteLocations, S.siteLocationsSpec), site('/site/reviews', SiteReviews, S.siteReviewsSpec), site('/site/policies', SitePolicies, S.sitePoliciesSpec),
+  site('/site/pricing', SitePricing, S.sitePricingSpec), site('/site/locations', SiteLocations, S.siteLocationsSpec), site('/site/reviews', SiteReviews, S.siteReviewsSpec), site('/site/gallery', SiteGallery, S.siteGallerySpec), site('/site/policies', SitePolicies, S.sitePoliciesSpec),
   site('/site/book', SiteBook, S.siteBookSpec), site('/site/contact', SiteContact, S.siteContactSpec), site('/site/faq', SiteFaq, S.siteFaqSpec), site('/site/about', SiteAbout, S.siteAboutSpec),
   // Ops manual
   { path: '/manual', element: h(ManualCover), spec: S.manualCoverSpec, roles: STAFF_ROLES, surface: 'manual', layout: 'desktop', nav: { label: 'Manual home', icon: 'book', order: 0, group: 'manual' } },

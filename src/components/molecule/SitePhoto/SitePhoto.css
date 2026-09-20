@@ -1,0 +1,5 @@
+.sphoto { display: block; position: relative; overflow: hidden; border-radius: var(--r-xl); background: var(--color-surface-tint-2); }
+.sphoto > img { display: block; width: 100%; height: auto; }
+.sphoto.is-cropped > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sphoto.is-flush { border-radius: 0; }
+@media (prefers-reduced-motion: no-preference) { .sphoto > img { transition: transform var(--dur-slow) var(--ease-out); } .sphoto.is-zoom:hover > img, .sphoto.is-zoom:focus-within > img { transform: scale(1.03); } }

@@ -14,7 +14,7 @@
 | `design/` | `tokens-draft.md` (derived color/type/spacing/icon tokens from Figma; input to the rebuilt design system), `components-from-designs.md` (component inventory from the exports: name, where used, variants/states, gaps). Later: `design-system.md`. |
 | `data/` | `entities-from-designs.md` (entities and fields implied by the screens, per surface, with contradictions). Later: `data-model.md` generated from the table library. |
 | `rules/` | `business-rules-from-designs.md` (every rule, price, threshold and copy seen, with source screen; seed for the rules registry, D-006). Later: the registry export itself. |
-| `reference/` | Digests of reference repos: `hoy-patterns.md`, `company-os.md`, `santa-maria-os.md`, `petrockhotel-site.md`; **`surfaces.md`**: every machine-drivable surface (route manifest, `DataProvider`, scripts, actions, API, planned WebMCP / CLI), updated every pass (P-10). |
+| `reference/` | Digests of reference repos: `hoy-patterns.md`, `company-os.md`, `santa-maria-os.md`, `petrockhotel-site.md`, **`petrockhotel-scrape/`** (the 2026-09-20 full crawl of the client site: `INVENTORY.md`, per-page markdown, 50 originals - the content source set for the public website, D-224), `pricing-adoption-2026-09-20.md` (the before / after of the prices adopted from the live site, D-229); **`surfaces.md`**: every machine-drivable surface (route manifest, `DataProvider`, scripts, actions, API, planned WebMCP / CLI), updated every pass (P-10). |
 
 Numbering: prompts and changelogs share a counter per folder (`0001`, `0002`, ...). A changelog's `prompt:` line points at the prompt number that caused it.
 

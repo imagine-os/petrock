@@ -10,13 +10,44 @@
 .shero-text { display: flex; flex-direction: column; gap: var(--sp-4); max-width: 640px; }
 .shero-eyebrow { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--ls-eyebrow); font-weight: var(--fw-semibold); color: var(--color-primary-text); }
 .shero-title { font-size: clamp(2rem, 1.2rem + 2.6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: var(--fw-bold); }
+.shero-subhead { font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary-text); }
 .shero-lead { font-size: var(--fs-md); line-height: 1.6; color: var(--color-text-muted); }
 .shero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
 .shero-center .shero-actions { justify-content: center; }
-.shero-brand .btn-secondary { background: transparent; border-color: color-mix(in srgb, var(--color-text-on-primary) 55%, transparent); color: var(--color-text-on-primary); }
-.shero-brand .btn-secondary:hover { background: color-mix(in srgb, var(--color-text-on-primary) 12%, transparent); }
-.shero-brand .btn-primary { background: var(--color-text-on-primary); color: var(--color-primary); }
-.shero-brand .btn-ghost { color: var(--color-text-on-primary); }
+.shero-brand .btn-secondary, .shero-media .btn-secondary { background: transparent; border-color: color-mix(in srgb, var(--color-text-on-primary) 55%, transparent); color: var(--color-text-on-primary); }
+.shero-brand .btn-secondary:hover, .shero-media .btn-secondary:hover { background: color-mix(in srgb, var(--color-text-on-primary) 12%, transparent); }
+.shero-brand .btn-primary, .shero-media .btn-primary { background: var(--color-text-on-primary); color: var(--color-primary); }
+.shero-brand .btn-ghost, .shero-media .btn-ghost { color: var(--color-text-on-primary); }
 .shero-aside { min-width: 0; color: var(--color-text); }
 .shero-aside .card { color: var(--color-text); }
 @media (max-width: 900px) { .shero.has-aside .shero-inner { grid-template-columns: 1fr; } .shero { padding: var(--sp-10) 0 var(--sp-8); } }
+
+/* --- tone="media": full-bleed photo or muted background video, white text over a brand scrim --- */
+.shero-media { position: relative; isolation: isolate; overflow: hidden; padding: 0; display: flex; align-items: flex-end; background: var(--color-primary); color: var(--color-text-on-primary); min-height: clamp(520px, 78vh, 900px); }
+.shero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.shero-bg > .sphoto { position: absolute; inset: 0; height: 100%; border-radius: 0; background: var(--color-primary); }
+.shero-bg > .sphoto > img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.shero-video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 56.25vw; min-width: 177.78vh; min-height: 100%; pointer-events: none; }
+.shero-video iframe { display: block; width: 100%; height: 100%; border: 0; pointer-events: none; }
+/* Dark brand wash: bottom-up and left-in so the text block clears 4.5:1 on white over any frame of the video. */
+.shero-scrim { position: absolute; inset: 0; background:
+  linear-gradient(to top, color-mix(in srgb, var(--color-primary) 72%, black) 0%, color-mix(in srgb, var(--color-primary) 72%, black) 30%, color-mix(in srgb, var(--color-primary) 40%, transparent) 68%, transparent 100%),
+  linear-gradient(color-mix(in srgb, black 24%, transparent), color-mix(in srgb, black 24%, transparent)); }
+/* Wide screens put the text in the left third, so add a left-in wash there instead of darkening the whole frame. */
+@media (min-width: 900px) { .shero-scrim { background:
+  linear-gradient(to top, color-mix(in srgb, var(--color-primary) 72%, black) 0%, color-mix(in srgb, var(--color-primary) 72%, black) 22%, color-mix(in srgb, var(--color-primary) 40%, transparent) 60%, transparent 100%),
+  linear-gradient(to right, color-mix(in srgb, var(--color-primary) 72%, black) 0%, color-mix(in srgb, var(--color-primary) 28%, transparent) 48%, transparent 72%),
+  linear-gradient(color-mix(in srgb, black 20%, transparent), color-mix(in srgb, black 20%, transparent)); } }
+.shero-media .shero-inner { position: relative; z-index: 2; width: 100%; padding-top: clamp(var(--sp-12), 14vh, var(--sp-16)); padding-bottom: clamp(var(--sp-10), 10vh, var(--sp-16)); }
+.shero-media .shero-text { max-width: min(760px, 100%); gap: var(--sp-5); text-shadow: 0 1px 20px color-mix(in srgb, black 45%, transparent); }
+.shero-media .shero-eyebrow, .shero-media .shero-subhead { color: color-mix(in srgb, var(--color-text-on-primary) 88%, transparent); }
+.shero-media .shero-eyebrow { font-size: clamp(var(--fs-2xs), 0.62rem + 0.18vw, var(--fs-md)); }
+.shero-media .shero-title { color: var(--color-text-on-primary); font-size: clamp(2.5rem, 1.4rem + 3.2vw, 6rem); line-height: 1.02; }
+.shero-media .shero-subhead { font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.5rem); letter-spacing: 0.08em; }
+.shero-media .shero-lead { color: color-mix(in srgb, var(--color-text-on-primary) 92%, transparent); font-size: clamp(1rem, 0.92rem + 0.42vw, 1.7rem); line-height: 1.55; max-width: 54ch; }
+.shero-mediactl { position: absolute; right: var(--sp-5); bottom: var(--sp-5); z-index: 3; }
+.shero-mediactl .iconbtn { width: 44px; height: 44px; background: color-mix(in srgb, black 45%, transparent); border-color: color-mix(in srgb, var(--color-text-on-primary) 55%, transparent); color: var(--color-text-on-primary); backdrop-filter: blur(6px); }
+.shero-mediactl .iconbtn:hover { background: color-mix(in srgb, black 62%, transparent); color: var(--color-text-on-primary); }
+@media (max-width: 700px) { .shero-media { min-height: clamp(460px, 70vh, 640px); } .shero-media .shero-text { gap: var(--sp-4); } .shero-mediactl { right: var(--sp-3); bottom: var(--sp-3); } }
+/* 10-foot rule: at TV widths the hero fills more of the screen and the text block grows with it (D-194). */
+@media (min-width: 2560px) { .shero-media { min-height: clamp(760px, 72vh, 1300px); } .shero-media .shero-text { max-width: min(1200px, 100%); gap: var(--sp-6); } .shero-mediactl .iconbtn { width: 64px; height: 64px; } }

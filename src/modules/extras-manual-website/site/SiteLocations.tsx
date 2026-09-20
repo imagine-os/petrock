@@ -8,7 +8,7 @@ import { Card } from '../../../components/molecule/Card/Card';
 import { Badge } from '../../../components/atom/Badge/Badge';
 import { Icon } from '../../../components/atom/Icon/Icon';
 import { CtaBand, SectionHead } from './siteBits';
-import { hoursSummary, isOpenNow, useLocations } from './teasers';
+import { hoursSummary, isOpenNow, tel, useLocations } from './teasers';
 
 /** P-06 Locations: each location with address, phone, hours, open-now, capacities and a map placeholder. */
 export function SiteLocations() {
@@ -28,7 +28,7 @@ export function SiteLocations() {
                   <p>{l.address}</p>
                   <ul className="ps-hours">{hoursSummary(l.hours).map((h) => <li key={h.label}><span>{h.label}</span><span>{h.value}</span></li>)}</ul>
                   <div className="ps-stats">{[['penthouse', 'penthouse rooms'], ['suite', 'suites'], ['daycare', 'daycare spots'], ['grooming', 'grooming tables']].map(([k, label]) => <div key={k} className="ps-stat"><strong>{c(k as CapacityRow['kind']) ?? '—'}</strong><span>{label}</span></div>)}</div>
-                  <div className="row wrap">{l.phone && <a href={`tel:${l.phone.replace(/[^\d+]/g, '')}`}><Button icon="phone">{l.phone}</Button></a>}<a href={`https://maps.google.com/?q=${encodeURIComponent(l.address)}`} target="_blank" rel="noreferrer"><Button variant="secondary" iconRight="external">Directions</Button></a><Link to={`/site/contact?location=${l.id}`}><Button variant="ghost">Message this location</Button></Link></div>
+                  <div className="row wrap">{l.phone && <a href={tel(l.phone)}><Button icon="phone">{l.phone}</Button></a>}<a href={`https://maps.google.com/?q=${encodeURIComponent(l.address)}`} target="_blank" rel="noreferrer"><Button variant="secondary" iconRight="external">Directions</Button></a><Link to={`/site/contact?location=${l.id}`}><Button variant="ghost">Message this location</Button></Link></div>
                 </Card>
                 <div className="ps-map" role="img" aria-label={`Map placeholder for ${l.name}`}><span><Icon name="location" size={16} /> {l.city} · {l.timezone}</span></div>
               </div>

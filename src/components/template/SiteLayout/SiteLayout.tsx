@@ -14,7 +14,7 @@ export interface SiteLayoutProps { children: ReactNode; nav?: SiteNavItem[]; cta
 
 export const SITE_NAV: SiteNavItem[] = [
   { to: '/site/home', label: 'Home', end: true }, { to: '/site/hotel', label: 'Hotel' }, { to: '/site/grooming', label: 'Grooming & Spa' }, { to: '/site/daycare', label: 'Daycare' },
-  { to: '/site/pricing', label: 'Pricing' }, { to: '/site/locations', label: 'Locations' }, { to: '/site/reviews', label: 'Reviews' }, { to: '/site/faq', label: 'FAQ' },
+  { to: '/site/pricing', label: 'Pricing' }, { to: '/site/locations', label: 'Locations' }, { to: '/site/reviews', label: 'Reviews' }, { to: '/site/gallery', label: 'Gallery' }, { to: '/site/faq', label: 'FAQ' },
 ];
 
 /** Public website frame: sticky header with brand, nav (drawer on phones), theme toggle and the book-now CTA; footer with locations, links and the staff entry. Pages render bare inside. */

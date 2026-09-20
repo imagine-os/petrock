@@ -23,6 +23,7 @@
 .ps-cta { border-radius: var(--r-xl); background: var(--color-primary); color: var(--color-text-on-primary); padding: var(--sp-10); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-6); } .ps-cta h2 { color: inherit; font-size: var(--fs-2xl); } .ps-cta p { color: color-mix(in srgb, var(--color-text-on-primary) 80%, transparent); max-width: 52ch; } .ps-cta .btn-primary { background: var(--color-text-on-primary); color: var(--color-primary); } .ps-cta .btn-secondary { background: transparent; color: var(--color-text-on-primary); border-color: color-mix(in srgb, var(--color-text-on-primary) 55%, transparent); } .ps-cta .btn-secondary:hover { background: color-mix(in srgb, var(--color-text-on-primary) 12%, transparent); }
 @media (max-width: 600px) { .ps-cta { padding: var(--sp-6); } .ps-cta h2 { font-size: var(--fs-xl); } }
 .ps-reviews { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4); } @media (max-width: 900px) { .ps-reviews { grid-template-columns: 1fr; } }
+.ps-loc .btn { min-height: 44px; }
 .ps-loc { display: flex; flex-direction: column; gap: var(--sp-3); height: 100%; } .ps-loc h3 { font-size: var(--fs-lg); display: flex; gap: 8px; align-items: center; }
 .ps-hours { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); } .ps-hours li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--color-border); padding: 4px 0; } .ps-hours li:last-child { border-bottom: 0; }
 .ps-map { aspect-ratio: 16 / 7; border-radius: var(--r-lg); background: repeating-linear-gradient(0deg, transparent 0 22px, color-mix(in srgb, var(--color-border) 60%, transparent) 22px 23px), repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in srgb, var(--color-border) 60%, transparent) 22px 23px), var(--color-surface-2); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; color: var(--color-text-faint); font-size: var(--fs-xs); }
@@ -34,3 +35,49 @@
 .ps-choice { display: flex; flex-direction: column; gap: 10px; height: 100%; align-items: flex-start; } .ps-choice h3 { font-size: var(--fs-md); } .ps-choice p { color: var(--color-text-muted); font-size: var(--fs-sm); flex: 1 1 auto; }
 .ps-team { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-4); } .ps-team-card { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .ps-inline-note { font-size: var(--fs-xs); color: var(--color-text-faint); }
+
+/* --- Real client photography (public/site/img, npm run site:images) --- */
+.ps-room > .sphoto { width: 100%; }
+.ps-tile.is-media { padding: 0; gap: 0; overflow: hidden; }
+.ps-tile-body { display: flex; flex-direction: column; gap: 10px; padding: var(--sp-5); flex: 1 1 auto; }
+.ps-tile-body p { color: var(--color-text-muted); flex: 1 1 auto; }
+
+/* Slim open-now strip right under the media hero (the old hero aside). */
+.ps-openstrip { border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+.ps-openstrip-in { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-5); padding-top: 12px; padding-bottom: 12px; min-height: 56px; }
+.ps-openstrip-now { display: inline-flex; align-items: center; gap: 8px; }
+.ps-openstrip-loc { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.ps-openstrip-in > a { margin-left: auto; }
+@media (max-width: 760px) { .ps-openstrip-in > a { margin-left: 0; } }
+
+/* Photo strip on the home page, links into P-13. */
+.ps-strip { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--sp-3); }
+.ps-strip-item { display: block; border-radius: var(--r-lg); overflow: hidden; }
+.ps-strip-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+@media (max-width: 1280px) { .ps-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .ps-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* P-13 gallery grid + lightbox (inside the library Modal). */
+.ps-gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-3); }
+.ps-gal-item { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: none; border-radius: var(--r-lg); overflow: hidden; cursor: zoom-in; }
+.ps-gal-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+@media (max-width: 560px) { .ps-gal { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); } }
+.ps-lightbox { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ps-lightbox .sphoto { background: var(--color-surface-2); }
+.ps-lightbox .sphoto > img { max-height: 68vh; width: 100%; object-fit: contain; }
+.ps-lightbox-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.ps-lightbox-bar .iconbtn { width: 44px; height: 44px; }
+.ps-lightbox-cap { flex: 1 1 auto; text-align: center; color: var(--color-text-muted); font-size: var(--fs-sm); }
+
+/* 10-foot rule on the public pages (D-194): type and rhythm grow at TV widths. */
+@media (min-width: 2560px) {
+  .ps { gap: var(--sp-20); }
+  .ps-section-head h2 { font-size: clamp(var(--fs-2xl), 1rem + 1.2vw, 3.4rem); }
+  .ps-section-head p { font-size: 1.35rem; }
+  .ps-tile h3, .ps-loc h3 { font-size: 1.7rem; }
+  .ps-tile-body p, .ps-tile p, .ps-inclusions, .ps-hours, .ps-step p { font-size: 1.2rem; }
+  .ps-from { font-size: 1.4rem; }
+  .ps-openstrip-in { min-height: 76px; font-size: 1.2rem; }
+  .ps-gal { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+  .ps-inline-note { font-size: 1.05rem; }
+}
