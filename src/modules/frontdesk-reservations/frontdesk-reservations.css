@@ -10,7 +10,8 @@
 @media (max-width: 900px) { .fdr-tl-bar { grid-template-columns: 1fr; } .fdr-tl-bar > :nth-child(2), .fdr-tl-bar > :nth-child(3) { justify-self: start; } }
 .fdr-toolbar .field { margin: 0; } .fdr-toolbar > .grow { flex: 1 1 200px; }
 .fdr-notes { display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
-.fdr-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-4); }
+/* auto-fit + a 160 px floor so F-14's five tiles sit on one row from ~1100 px up */
+.fdr-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--sp-3); }
 .fdr-attn { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
 .fdr-attn-item { display: flex; gap: var(--sp-3); align-items: flex-start; padding: var(--sp-3); border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); }
 .fdr-attn-item.is-danger { border-color: var(--color-danger); } .fdr-attn-item.is-warn { border-color: var(--color-warn); }

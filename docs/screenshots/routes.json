@@ -317,8 +317,9 @@
    "layout": [
     "PageHeader (title, New groom booking)",
     "GroomingDateNav + filters (groomer, status) + view toggle (Day / Board / Agenda)",
-    "GroomDayGrid (time x groomers, now line, capacity shading)",
-    "Legend + hidden columns chips"
+    "Legend row (right-aligned status dots + hidden-column chips)",
+    "GroomDayGrid (time x groomers; white heads with an initials disc and a thin coloured top border, 8 % working-hours tint, hatched off hours, side-by-side lanes for overlaps, over-capacity warning chip, now hairline with a time chip)",
+    "Helper line under the grid"
    ],
    "data": [
     "appointments",
@@ -341,11 +342,14 @@
     "groomer"
    ],
    "logic": [
-    "Card label R-G20 \"Owner Last, PET; Breed; Package Size\"",
-    "Vaccine flag from petVaccineSummary (R-A11)",
-    "Grid hours from location hours ±1h; column tint from employees.working_hours",
-    "Over-capacity rows when overlaps > capacities.grooming (R-G21)",
-    "Column prefs upsert to groomer_column_prefs per user + location (R-X62)",
+    "Cards are ScheduleCards: pet + breed, customer, package · size chips; the R-G20 string \"Owner Last, PET; Breed; Package Size\" stays as the card's accessible name and tooltip",
+    "Vaccine flag from petVaccineSummary (R-A11) rendered as an alert Badge with text, never a bare icon",
+    "Grid hours from location hours ±1h; working hours are an 8 % tint of the groomer hue, off hours a neutral hatch",
+    "Overlapping appointments split the column into n side-by-side lanes",
+    "Over-capacity hours get a warning chip beside the neutral hour label when overlaps > capacities.grooming (R-G21)",
+    "Column prefs upsert to groomer_column_prefs per user + location (R-X62); swatches are the groomerHues tokens",
+    "Now hairline only when the shown day is today",
+    "Compact cards show at most one alert chip (\"N alerts\" when several); the full list stays in the card's accessible name and tooltip",
     "Drag / slot click writes appointments.starts_at + groomer_id (audit)"
    ],
    "integrations": [],
@@ -357,10 +361,105 @@
     "Chip",
     "Button",
     "GroomDayGrid",
-    "GroomAppointmentCard",
+    "ScheduleCard",
     "Badge",
     "PetVaccineChip",
     "EmptyState"
+   ],
+   "actions": [
+    {
+     "id": "grooming.setDay",
+     "label": "Change the day",
+     "intent": "show another day in the grooming day view",
+     "params": {
+      "day": "date"
+     }
+    },
+    {
+     "id": "grooming.filterGroomer",
+     "label": "Filter by groomer",
+     "intent": "show only one groomer column",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.filterStatus",
+     "label": "Filter by status",
+     "intent": "show only appointments in one status",
+     "params": {
+      "status": "string"
+     }
+    },
+    {
+     "id": "grooming.openAppointment",
+     "label": "Open an appointment",
+     "intent": "open one appointment",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "grooming.bookSlot",
+     "label": "Book an empty slot",
+     "intent": "start a groom booking at that time with that groomer",
+     "permission": "appointments.write",
+     "params": {
+      "groomer": "id",
+      "time": "string"
+     }
+    },
+    {
+     "id": "grooming.reschedule",
+     "label": "Reschedule an appointment",
+     "intent": "move an appointment to another groomer or time",
+     "permission": "appointments.write",
+     "params": {
+      "id": "id",
+      "groomer": "id",
+      "time": "string"
+     }
+    },
+    {
+     "id": "grooming.moveColumn",
+     "label": "Reorder a groomer column",
+     "intent": "move a groomer column left or right",
+     "params": {
+      "groomer": "id",
+      "direction": "enum:-1,1"
+     }
+    },
+    {
+     "id": "grooming.colourColumn",
+     "label": "Recolour a groomer column",
+     "intent": "change the colour of a groomer column",
+     "params": {
+      "groomer": "id",
+      "colour": "string"
+     }
+    },
+    {
+     "id": "grooming.hideColumn",
+     "label": "Hide a groomer column",
+     "intent": "hide a groomer column",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.showColumn",
+     "label": "Show a hidden column",
+     "intent": "bring a hidden groomer column back",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.newBooking",
+     "label": "New groom booking",
+     "intent": "start a new grooming appointment",
+     "permission": "appointments.write"
+    }
    ],
    "rules": [
     "R-G20",
@@ -376,8 +475,10 @@
     "loading (snapshot)",
     "no groomers at location",
     "all columns hidden",
-    "over capacity",
+    "over capacity hour",
+    "overlapping lanes",
     "groomer off today",
+    "now line (today)",
     "unassigned column"
    ],
    "figma": [
@@ -389,7 +490,9 @@
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ],
    "notes": [
     "Replaces the F-30 stub at /desk/grooming.",
@@ -12010,7 +12113,7 @@
    "layout": [
     "PageHeader",
     "GroomingDateNav + groomer filter + view toggle",
-    "GroomStatusBoard (5 columns)",
+    "AppointmentBoard (6 status columns: dot + label + count + collapse; ScheduleCards; cancelled / no show collapsed by default)",
     "PinApprovalModal"
    ],
    "data": [
@@ -12032,8 +12135,9 @@
     "groomer"
    ],
    "logic": [
-    "Allowed moves from APPOINTMENT_TRANSITIONS (mirror of the booking lifecycle)",
-    "confirmed -> cancelled / no_show and re-open need a manager PIN (R-X63)",
+    "Allowed moves from APPOINTMENT_TRANSITIONS (mirror of the booking lifecycle), offered both by dragging and from the card menu (D-195)",
+    "confirmed -> cancelled / no_show and re-open need a manager PIN (R-X63); those entries carry a lock",
+    "Cards are ScheduleCards: pet + breed, customer, groomer chip, package · size; the R-G20 string is the accessible name",
     "Every move writes audit_log (R-J08)"
    ],
    "integrations": [],
@@ -12042,10 +12146,61 @@
     "GroomingDateNav",
     "SegmentedControl",
     "Select",
-    "GroomStatusBoard",
-    "GroomAppointmentCard",
+    "AppointmentBoard",
+    "ScheduleCard",
+    "Badge",
     "PinApprovalModal",
     "Toast"
+   ],
+   "actions": [
+    {
+     "id": "grooming.setDay",
+     "label": "Change the day",
+     "intent": "show another day on the grooming board",
+     "params": {
+      "day": "date"
+     }
+    },
+    {
+     "id": "grooming.filterGroomer",
+     "label": "Filter by groomer",
+     "intent": "show only one groomer's appointments",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.openAppointment",
+     "label": "Open an appointment",
+     "intent": "open one appointment",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "grooming.moveStatus",
+     "label": "Move an appointment",
+     "intent": "move an appointment to another status column",
+     "permission": "appointments.write",
+     "params": {
+      "id": "id",
+      "status": "enum:requested,confirmed,in_progress,done,cancelled,no_show"
+     }
+    },
+    {
+     "id": "grooming.collapseColumn",
+     "label": "Collapse a column",
+     "intent": "collapse or expand a board column",
+     "params": {
+      "column": "string"
+     }
+    },
+    {
+     "id": "grooming.newBooking",
+     "label": "New groom booking",
+     "intent": "start a new grooming appointment",
+     "permission": "appointments.write"
+    }
    ],
    "rules": [
     "R-X63",
@@ -12057,18 +12212,23 @@
    "states": [
     "empty day",
     "drag over",
+    "card menu open",
     "PIN modal",
-    "collapsed columns"
+    "collapsed columns",
+    "scrolled (edge fade)"
    ],
    "checkedAt": [
     360,
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ],
    "notes": [
-    "D-008: Spa gets Table + Board; no Figma board existed, designed fresh."
+    "D-008: Spa gets Table + Board; no Figma board existed, designed fresh.",
+    "Uses the shared AppointmentBoard; GroomStatusBoard was folded into it in the look-and-feel pass."
    ]
   }
  },
@@ -12116,7 +12276,8 @@
    ],
    "logic": [
     "Line items recomputed by quoteForAppointment from packages / addons / fees / taxes (never hardcoded)",
-    "Status flag icons: warning (requested / note), coin (payment pending), cross (vaccine issue)",
+    "Status column = the status badge plus chips that appear only when they apply (Vaccine, Unpaid, Check) - no row of greyed-out icons",
+    "Time, date and money cells use the DataTable `num` tone (tabular numerals in body colour)",
     "Day totals = sum of totals excluding cancelled / no-show"
    ],
    "integrations": [],
@@ -12128,8 +12289,55 @@
     "GroomStatusBadge",
     "PetVaccineChip",
     "Badge",
-    "Icon",
     "Button"
+   ],
+   "actions": [
+    {
+     "id": "grooming.setDay",
+     "label": "Change the day",
+     "intent": "show another day in the agenda",
+     "params": {
+      "day": "date"
+     }
+    },
+    {
+     "id": "grooming.filterGroomer",
+     "label": "Filter by groomer",
+     "intent": "show only one groomer's appointments",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.filterStatus",
+     "label": "Filter by status",
+     "intent": "show only appointments in one status",
+     "params": {
+      "status": "string"
+     }
+    },
+    {
+     "id": "grooming.filterPayment",
+     "label": "Filter by payment",
+     "intent": "show only appointments with one payment state",
+     "params": {
+      "payment": "enum:pending,authorized,paid,refunded"
+     }
+    },
+    {
+     "id": "grooming.openAppointment",
+     "label": "Open an appointment",
+     "intent": "open one appointment",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "grooming.newBooking",
+     "label": "New groom booking",
+     "intent": "start a new grooming appointment",
+     "permission": "appointments.write"
+    }
    ],
    "rules": [
     "R-A11",
@@ -12153,7 +12361,9 @@
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ]
   }
  },
@@ -13455,7 +13665,7 @@
    "purpose": "The reservations table of the design (18 columns) grouped by Arriving / Departing / Staying / Daycare / Checked out for the selected day, with filters, search, a date navigator and the switch to the Timeline and Board views (D-008). Rows open the booking detail.",
    "layout": [
     "TopLine (view switch, + Hotel Reservation)",
-    "ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out group rows; head + row checkboxes)",
+    "ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out section rows with a count Badge; head + row checkboxes)",
     "DaycareDrawer"
    ],
    "data": [
@@ -13479,7 +13689,8 @@
     "18 design columns: ID, Status, Customer, Hotel room, Date in, Time in, Date out, Time out, Nbr days, Pet(s), Breed, Pet count, Mobile, Home, Total charge, Deposits, Balance, Booking notes.",
     "Balance = total - deposits (R-D14).",
     "Nbr days = nights for hotel, 1 for daycare.",
-    "Cancelled and no-show rows hidden unless the toggle is on."
+    "Cancelled and no-show rows hidden unless the toggle is on.",
+    "Times, counts, phones and money use the DataTable `num` tone (tabular numerals in body colour) instead of Figma's purple, so only real links read as links; the purple head stays (D-216)."
    ],
    "integrations": [],
    "components": [
@@ -13498,6 +13709,72 @@
     "Button",
     "IconButton",
     "EmptyState"
+   ],
+   "actions": [
+    {
+     "id": "reservations.switchView",
+     "label": "Switch view",
+     "intent": "show the reservations as a table, timeline or board",
+     "params": {
+      "view": "enum:table,timeline,board"
+     }
+    },
+    {
+     "id": "reservations.newBooking",
+     "label": "New hotel reservation",
+     "intent": "start a new hotel reservation",
+     "permission": "bookings.write"
+    },
+    {
+     "id": "reservations.setDay",
+     "label": "Change the day",
+     "intent": "show the reservations of another day",
+     "params": {
+      "day": "date"
+     }
+    },
+    {
+     "id": "reservations.seeAll",
+     "label": "See all upcoming",
+     "intent": "switch between the selected day and all upcoming reservations"
+    },
+    {
+     "id": "reservations.filter",
+     "label": "Filter the table",
+     "intent": "filter reservations by search text, status, kind or room type",
+     "params": {
+      "q": "string",
+      "status": "string",
+      "kind": "enum:hotel,daycare",
+      "roomType": "id",
+      "showClosed": "string"
+     }
+    },
+    {
+     "id": "reservations.toggleGroup",
+     "label": "Collapse a section",
+     "intent": "collapse or expand the arriving, departing, staying, daycare or checked-out section",
+     "params": {
+      "group": "enum:arriving,departing,staying,daycare,checked_out"
+     }
+    },
+    {
+     "id": "reservations.openBooking",
+     "label": "Open a reservation",
+     "intent": "open one reservation",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "reservations.editBooking",
+     "label": "Edit a reservation",
+     "intent": "edit one hotel reservation",
+     "permission": "bookings.write",
+     "params": {
+      "id": "id"
+     }
+    }
    ],
    "rules": [
     "R-I05",
@@ -13529,7 +13806,9 @@
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ]
   }
  },
@@ -13551,7 +13830,7 @@
    "layout": [
     "TopLine (view switch, New Booking)",
     "TimelineBar (range pill centred; 1 / 2 weeks + Filter popover right: room type, status, unassigned, daycare, cancelled)",
-    "RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; alternating day columns, TODAY pill, flat status blocks)",
+    "RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; lightly tinted alternating day columns, weekend marked in the header, dashed today line + Today pill, sticky day head and room column, room cell = code + type badge, 6 px status bars with a dark left edge)",
     "BlockPopover (summary, Open, Set status, Assign room)",
     "MoveModal",
     "RoomModal",
@@ -13580,7 +13859,9 @@
     "Block = [check-in day, check-out day) starting at the check-in half-day; same-day stays take one cell.",
     "Colour from booking status tokens (R-I09); flags: vaccine issue, balance due, notes, medication.",
     "Drop onto (room, day): nights kept, target room must be the booked type, fit the heaviest dog (R-E09) and be free (R-X03); confirmed in a modal, logged as a booking event (R-X07).",
-    "Empty cell click starts a new booking for that room and day."
+    "Empty cell click starts a new booking for that room and day.",
+    "Bar label is \"Pet · Customer\", truncated; a bar narrower than 76 px shows a \"…\" chip instead and keeps the full label in its aria-label and popover.",
+    "The popover opens on click, Enter and hover; a keyboard-opened popover takes focus, so dragging is never the only way (D-195)."
    ],
    "integrations": [],
    "components": [
@@ -13600,6 +13881,100 @@
     "PinApprovalModal",
     "EmptyState"
    ],
+   "actions": [
+    {
+     "id": "reservations.switchView",
+     "label": "Switch view",
+     "intent": "show the reservations as a table, timeline or board",
+     "params": {
+      "view": "enum:table,timeline,board"
+     }
+    },
+    {
+     "id": "reservations.setWeek",
+     "label": "Change the week",
+     "intent": "move the timeline to another week",
+     "params": {
+      "start": "date"
+     }
+    },
+    {
+     "id": "reservations.setSpan",
+     "label": "One or two weeks",
+     "intent": "show one week or two weeks of the timeline",
+     "params": {
+      "span": "enum:7,14"
+     }
+    },
+    {
+     "id": "reservations.filter",
+     "label": "Filter the timeline",
+     "intent": "filter the timeline by room type, status, daycare, unassigned or cancelled rows",
+     "params": {
+      "roomType": "id",
+      "status": "string",
+      "showDaycare": "string",
+      "showUnassigned": "string",
+      "showClosed": "string"
+     }
+    },
+    {
+     "id": "reservations.openStay",
+     "label": "Open a stay",
+     "intent": "open the popover or detail of one stay",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "reservations.collapseGroup",
+     "label": "Collapse a room group",
+     "intent": "collapse or expand a room-type group",
+     "params": {
+      "group": "id"
+     }
+    },
+    {
+     "id": "reservations.moveStay",
+     "label": "Move a stay",
+     "intent": "move a stay to another room or start day",
+     "permission": "bookings.write",
+     "params": {
+      "id": "id",
+      "room": "id",
+      "day": "date"
+     }
+    },
+    {
+     "id": "reservations.assignRoom",
+     "label": "Assign a room",
+     "intent": "assign or change the room of a stay",
+     "permission": "bookings.write",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "reservations.setStatus",
+     "label": "Set the booking status",
+     "intent": "move a stay through the booking lifecycle",
+     "permission": "bookings.status",
+     "params": {
+      "id": "id",
+      "status": "string"
+     }
+    },
+    {
+     "id": "reservations.newBookingForCell",
+     "label": "Book an empty cell",
+     "intent": "start a booking for that room on that day",
+     "permission": "bookings.write",
+     "params": {
+      "room": "id",
+      "day": "date"
+     }
+    }
+   ],
    "rules": [
     "R-I09",
     "R-I01",
@@ -13615,9 +13990,11 @@
     "two weeks",
     "today in view",
     "popover open",
+    "narrow bar (… chip)",
     "dragging",
     "move confirm",
     "filtered",
+    "group collapsed",
     "phone scroll"
    ],
    "figma": [
@@ -13631,7 +14008,9 @@
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ]
   }
  },
@@ -13652,9 +14031,9 @@
    "purpose": "Kanban of the day's (or week's) Grooming & Spa appointments by status - requested, confirmed, in progress, done, cancelled / no show. Drag cards to move them through the day; cancelling or no-show needs a manager PIN. Cards open a drawer with the appointment.",
    "layout": [
     "PageHeader (view switch, day navigator, Day / Week)",
-    "StatTiles (appointments, in progress, done, booked revenue)",
+    "StatTiles (appointments, in progress, done, booked revenue, groomers - one row from ~1100 px)",
     "FilterBar (groomer, package)",
-    "AppointmentBoard",
+    "AppointmentBoard (status dot + label + count + collapse per column; ScheduleCards; horizontal scroll-snap with an edge fade)",
     "AppointmentDrawer (pet, customer, package, add-ons, groomer, price, vaccines, notes, status select)",
     "CancelModal (cancelled vs no show)",
     "PinApprovalModal"
@@ -13681,7 +14060,8 @@
    "logic": [
     "Columns = APPOINTMENT_STATUS with cancelled + no_show merged into one locked column.",
     "Move to cancelled / no_show -> PinApprovalModal (R-X06); other moves update appointments.status directly and log audit_log.",
-    "Card accent = groomer colour (R-L02); price and minutes come from the appointment quote (packages + add-ons)."
+    "Cards are ScheduleCards: lifecycle stripe, time + groomer chip (groomer colour, R-L02), pet + breed, customer, package · size and minutes chips, vaccine / balance-due alert badges.",
+    "Every move is available from the card menu as well as by dragging (D-195); price and minutes come from the appointment quote (packages + add-ons)."
    ],
    "integrations": [],
    "components": [
@@ -13691,6 +14071,7 @@
     "StatTile",
     "Select",
     "AppointmentBoard",
+    "ScheduleCard",
     "Badge",
     "Avatar",
     "Drawer",
@@ -13701,6 +14082,79 @@
     "RadioGroup",
     "PinApprovalModal",
     "EmptyState"
+   ],
+   "actions": [
+    {
+     "id": "reservations.switchView",
+     "label": "Switch view",
+     "intent": "show the reservations as a table, timeline or board",
+     "params": {
+      "view": "enum:table,timeline,board"
+     }
+    },
+    {
+     "id": "grooming.setDay",
+     "label": "Change the day",
+     "intent": "show another day or week on the board",
+     "params": {
+      "day": "date"
+     }
+    },
+    {
+     "id": "grooming.setSpan",
+     "label": "Day or week",
+     "intent": "show one day or the whole week",
+     "params": {
+      "span": "enum:day,week"
+     }
+    },
+    {
+     "id": "grooming.filterGroomer",
+     "label": "Filter by groomer",
+     "intent": "show only one groomer's appointments",
+     "params": {
+      "groomer": "id"
+     }
+    },
+    {
+     "id": "grooming.filterPackage",
+     "label": "Filter by package",
+     "intent": "show only one grooming package",
+     "params": {
+      "package": "id"
+     }
+    },
+    {
+     "id": "grooming.openAppointment",
+     "label": "Open an appointment",
+     "intent": "open one appointment",
+     "params": {
+      "id": "id"
+     }
+    },
+    {
+     "id": "grooming.moveStatus",
+     "label": "Move an appointment",
+     "intent": "move an appointment to another status column",
+     "permission": "appointments.write",
+     "params": {
+      "id": "id",
+      "status": "enum:requested,confirmed,in_progress,done,closed"
+     }
+    },
+    {
+     "id": "grooming.collapseColumn",
+     "label": "Collapse a column",
+     "intent": "collapse or expand a board column",
+     "params": {
+      "column": "string"
+     }
+    },
+    {
+     "id": "grooming.openDayView",
+     "label": "Open the day view",
+     "intent": "open the grooming day view"
+    }
    ],
    "rules": [
     "R-X06",
@@ -13715,6 +14169,8 @@
     "day",
     "week",
     "filtered by groomer",
+    "card menu open",
+    "column collapsed",
     "drawer open",
     "cancel modal",
     "PIN approval",
@@ -13729,7 +14185,9 @@
     390,
     768,
     1280,
-    1920
+    1920,
+    2560,
+    3840
    ]
   }
  },

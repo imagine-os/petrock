@@ -20,16 +20,21 @@ import { addDaysIso, combine, diffDays, fmtDate, hhmmOf, todayIso, weekStart } f
 import { roomFits, staysOverlap, ACTIVE_STATUSES } from './lib/availability';
 import { useBookingActions } from './lib/useBookingActions';
 import { RoomPickModal } from './lib/RoomPickModal';
+import { useT } from '../../i18n';
 import { ViewSwitch } from './ReservationsTablePage';
 import type { RoomRow } from '../../data/schema/core';
 import './frontdesk-reservations.css';
 
 const UNASSIGNED = '__unassigned';
 const DC_ROWS = [{ id: 'dc_full_day', label: 'Full day' }, { id: 'dc_half_day', label: 'Half day' }, { id: 'dc_hour', label: 'Play hour' }];
+/** Two letters so the room code always stays readable in the 132-168 px label column. */
+const TYPE_ABBR: Record<string, string> = { penthouse: 'PH', suite: 'ST', daycare: 'DC' };
+const abbr = (rt: { key?: string | null; name: string }) => TYPE_ABBR[rt.key ?? ''] ?? rt.name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase();
 
 /** F-13 - rooms × days with stays as blocks (D-008), laid out per `all reservation grooming.jpg`: New Booking top-right, range pill centred, span + Filter popover right, then the grid (legend removed; the status is in the block popover). */
 export function TimelinePage() {
   const nav = useNavigate();
+  const t = useT();
   const { toast } = useToast();
   const { location } = useLocation();
   const { rows, bookings, rooms, roomTypes } = useReservationRows();
@@ -48,18 +53,18 @@ export function TimelinePage() {
 
   const groups = useMemo<TimelineGroup[]>(() => {
     const g: TimelineGroup[] = [];
-    if (showUnassigned) g.push({ key: 'unassigned', label: 'Unassigned (no room yet)', rows: [{ id: UNASSIGNED, label: 'No room', sub: 'assign from the popover' }] });
+    if (showUnassigned) g.push({ key: 'unassigned', label: 'Unassigned', countTitle: 'stays in view', rows: [{ id: UNASSIGNED, label: 'No room', sub: 'assign from the popover' }] });
     for (const rt of roomTypes.slice().sort((a, b) => a.sort_order - b.sort_order)) {
       if (roomType && rt.id !== roomType) continue;
       const rs = rooms.filter((r) => r.room_type_id === rt.id && r.active !== false).sort((a, b) => a.sort_order - b.sort_order);
-      g.push({ key: rt.id, label: `${rt.name}s (${rs.length})`, rows: rs.map((r) => ({ id: r.id, label: r.code, sub: r.position === 'bottom' ? 'bottom · any weight' : r.position === 'top' ? 'top · ≤30 lb' : undefined })) });
+      g.push({ key: rt.id, label: `${rt.name}s (${rs.length})`, countTitle: 'stays in view', rows: rs.map((r) => ({ id: r.id, label: r.code, badge: abbr(rt), sub: [rt.name, r.position === 'bottom' ? 'bottom · any weight' : r.position === 'top' ? 'top · ≤30 lb' : ''].filter(Boolean).join(' · ') })) });
     }
-    if (showDaycare && !roomType) g.push({ key: 'daycare', label: 'Daycare', rows: DC_ROWS });
+    if (showDaycare && !roomType) g.push({ key: 'daycare', label: 'Daycare', countTitle: 'bookings in view', rows: DC_ROWS.map((r) => ({ ...r, badge: 'DC' })) });
     return g;
   }, [rooms, roomTypes, roomType, showDaycare, showUnassigned]);
 
   const blocks = useMemo<TimelineBlock[]>(() => rows.filter((r) => (showClosed || !['cancelled', 'no_show'].includes(r.status)) && (!status || r.status === status) && (!roomType || r.roomTypeId === roomType || r.kind === 'daycare')).map((r) => ({
-    id: r.id, rowId: r.kind === 'daycare' ? `dc_${r.daycare?.item ?? 'full_day'}` : r.roomId ?? UNASSIGNED, startDay: r.dayIn, endDay: r.dayOut, label: r.customer, sub: r.petNames, status: r.status, draggable: r.kind === 'hotel',
+    id: r.id, rowId: r.kind === 'daycare' ? `dc_${r.daycare?.item ?? 'full_day'}` : r.roomId ?? UNASSIGNED, startDay: r.dayIn, endDay: r.dayOut, label: r.petNames || r.customer, sub: r.petNames ? r.customer : undefined, status: r.status, draggable: r.kind === 'hotel',
     flags: [...(!r.vaccineOk ? ['vaccine' as const] : []), ...(r.balance > 0 && r.status !== 'cancelled' ? ['unpaid' as const] : []), ...(r.notes ? ['note' as const] : [])],
   })), [rows, showClosed, status, roomType]);
   const byId = useMemo(() => Object.fromEntries(rows.map((r) => [r.id, r])), [rows]);
@@ -106,12 +111,13 @@ export function TimelinePage() {
             <Toggle size="sm" checked={showUnassigned} onChange={setShowUnassigned} label="Unassigned row" />
             <Toggle size="sm" checked={showDaycare} onChange={setShowDaycare} label="Daycare rows" />
             <Toggle size="sm" checked={showClosed} onChange={setShowClosed} label="Cancelled / no show" />
-            <p className="xs muted" style={{ margin: 0 }}>Block flags: vaccine, balance due, notes. Drag a block to move it; click an empty cell to book that room.</p>
+            <p className="xs muted" style={{ margin: 0 }}>Bars show pet · customer with flags for vaccine, balance due and notes. Drag a bar or use the popover to move it; click an empty cell to book that room.</p>
           </FilterPopover>
         </div>
       </div>
 
       <RoomTimeline groups={groups} blocks={blocks} startDay={start} days={days} today={today} onBlockMove={onMove}
+        labels={{ corner: t('frontdesk-reservations.allRooms'), today: t('frontdesk-reservations.todayPill'), close: t('frontdesk-reservations.close'), empty: t('frontdesk-reservations.noRooms'), grid: t('frontdesk-reservations.roomTimeline') }}
         onCellClick={(rowId, day) => { if (rowId === UNASSIGNED || rowId.startsWith('dc_')) return; const room = rooms.find((r) => r.id === rowId); if (!room) return; nav(`/desk/reservations/new?checkIn=${day}&checkOut=${addDaysIso(day, 1)}&roomType=${room.room_type_id}&room=${room.id}`); }}
         renderDetail={(block, close) => { const r = byId[block.id]; if (!r) return null; return (
           <div className="fdr-pop-body">

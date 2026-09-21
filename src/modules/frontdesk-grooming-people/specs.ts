@@ -5,31 +5,62 @@ import type { Role } from '../../auth/roles';
 const STAFF: Role[] = ['super_admin', 'owner', 'manager', 'front_desk', 'groomer'];
 const DESK: Role[] = ['super_admin', 'owner', 'manager', 'front_desk'];
 const CHECKED = [360, 390, 768, 1280, 1920];
+/** Re-checked to 4K in the F-30 / F-31 / F-32 look-and-feel pass. */
+const CHECKED_4K = [360, 390, 768, 1280, 1920, 2560, 3840];
 
 export const dayViewSpec = defineSpec({
   code: 'F-30', name: 'Grooming day view', purpose: 'Run the grooming day at one location: groomer columns tinted by working hours, appointments by time, flags for vaccines / payment / unconfirmed, column order-colour-hide per user, click a slot to book, drag to reschedule.',
-  layout: ['PageHeader (title, New groom booking)', 'GroomingDateNav + filters (groomer, status) + view toggle (Day / Board / Agenda)', 'GroomDayGrid (time x groomers, now line, capacity shading)', 'Legend + hidden columns chips'],
+  layout: ['PageHeader (title, New groom booking)', 'GroomingDateNav + filters (groomer, status) + view toggle (Day / Board / Agenda)', 'Legend row (right-aligned status dots + hidden-column chips)', 'GroomDayGrid (time x groomers; white heads with an initials disc and a thin coloured top border, 8 % working-hours tint, hatched off hours, side-by-side lanes for overlaps, over-capacity warning chip, now hairline with a time chip)', 'Helper line under the grid'],
   data: ['appointments', 'appointment_extras', 'employees', 'groomer_column_prefs', 'customers', 'pets', 'vaccine_records', 'vaccine_types', 'packages', 'capacities', 'locations'], roles: STAFF,
-  logic: ['Card label R-G20 "Owner Last, PET; Breed; Package Size"', 'Vaccine flag from petVaccineSummary (R-A11)', 'Grid hours from location hours ±1h; column tint from employees.working_hours', 'Over-capacity rows when overlaps > capacities.grooming (R-G21)', 'Column prefs upsert to groomer_column_prefs per user + location (R-X62)', 'Drag / slot click writes appointments.starts_at + groomer_id (audit)'],
-  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'Select', 'Chip', 'Button', 'GroomDayGrid', 'GroomAppointmentCard', 'Badge', 'PetVaccineChip', 'EmptyState'],
-  rules: ['R-G20', 'R-G21', 'R-A11', 'R-X62', 'R-G10', 'R-G17', 'R-E10', 'R-J08'], states: ['loading (snapshot)', 'no groomers at location', 'all columns hidden', 'over capacity', 'groomer off today', 'unassigned column'],
-  figma: ['Grooming.png', 'Grooming-1.png'], checkedAt: CHECKED, notes: ['Replaces the F-30 stub at /desk/grooming.', 'Phones: horizontal scroll with sticky time column (D-016).'],
+  logic: ['Cards are ScheduleCards: pet + breed, customer, package · size chips; the R-G20 string "Owner Last, PET; Breed; Package Size" stays as the card\'s accessible name and tooltip', 'Vaccine flag from petVaccineSummary (R-A11) rendered as an alert Badge with text, never a bare icon', 'Grid hours from location hours ±1h; working hours are an 8 % tint of the groomer hue, off hours a neutral hatch', 'Overlapping appointments split the column into n side-by-side lanes', 'Over-capacity hours get a warning chip beside the neutral hour label when overlaps > capacities.grooming (R-G21)', 'Column prefs upsert to groomer_column_prefs per user + location (R-X62); swatches are the groomerHues tokens', 'Now hairline only when the shown day is today', 'Compact cards show at most one alert chip ("N alerts" when several); the full list stays in the card\'s accessible name and tooltip', 'Drag / slot click writes appointments.starts_at + groomer_id (audit)'],
+  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'Select', 'Chip', 'Button', 'GroomDayGrid', 'ScheduleCard', 'Badge', 'PetVaccineChip', 'EmptyState'],
+  actions: [
+    { id: 'grooming.setDay', label: 'Change the day', intent: 'show another day in the grooming day view', params: { day: 'date' } },
+    { id: 'grooming.filterGroomer', label: 'Filter by groomer', intent: 'show only one groomer column', params: { groomer: 'id' } },
+    { id: 'grooming.filterStatus', label: 'Filter by status', intent: 'show only appointments in one status', params: { status: 'string' } },
+    { id: 'grooming.openAppointment', label: 'Open an appointment', intent: 'open one appointment', params: { id: 'id' } },
+    { id: 'grooming.bookSlot', label: 'Book an empty slot', intent: 'start a groom booking at that time with that groomer', permission: 'appointments.write', params: { groomer: 'id', time: 'string' } },
+    { id: 'grooming.reschedule', label: 'Reschedule an appointment', intent: 'move an appointment to another groomer or time', permission: 'appointments.write', params: { id: 'id', groomer: 'id', time: 'string' } },
+    { id: 'grooming.moveColumn', label: 'Reorder a groomer column', intent: 'move a groomer column left or right', params: { groomer: 'id', direction: 'enum:-1,1' } },
+    { id: 'grooming.colourColumn', label: 'Recolour a groomer column', intent: 'change the colour of a groomer column', params: { groomer: 'id', colour: 'string' } },
+    { id: 'grooming.hideColumn', label: 'Hide a groomer column', intent: 'hide a groomer column', params: { groomer: 'id' } },
+    { id: 'grooming.showColumn', label: 'Show a hidden column', intent: 'bring a hidden groomer column back', params: { groomer: 'id' } },
+    { id: 'grooming.newBooking', label: 'New groom booking', intent: 'start a new grooming appointment', permission: 'appointments.write' },
+  ],
+  rules: ['R-G20', 'R-G21', 'R-A11', 'R-X62', 'R-G10', 'R-G17', 'R-E10', 'R-J08'], states: ['loading (snapshot)', 'no groomers at location', 'all columns hidden', 'over capacity hour', 'overlapping lanes', 'groomer off today', 'now line (today)', 'unassigned column'],
+  figma: ['Grooming.png', 'Grooming-1.png'], checkedAt: CHECKED_4K, notes: ['Replaces the F-30 stub at /desk/grooming.', 'Phones: horizontal scroll with sticky time column (D-016).'],
 });
 export const boardSpec = defineSpec({
   code: 'F-31', name: 'Grooming board', purpose: 'Kanban of the day\'s appointments by status (requested, confirmed, in progress, done, cancelled / no show) with drag or "Move to" transitions, PIN-gated where the lifecycle says so.',
-  layout: ['PageHeader', 'GroomingDateNav + groomer filter + view toggle', 'GroomStatusBoard (5 columns)', 'PinApprovalModal'],
+  layout: ['PageHeader', 'GroomingDateNav + groomer filter + view toggle', 'AppointmentBoard (6 status columns: dot + label + count + collapse; ScheduleCards; cancelled / no show collapsed by default)', 'PinApprovalModal'],
   data: ['appointments', 'employees', 'customers', 'pets', 'packages', 'vaccine_records', 'vaccine_types', 'approvals', 'audit_log'], roles: STAFF,
-  logic: ['Allowed moves from APPOINTMENT_TRANSITIONS (mirror of the booking lifecycle)', 'confirmed -> cancelled / no_show and re-open need a manager PIN (R-X63)', 'Every move writes audit_log (R-J08)'],
-  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'Select', 'GroomStatusBoard', 'GroomAppointmentCard', 'PinApprovalModal', 'Toast'],
-  rules: ['R-X63', 'R-I06', 'R-J08', 'R-G20', 'R-I01'], states: ['empty day', 'drag over', 'PIN modal', 'collapsed columns'], checkedAt: CHECKED, notes: ['D-008: Spa gets Table + Board; no Figma board existed, designed fresh.'],
+  logic: ['Allowed moves from APPOINTMENT_TRANSITIONS (mirror of the booking lifecycle), offered both by dragging and from the card menu (D-195)', 'confirmed -> cancelled / no_show and re-open need a manager PIN (R-X63); those entries carry a lock', 'Cards are ScheduleCards: pet + breed, customer, groomer chip, package · size; the R-G20 string is the accessible name', 'Every move writes audit_log (R-J08)'],
+  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'Select', 'AppointmentBoard', 'ScheduleCard', 'Badge', 'PinApprovalModal', 'Toast'],
+  actions: [
+    { id: 'grooming.setDay', label: 'Change the day', intent: 'show another day on the grooming board', params: { day: 'date' } },
+    { id: 'grooming.filterGroomer', label: 'Filter by groomer', intent: 'show only one groomer\'s appointments', params: { groomer: 'id' } },
+    { id: 'grooming.openAppointment', label: 'Open an appointment', intent: 'open one appointment', params: { id: 'id' } },
+    { id: 'grooming.moveStatus', label: 'Move an appointment', intent: 'move an appointment to another status column', permission: 'appointments.write', params: { id: 'id', status: 'enum:requested,confirmed,in_progress,done,cancelled,no_show' } },
+    { id: 'grooming.collapseColumn', label: 'Collapse a column', intent: 'collapse or expand a board column', params: { column: 'string' } },
+    { id: 'grooming.newBooking', label: 'New groom booking', intent: 'start a new grooming appointment', permission: 'appointments.write' },
+  ],
+  rules: ['R-X63', 'R-I06', 'R-J08', 'R-G20', 'R-I01'], states: ['empty day', 'drag over', 'card menu open', 'PIN modal', 'collapsed columns', 'scrolled (edge fade)'], checkedAt: CHECKED_4K, notes: ['D-008: Spa gets Table + Board; no Figma board existed, designed fresh.', 'Uses the shared AppointmentBoard; GroomStatusBoard was folded into it in the look-and-feel pass.'],
 });
 export const agendaSpec = defineSpec({
   code: 'F-32', name: 'Grooming agenda list', purpose: 'Table of the day\'s grooming appointments (Time, Groomer, Status flags, Agenda with package + add-on line items, Payment, Total) with filters and a date navigator.',
   layout: ['PageHeader', 'GroomingDateNav + Filters (groomer, status, payment) + view toggle', 'DataTable (agenda rows with line items)', 'Totals footer'],
   data: ['appointments', 'appointment_extras', 'employees', 'customers', 'pets', 'packages', 'addons', 'fees', 'taxes', 'vaccine_records', 'vaccine_types'], roles: STAFF,
-  logic: ['Line items recomputed by quoteForAppointment from packages / addons / fees / taxes (never hardcoded)', 'Status flag icons: warning (requested / note), coin (payment pending), cross (vaccine issue)', 'Day totals = sum of totals excluding cancelled / no-show'],
-  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'DataTable', 'GroomStatusBadge', 'PetVaccineChip', 'Badge', 'Icon', 'Button'],
-  rules: ['R-A11', 'R-G01', 'R-G11', 'R-H04', 'R-H03'], states: ['empty day', 'filtered', 'phone card layout'], figma: ['Frame 1171276264-11.png', 'front desk-12.jpg', 'front desk-14.jpg'], checkedAt: CHECKED,
+  logic: ['Line items recomputed by quoteForAppointment from packages / addons / fees / taxes (never hardcoded)', 'Status column = the status badge plus chips that appear only when they apply (Vaccine, Unpaid, Check) - no row of greyed-out icons', 'Time, date and money cells use the DataTable `num` tone (tabular numerals in body colour)', 'Day totals = sum of totals excluding cancelled / no-show'],
+  integrations: [], components: ['PageHeader', 'GroomingDateNav', 'SegmentedControl', 'DataTable', 'GroomStatusBadge', 'PetVaccineChip', 'Badge', 'Button'],
+  actions: [
+    { id: 'grooming.setDay', label: 'Change the day', intent: 'show another day in the agenda', params: { day: 'date' } },
+    { id: 'grooming.filterGroomer', label: 'Filter by groomer', intent: 'show only one groomer\'s appointments', params: { groomer: 'id' } },
+    { id: 'grooming.filterStatus', label: 'Filter by status', intent: 'show only appointments in one status', params: { status: 'string' } },
+    { id: 'grooming.filterPayment', label: 'Filter by payment', intent: 'show only appointments with one payment state', params: { payment: 'enum:pending,authorized,paid,refunded' } },
+    { id: 'grooming.openAppointment', label: 'Open an appointment', intent: 'open one appointment', params: { id: 'id' } },
+    { id: 'grooming.newBooking', label: 'New groom booking', intent: 'start a new grooming appointment', permission: 'appointments.write' },
+  ],
+  rules: ['R-A11', 'R-G01', 'R-G11', 'R-H04', 'R-H03'], states: ['empty day', 'filtered', 'phone card layout'], figma: ['Frame 1171276264-11.png', 'front desk-12.jpg', 'front desk-14.jpg'], checkedAt: CHECKED_4K,
 });
 export const bookingFormSpec = defineSpec({
   code: 'F-33', name: 'Groom booking form', purpose: 'Create or edit a Grooming & Spa appointment at the desk: date, time, groomer, customer (+ New customer), one or more pets with vaccine status, package priced by size, add-ons, discount (PIN), payment method, invoice preview, note.',

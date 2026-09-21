@@ -1,6 +1,8 @@
 # Kanban
 
 ## Backlog
+- DataTable sort buttons and GroomingDateNav "Today" label under 44 px (pre-existing, found in prompt 0018 QA); hidden checkbox input size
+- Per-role points of view for the desk (front desk vs manager vs groomer landing and filters), if Justin meant that by "point of views" (prompt 0018)
 - Daycare prepaid packages: purchase / redemption flow so `quoteDaycare` applies the seeded prepay discounts (D-229 gap)
 - Training as a service: `training_courses` table + quote path + site prices (D-228)
 - Season rows per year (moveable Easter / Thanksgiving) in A-20, or a rule for moveable feasts (D-229)
@@ -42,6 +44,7 @@
 - Santa Maria digest (D-009, blocked): Justin connected GitHub 2026-09-17 (reported again 19:17 UTC) but Santa-Maria-Tenis-Club/os is still not visible to Claude Tag (19:18 UTC); the Claude GitHub App must be installed on that org and the repo enabled in Claude Tag settings, then run a separate session and digest spec builder + dev/doc tricks into `docs/reference/santa-maria-os.md`
 
 ## Done
+- Front-desk hotel and grooming views polish (Justin 2026-09-21, prompt 0018, changelog 0032, **v0.3.1**): one ScheduleCard + one AppointmentBoard (D-231, D-234), calm timeline grid with popover and dashed today line (D-232), muted groomer hues with lanes (D-233), num tone and section rows in desk tables (D-235); before/after captures for F-10, F-13, F-14, F-30, F-31, F-32; 26 en / es strings; SEED_VERSION 5
 - Public website on real petrockhotel.com content (Justin 2026-09-20, prompt 0017, changelog 0031, **v0.3.0**): full crawl into docs/reference/petrockhotel-scrape (D-224), site-images pipeline + SitePhoto (D-225), media hero with the client's video and photo (D-226), P-13 gallery (D-227), training section (D-228), real copy on P-01..P-04 / P-12, 130 en / es strings; pricing seed adopted from the live site (D-229, SEED_VERSION 4), legal name Petrock Holdings LLC (D-230)
 - Verify petrockhotel.com facts on the live site (D-187): Westwood address / hours, phones, Suite copy, $12 sanitation fee, grooming disclaimer - **verified 2026-09-20, see `docs/reference/pricing-adoption-2026-09-20.md`** (the domain became reachable, the full crawl is D-224; addresses / phones / hours / emails all matched the seed, the price lists were adopted per D-229)
 - Hub home redesign HUB-01 (Justin 2026-09-20, prompt 0016, changelog 0030, **v0.2.1**): CTL-style testing hub with hero band, session bar, four audience groups, 15 thumbnail cards (`npm run thumbs`, D-218), one control per card (D-219), Built / You-are-here pills, 13 tool rows, stat strip; `Placeholder` atom (D-222), `PageSpec.actions` type + 7 hub actions (D-221), hub scale band to 3840 (D-220), `settleImages` in the screenshot script (D-223); 105 en / es strings; decisions D-218..D-223

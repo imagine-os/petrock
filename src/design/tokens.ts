@@ -92,6 +92,12 @@ export const timelineFills = {
   dark: { requested: '#8E4E8C', pending_vaccines: '#7B5C9F', confirmed: '#4E8C3C', checked_in: '#4C4FA8', checked_out: '#A8945A', cancelled: '#8C4C4C', no_show: '#7A4444', daycare: '#0E8F8F' },
 } as const;
 
+/** Muted per-groomer column hues (F-30 day grid). Calm enough to tint a whole column at 8 % and still read as "this groomer". */
+export const groomerHues = {
+  light: ['#6E93C4', '#6FA97E', '#C39A57', '#C07E9B', '#8B85C9', '#5FA6A2'],
+  dark: ['#5A7BA6', '#5A8A68', '#A38048', '#A06A82', '#746FA8', '#4E8A86'],
+} as const;
+
 /** Semantic roles per theme. `{p}` placeholders are replaced with the brand palette / neutrals at generation time. */
 export const semantic: Record<ThemeName, Record<string, string>> = {
   light: {
@@ -142,8 +148,10 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-focus': '{primary400}',
     'color-scrim': 'rgba(50,50,50,.80)',
     'color-scrim-soft': 'rgba(0,0,0,.20)', // Home Page-5 alert over the phone screen
-    'color-grid-alt': '#CDD2D8',          // timeline alternating day columns (all reservation grooming.jpg)
-    'color-grid-alt-head': '#B1B8C2',     // timeline day head over an alternating column
+    'color-grid-alt': '#F6F7F9',          // timeline alternating day columns: a tint, not a block (D-2xx polish pass)
+    'color-grid-alt-head': '#EEF1F4',     // timeline day head over an alternating column
+    'color-grid-weekend': '#F3F1F8',      // weekend day columns (header carries the colour, the cells only a hint)
+    'color-bar-edge': 'rgba(0,0,0,.28)',  // dark left edge of a timeline bar (Figma)
     'color-field-fill': '{n-75}',         // Hotel Reservation.png check-in / check-out fields #F2F4F7
     'color-placeholder': '{n-200}',
     'shadow-color': '0,0,0',
@@ -196,8 +204,10 @@ export const semantic: Record<ThemeName, Record<string, string>> = {
     'color-focus': '{primaryOnDark}',
     'color-scrim': 'rgba(0,0,0,.72)',
     'color-scrim-soft': 'rgba(0,0,0,.45)',
-    'color-grid-alt': 'rgba(255,255,255,.07)',
-    'color-grid-alt-head': 'rgba(255,255,255,.13)',
+    'color-grid-alt': 'rgba(255,255,255,.035)',
+    'color-grid-alt-head': 'rgba(255,255,255,.06)',
+    'color-grid-weekend': 'rgba(177,138,224,.07)',
+    'color-bar-edge': 'rgba(0,0,0,.45)',
     'color-field-fill': '{n-800}',
     'color-placeholder': '{n-700}',
     'shadow-color': '0,0,0',
@@ -255,7 +265,7 @@ export const layoutTokens = {
   'bp-phone': '600px', 'bp-tablet': '900px', 'bp-desktop': '1280px',
 } as const;
 
-export const tokens = { brands, neutrals, status, bookingHues, timelineFills, semantic, type, spacing, radii, shadows, motion, layout: layoutTokens };
+export const tokens = { brands, neutrals, status, bookingHues, timelineFills, groomerHues, semantic, type, spacing, radii, shadows, motion, layout: layoutTokens };
 
 function vars(obj: Record<string, string>): string {
   return Object.entries(obj).map(([k, v]) => `  --${k}: ${v};`).join('\n');
@@ -279,7 +289,8 @@ function themeBlock(theme: ThemeName, brand: BrandPalette): string {
     'color-completed': st.completed, 'color-completed-bg': st.completedBg,
   };
   const tl = Object.fromEntries(Object.entries(timelineFills[theme]).map(([k, v]) => [`timeline-${k}-fill`, v]));
-  return `${vars(sem)}\n${vars(stVars)}\n${vars(tl)}\n  color-scheme: ${theme};`;
+  const gh = Object.fromEntries(groomerHues[theme].map((v, i) => [`groomer-${i + 1}`, v]));
+  return `${vars(sem)}\n${vars(stVars)}\n${vars(tl)}\n${vars(gh)}\n  color-scheme: ${theme};`;
 }
 
 /** Builds the full tokens stylesheet: static scales on :root, then one block per brand x theme. */

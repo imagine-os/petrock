@@ -16,7 +16,7 @@
 .datatable th { height: var(--h-thead); background: var(--color-table-head); color: var(--color-table-head-text); font-weight: var(--fw-regular); font-size: var(--fs-xs); border-bottom: 0; }
 .datatable thead tr:last-child th:first-child { border-top-left-radius: var(--r-card); } .datatable thead tr:last-child th:last-child { border-top-right-radius: var(--r-card); }
 .datatable thead .datatable-groups + tr th:first-child, .datatable thead .datatable-groups + tr th:last-child { border-radius: 0; }
-.datatable td.cell-muted { color: var(--color-text-muted); } .datatable td.cell-heading { color: var(--color-heading); } .datatable td.cell-date { color: var(--color-text); } .datatable td.cell-primary { color: var(--color-primary-text); }
+.datatable td.cell-muted { color: var(--color-text-muted); } .datatable td.cell-heading { color: var(--color-heading); } .datatable td.cell-date { color: var(--color-text); } .datatable td.cell-primary { color: var(--color-primary-text); } .datatable td.cell-num { color: var(--color-text); font-variant-numeric: tabular-nums; }
 .datatable thead.is-sticky th { position: sticky; top: 0; z-index: 2; }
 .datatable thead.is-sticky .datatable-groups th { top: 0; } .datatable thead.is-sticky .datatable-groups + tr th { top: 32px; }
 .datatable-groups th { height: 32px; text-align: center; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-label); background: var(--color-surface-2); border-radius: 0; }
@@ -25,10 +25,13 @@
 .datatable-sorticon { color: inherit; opacity: 0; transition: opacity var(--dur-fast); } th:hover .datatable-sorticon, .datatable-sort:focus-visible .datatable-sorticon { opacity: .55; } th[aria-sort] .datatable-sorticon { opacity: 1; }
 .datatable-cbcell { width: 36px; padding-right: 0 !important; } .datatable-cbcell .checkbox { gap: 0; } .datatable-cbcell .checkbox-box { width: 14px; height: 14px; border-width: 1.5px; border-radius: var(--r-cb); border-color: var(--color-border-strong); } .datatable-cbcell .checkbox-box svg { width: 11px; height: 11px; }
 .datatable th.datatable-cbcell .checkbox-box { border-color: var(--color-border-card); background: transparent; } .datatable th.datatable-cbcell .checkbox-input:checked + .checkbox-box, .datatable th.datatable-cbcell .checkbox-input:indeterminate + .checkbox-box { background: var(--color-table-head-text); color: var(--color-table-head); border-color: var(--color-table-head-text); }
-/* group rows (598:23540): "ARRIVING (34) ▾" Open Sans 600 14 #808080, 40 tall, no rule */
-.datatable-grouprow td { height: 44px; border-bottom: 0; padding-top: 6px; }
-.datatable-groupbtn { display: inline-flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-label); text-transform: uppercase; letter-spacing: .02em; }
+/* group rows (598:23540): a section row - "ARRIVING" + a count Badge + caret, with a hairline above it */
+.datatable-grouprow td { height: 44px; border-bottom: 0; padding-top: 10px; }
+.datatable-grouprow:not(:first-child) td { border-top: 1px solid var(--color-border-subtle); }
+.datatable-groupbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; cursor: pointer; border: 0; background: none; padding: 0; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-label); text-transform: uppercase; letter-spacing: .02em; }
 .datatable-groupbtn:hover { color: var(--color-primary-text); }
+.datatable-groupbtn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: var(--r-sm); }
+.datatable-grouplabel { letter-spacing: .04em; }
 .datatable-groupcaret { color: var(--color-primary-text); transition: transform var(--dur-fast); } .datatable-groupcaret.is-collapsed { transform: rotate(-90deg); }
 .datatable-groupempty td { color: var(--color-text-faint); font-size: var(--fs-xs); height: 36px; }
 .datatable tbody tr:last-child td { border-bottom: 0; }

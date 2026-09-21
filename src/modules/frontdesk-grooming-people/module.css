@@ -43,7 +43,7 @@
 .fgp-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-3); }
 .fgp-agenda-title { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .fgp-agenda-title a { font-weight: var(--fw-semibold); color: var(--color-primary); text-decoration: none; } .fgp-agenda-title a:hover { text-decoration: underline; }
 .fgp-agenda-items { font-size: var(--fs-xs); color: var(--color-text-muted); }
-.fgp-flags { display: inline-flex; gap: 6px; align-items: center; } .fgp-flags .is-off { opacity: .2; }
+.fgp-flags { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-width: 0; }
 .fgp-inbox { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: var(--sp-4); min-height: 560px; height: calc(100vh - 230px); }
 .fgp-inbox > .card { height: 100%; min-height: 0; } .fgp-inbox .card > * { min-height: 0; }
 @media (max-width: 767px) { .fgp-inbox { grid-template-columns: 1fr; height: auto; min-height: 0; } .fgp-inbox.show-thread .fgp-inbox-list { display: none; } .fgp-inbox:not(.show-thread) .fgp-inbox-thread { display: none; } .fgp-inbox .fgp-inbox-thread { min-height: 70vh; } }

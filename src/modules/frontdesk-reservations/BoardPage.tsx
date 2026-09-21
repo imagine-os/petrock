@@ -18,6 +18,8 @@ import { Drawer } from '../../components/organism/Drawer/Drawer';
 import { Modal } from '../../components/organism/Modal/Modal';
 import { RadioGroup } from '../../components/atom/RadioGroup/RadioGroup';
 import { AppointmentBoard, type BoardCard, type BoardColumn } from '../../components/organism/AppointmentBoard/AppointmentBoard';
+import { flagAlerts } from '../../components/molecule/ScheduleCard/ScheduleCard';
+import { useT } from '../../i18n';
 import { BookingInfoGrid } from '../../components/molecule/BookingInfoGrid/BookingInfoGrid';
 import { PetVaccineStatus } from '../../components/molecule/PetVaccineStatus/PetVaccineStatus';
 import { EmptyState } from '../../components/molecule/EmptyState/EmptyState';
@@ -30,7 +32,7 @@ import './frontdesk-reservations.css';
 
 const CLOSED = 'closed';
 const COLUMNS: BoardColumn[] = [
-  { key: 'requested', label: 'Requested', tone: 'info' }, { key: 'confirmed', label: 'Confirmed', tone: 'success' }, { key: 'in_progress', label: 'In progress', tone: 'warn' }, { key: 'done', label: 'Done', tone: 'neutral' },
+  { key: 'requested', label: 'Requested', tone: 'info' }, { key: 'confirmed', label: 'Confirmed', tone: 'success' }, { key: 'in_progress', label: 'In progress', tone: 'warn' }, { key: 'done', label: 'Done', tone: 'completed' },
   { key: CLOSED, label: 'Cancelled / no show', tone: 'danger', locked: true, hint: 'Cancelling or no-show needs a manager PIN (R-X06)' },
 ];
 const STATUS_LABEL: Record<string, string> = { requested: 'Requested', confirmed: 'Confirmed', in_progress: 'In progress', done: 'Done', cancelled: 'Cancelled', no_show: 'No show' };
@@ -39,6 +41,7 @@ const STATUS_LABEL: Record<string, string> = { requested: 'Requested', confirmed
 export function BoardPage() {
   const nav = useNavigate();
   const data = useData();
+  const t = useT();
   const { toast } = useToast();
   const { user, can } = useSession();
   const { location, scope, locationId } = useLocation();
@@ -65,10 +68,12 @@ export function BoardPage() {
   const groomerOf = (a: AppointmentRow) => employees.find((e) => e.id === a.groomer_id);
   const pkgOf = (a: AppointmentRow) => packages.find((p) => p.id === a.package_id);
   const cards = useMemo<BoardCard[]>(() => inView.map((a) => { const p = petOf(a), c = custOf(a), g = groomerOf(a), k = pkgOf(a); const v = p ? petVaccineSummary(p.id, records, vtypes) : null; return {
-    id: a.id, column: a.status === 'cancelled' || a.status === 'no_show' ? CLOSED : a.status, time: fmtTime(a.starts_at), sortKey: a.starts_at, title: `${p?.name ?? 'Pet'} · ${p?.breed ?? ''}`, subtitle: c ? `${c.last_name}, ${c.first_name}` : undefined, accent: g?.color ?? null,
-    meta: <><Badge size="sm">{k?.name.replace(' Groom', '') ?? 'Package'} · {a.size}</Badge><Badge size="sm" tone="neutral">{a.duration_min} min</Badge>{g && <Badge size="sm" tone="primary">{g.display_name ?? g.name}</Badge>}{span === 'week' && <Badge size="sm">{fmtDay(a.starts_at.slice(0, 10))}</Badge>}</>,
-    flags: <>{v && !v.ok && <PetVaccineStatus compact summary={v} petName={p?.name} />}{a.payment_status !== 'paid' && a.status !== 'cancelled' && <Badge size="sm" tone="warn" title="Balance due">{fmtMoney(a.total)}</Badge>}{a.status === 'no_show' && <Badge size="sm" tone="danger">no show</Badge>}</>,
-  }; }), [inView, pets, customers, employees, packages, records, vtypes, span]); // eslint-disable-line react-hooks/exhaustive-deps
+    id: a.id, column: a.status === 'cancelled' || a.status === 'no_show' ? CLOSED : a.status, status: a.status, sortKey: a.starts_at,
+    time: fmtTime(a.starts_at), assignee: g ? g.display_name ?? g.name : t('frontdesk-reservations.unassigned'), assigneeColor: g?.color ?? null,
+    title: p?.name ?? 'Pet', titleMeta: p?.breed, subtitle: c ? `${c.last_name}, ${c.first_name}` : undefined,
+    chips: [{ label: `${k?.name.replace(' Groom', '') ?? 'Package'} · ${a.size}` }, { label: t('frontdesk-reservations.minutes', { n: a.duration_min }) }, ...(span === 'week' ? [{ label: fmtDay(a.starts_at.slice(0, 10)) }] : [])],
+    alerts: [...flagAlerts({ vaccine: !!v && !v.ok }), ...(a.payment_status !== 'paid' && a.status !== 'cancelled' ? [{ key: 'due', label: t('frontdesk-reservations.due', { amount: fmtMoney(a.total) }), tone: 'warn' as const, icon: 'dollar' as const }] : [])],
+  }; }), [inView, pets, customers, employees, packages, records, vtypes, span, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setStatus = async (a: AppointmentRow, status: string, approvedBy?: string) => {
     await data.update<AppointmentRow>('appointments', a.id, { status, payment_status: status === 'cancelled' && a.payment_status === 'paid' ? 'refunded' : a.payment_status });
@@ -109,7 +114,12 @@ export function BoardPage() {
         <StatTile label="Groomers" value={groomers.length} icon="users" hint="at this location (R-E10: 2 simultaneous)" />
       </div>
 
-      {inView.length === 0 ? <EmptyState icon="scissors" title="No appointments in this range" body="Try another day or the week view." /> : <AppointmentBoard columns={COLUMNS} cards={cards} onMove={onMove} onCardClick={(c) => setOpenId(c.id)} selectedId={openId} />}
+      {inView.length === 0 ? <EmptyState icon="scissors" title="No appointments in this range" body="Try another day or the week view." /> : (
+        <AppointmentBoard columns={COLUMNS} cards={cards} onMove={onMove} onCardClick={(c) => setOpenId(c.id)} selectedId={openId} ariaLabel="Grooming & Spa board"
+          allowedMoves={(card) => COLUMNS.filter((col) => col.key !== card.column && !(card.column === 'done' && col.key !== CLOSED)).map((col) => ({ to: col.key, label: t('frontdesk-reservations.moveTo', { status: col.label }), locked: col.locked }))}
+          emptyText={t('frontdesk-reservations.noneHere')}
+          labels={{ open: t('frontdesk-reservations.open'), more: t('frontdesk-reservations.cardActions'), collapse: t('frontdesk-reservations.collapseColumn'), expand: t('frontdesk-reservations.expandColumn'), locked: t('frontdesk-reservations.needsPin') }} />
+      )}
 
       <Drawer open={!!open} onClose={() => setOpenId(null)} title={open ? `${open.code} · ${openPet?.name ?? ''}` : ''} footer={open && <div className="row" style={{ justifyContent: 'space-between', width: '100%' }}>
         <Select size="sm" aria-label="Status" value={open.status} onChange={(e) => { const to = e.target.value; if (to === 'cancelled' || to === 'no_show') setCancelFor({ appt: open, to }); else void setStatus(open, to); }} options={APPOINTMENT_STATUS.map((s) => ({ value: s, label: STATUS_LABEL[s] }))} />

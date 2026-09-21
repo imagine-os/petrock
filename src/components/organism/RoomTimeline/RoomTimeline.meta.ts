@@ -5,16 +5,16 @@ import { toIso } from '../../molecule/DatePicker/DatePicker';
 
 const shift = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return toIso(d); };
 const groups: TimelineGroup[] = [
-  { key: 'ph', label: 'Penthouses', rows: [{ id: 'ph1', label: 'PH(B) 101', sub: 'bottom' }, { id: 'ph2', label: 'PH(B) 102', sub: 'bottom' }, { id: 'ph7', label: 'PH(T) 107', sub: 'top · ≤30 lb' }] },
-  { key: 'su', label: 'Suites', rows: [{ id: 's1', label: 'Suite A1' }, { id: 's2', label: 'Suite A2' }] },
+  { key: 'ph', label: 'Penthouses', rows: [{ id: 'ph1', label: 'PH(B) 101', sub: 'bottom · any weight', badge: 'PH' }, { id: 'ph2', label: 'PH(B) 102', sub: 'bottom · any weight', badge: 'PH' }, { id: 'ph7', label: 'PH(T) 107', sub: 'top · ≤30 lb', badge: 'PH' }] },
+  { key: 'su', label: 'Suites', rows: [{ id: 's1', label: 'Suite A1', badge: 'Suite' }, { id: 's2', label: 'Suite A2', badge: 'Suite' }] },
 ];
 const initial: TimelineBlock[] = [
-  { id: 'b1', rowId: 'ph1', startDay: shift(-2), endDay: shift(1), label: 'Thompson · Biscuit, Mochi', status: 'checked_in', flags: ['medication'] },
-  { id: 'b2', rowId: 'ph2', startDay: shift(1), endDay: shift(4), label: 'Okafor · Pepper', status: 'confirmed', flags: ['unpaid'] },
-  { id: 'b3', rowId: 'ph7', startDay: shift(0), endDay: shift(2), label: 'Goldberg · Olive', status: 'pending_vaccines', flags: ['vaccine'] },
-  { id: 'b4', rowId: 's1', startDay: shift(-6), endDay: shift(-1), label: 'Kim · Max', status: 'checked_out' },
-  { id: 'b5', rowId: 's1', startDay: shift(2), endDay: shift(3), label: 'Patel · Bear', status: 'requested', flags: ['note'] },
-  { id: 'b6', rowId: 's2', startDay: shift(3), endDay: shift(9), label: 'Nakamura · Daisy, Apollo', status: 'cancelled' },
+  { id: 'b1', rowId: 'ph1', startDay: shift(-2), endDay: shift(1), label: 'Biscuit, Mochi', sub: 'Thompson', status: 'checked_in', flags: ['medication'] },
+  { id: 'b2', rowId: 'ph2', startDay: shift(1), endDay: shift(4), label: 'Pepper', sub: 'Okafor', status: 'confirmed', flags: ['unpaid'] },
+  { id: 'b3', rowId: 'ph7', startDay: shift(0), endDay: shift(2), label: 'Olive', sub: 'Goldberg', status: 'pending_vaccines', flags: ['vaccine'] },
+  { id: 'b4', rowId: 's1', startDay: shift(-6), endDay: shift(-1), label: 'Max', sub: 'Kim', status: 'checked_out' },
+  { id: 'b5', rowId: 's1', startDay: shift(2), endDay: shift(3), label: 'Bear', sub: 'Patel', status: 'requested', flags: ['note'] },
+  { id: 'b6', rowId: 's2', startDay: shift(3), endDay: shift(9), label: 'Daisy, Apollo', sub: 'Nakamura', status: 'cancelled' },
 ];
 
 function Demo() {
@@ -25,10 +25,10 @@ function Demo() {
 }
 
 export default defineMeta({
-  tier: 'organism', name: 'RoomTimeline', description: 'Rooms x days Gantt in the Figma timeline skin (all reservation grooming.jpg): week range headers, 54 px day heads with green weekends and a black TODAY pill, alternating grey columns, dashed today line, grey group rows, room rows with a 32 px disc, flat square blocks in the status hue with flag icons and a clock; lanes for overlaps, drag to move, popover detail.',
-  props: [{ name: 'groups', type: 'TimelineGroup[]', required: true, description: 'Room groups (Penthouses, Suites, Daycare) with rows' }, { name: 'blocks', type: 'TimelineBlock[]', required: true, description: 'Stays: rowId, startDay, endDay (exclusive), label, status, flags' }, { name: 'startDay / days', type: 'string / number', required: true, description: 'Visible window' }, { name: 'today', type: 'string', description: 'Marker day' }, { name: 'onBlockMove', type: '(block, rowId, day) => void', description: 'Enables drag-and-drop' }, { name: 'onCellClick', type: '(rowId, day) => void', description: 'Empty cell click (new booking)' }, { name: 'renderDetail', type: '(block, close) => ReactNode', description: 'Popover content on block click' }, { name: 'dayMinWidth', type: 'number', default: '56', description: 'Phone column width' }],
-  states: ['default', 'today in view', 'block selected / popover', 'dragging over a cell', 'clipped blocks at the window edges', 'group collapsed', 'empty'],
+  tier: 'organism', name: 'RoomTimeline', description: 'Rooms x days Gantt for hotel stays. Calm light grid: week range headers, day heads with the weekend marked in colour, a very light tint on alternating columns, today as a thin dashed line plus a small pill, a grey group LABEL cell with a hairline across the row, a sticky day header and sticky room column (also on phones). Room cell = code + tiny type badge; bars are 6 px-radius buttons in the status fill with a dark left edge, a "Pet · Customer" label and a "…" chip under 76 px; lanes for overlaps, drag to move, popover on click / Enter / hover.',
+  props: [{ name: 'groups', type: 'TimelineGroup[]', required: true, description: 'Room groups (Penthouses, Suites, Daycare) with rows' }, { name: 'blocks', type: 'TimelineBlock[]', required: true, description: 'Stays: rowId, startDay, endDay (exclusive), label, status, flags' }, { name: 'startDay / days', type: 'string / number', required: true, description: 'Visible window' }, { name: 'today', type: 'string', description: 'Marker day' }, { name: 'onBlockMove', type: '(block, rowId, day) => void', description: 'Enables drag-and-drop' }, { name: 'onCellClick', type: '(rowId, day) => void', description: 'Empty cell click (new booking)' }, { name: 'renderDetail', type: '(block, close) => ReactNode', description: 'Popover content on block click' }, { name: 'dayMinWidth', type: 'number', default: '56', description: 'Phone column width' }, { name: 'labels', type: '{ corner, today, close, empty, grid }', description: 'Translated labels from the module (useT)' }],
+  states: ['default', 'today in view', 'block selected / popover', 'narrow block (… chip)', 'dragging over a cell', 'clipped blocks at the window edges', 'group collapsed', 'empty'],
   usages: [{ title: 'Two weeks, drag a block to another room', render: () => h(Demo) }],
-  a11y: ['Grid roles (grid, row, rowheader, columnheader, gridcell); blocks are buttons with a full title; popover is a dialog closed by Escape / outside click; drag has a click alternative (Set status / Move in the popover).'],
+  a11y: ['Grid roles (grid, row, rowheader, columnheader, gridcell); blocks are buttons with an aria-label carrying pet, customer and dates.', 'The popover opens on click, Enter and focus and is a dialog closed by Escape / outside click; a keyboard-opened popover receives focus, so dragging is never the only way (D-195).'],
   usedBy: ['F-13'], figma: ['all reservation grooming-1.jpg', 'all reservation grooming-2.jpg', 'all reservation grooming.jpg'],
 });

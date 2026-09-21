@@ -2,7 +2,8 @@ import './Avatar.css';
 
 export interface AvatarProps { name: string; src?: string | null; size?: number; shape?: 'circle' | 'rounded'; kind?: 'person' | 'pet'; /** Figma profile / pet hero: dashed coral ring around the photo. */ ring?: boolean; className?: string }
 
-const initials = (name: string) => name.split(/\s+/).filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
+/** Up to two leading letters of a name; also used by schedule surfaces that draw their own tinted disc. */
+export const initials = (name: string) => name.split(/\s+/).filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
 const hue = (name: string) => { let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
 
 /** Person or pet avatar: photo when present, else initials on a lavender tint (Figma #E8DFF5 ellipses). */

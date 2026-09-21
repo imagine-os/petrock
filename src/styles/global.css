@@ -34,6 +34,7 @@ pre, table, img, svg, video, iframe { max-width: 100%; }
 .row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
 .wrap { flex-wrap: wrap; }
 .grow { flex: 1 1 auto; min-width: 0; }
+.tnum { font-variant-numeric: tabular-nums; }
 .muted { color: var(--color-text-muted); }
 .faint { color: var(--color-text-faint); }
 .small { font-size: var(--fs-sm); } .xs { font-size: var(--fs-xs); } .md { font-size: var(--fs-md); }

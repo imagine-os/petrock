@@ -5,7 +5,7 @@ import { useLocation } from '../../tenant/LocationProvider';
 import type { EmployeeRow, FeeRow, TaxRow, VaccineRecordRow, VaccineTypeRow, CapacityRow } from '../../data/schema/core';
 import type { AppointmentExtrasRow } from '../../data/schema/frontdesk-grooming-people';
 import { byId, dayViewLabel, groomersAt, petVaccineSummary, type AddonFull, type AppointmentFull, type CustomerFull, type PackageFull, type PetFull, type VaccineSummary } from './lib';
-import type { GroomAppointmentFlags } from '../../components/molecule/GroomAppointmentCard/GroomAppointmentCard';
+import type { GroomAppointmentFlags, ScheduleCardChip } from '../../components/molecule/ScheduleCard/ScheduleCard';
 
 export function usePricingTables() {
   const { rows: packages } = useTable<PackageFull>('packages');
@@ -57,4 +57,15 @@ function toLocalDay(iso: string, wanted: string): string {
   const d = new Date(iso);
   const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   return local === wanted ? iso.slice(0, 10) : '__no__';
+}
+
+// ---- ScheduleCard fields shared by F-30 (day grid) and F-31 (board) ----
+/** "Last, First" for the card's customer line. */
+export const cardCustomer = (v: AppointmentView) => (v.customer ? `${v.customer.last_name}, ${v.customer.first_name}` : undefined);
+/** Package · size, then an add-on count with the names in its tooltip. */
+export function cardChips(v: AppointmentView, t: (key: string, vars?: Record<string, string | number>) => string): ScheduleCardChip[] {
+  const chips: ScheduleCardChip[] = [];
+  if (v.pkg) chips.push({ label: `${v.pkg.name.replace(' Groom', '')} · ${v.ap.size}` });
+  if (v.addonNames.length) chips.push({ label: t('frontdesk-grooming-people.addonCount', { n: v.addonNames.length }), title: v.addonNames.join(', ') });
+  return chips;
 }

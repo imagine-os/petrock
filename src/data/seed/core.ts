@@ -13,6 +13,7 @@ import { ROLE_PERMISSIONS } from '../../auth/permissions';
 import { addDays, at, isoDay } from './rng';
 import { quoteHotel, quoteGrooming, quoteDaycare, nightsBetween, type RateLike, type SeasonLike, type DiscountLike, type FeeLike, type TaxLike, type PackageLike, type AddonLike, type DaycarePriceLike, type Size } from '../../pricing/engine';
 import { sizeFromWeightLbs } from '../../domain/booking';
+import { groomerHues } from '../../design/tokens';
 
 export const order = 0;
 
@@ -43,9 +44,11 @@ export function seed(ctx: SeedCtx) {
   }
   const staff = demoUsers.filter((u) => u.pin);
   const colors = ['#552583', '#E79DD1', '#2A9D8F', '#F4A261', '#1456F5', '#039B00'];
+  // D-233: groomers carry a muted `groomerHues` hue so the F-30 day-grid heads and column tints stay calm.
+  const GROOMER_HUES = groomerHues.light;
   staff.forEach((u, i) => add('employees', {
     id: `emp_${u.id.replace('usr_', '')}`, location_id: u.locationId ?? DEFAULT_LOCATION_ID, user_id: u.id, name: u.name, display_name: u.name.split(' ')[0], email: u.email, phone: null,
-    department: u.role === 'groomer' ? 'Groom' : u.role === 'front_desk' ? 'Receptionist' : 'Operations', job_title: ROLE_LABEL[u.role], status: 'active', color: colors[i % colors.length],
+    department: u.role === 'groomer' ? 'Groom' : u.role === 'front_desk' ? 'Receptionist' : 'Operations', job_title: ROLE_LABEL[u.role], status: 'active', color: u.role === 'groomer' ? GROOMER_HUES[0] : colors[i % colors.length],
     is_groomer: u.role === 'groomer', is_handler: u.role !== 'owner' && u.role !== 'super_admin', pin_hash: hashPin(u.pin!), working_hours: null, date_started: isoDay(D(-400 - i * 30)), note: null,
   }));
   // a second groomer and a handler at Westwood (no login)

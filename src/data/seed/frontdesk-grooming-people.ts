@@ -8,6 +8,7 @@ import type { SeedCtx } from './index';
 import type { BaseRow } from '../schema/types';
 import { hashPin } from '../../auth/pin';
 import { addDays, at, isoDay } from './rng';
+import { groomerHues } from '../../design/tokens';
 import { quoteGrooming, type AddonLike, type FeeLike, type PackageLike, type Size, type TaxLike } from '../../pricing/engine';
 
 export const order = 100;
@@ -41,8 +42,8 @@ export function seed(ctx: SeedCtx) {
   const emp = db.employees as (BaseRow & { id: string; working_hours: unknown })[];
   const core = emp.find((e) => e.id === 'emp_groomer'); if (core) core.working_hours = HOURS;
   const jess = emp.find((e) => e.id === 'emp_jessica'); if (jess) jess.working_hours = { ...HOURS, 5: { open: '09:00', close: '17:00' } };
-  add('employees', { id: 'emp_tamsin', location_id: 'loc_encino', user_id: null, name: 'Tamsin Reyes', display_name: 'Tamsin', email: 'tamsin@demo.petrock.test', phone: null, department: 'Groom', job_title: 'Groomer', status: 'active', color: '#F4D06F', is_groomer: true, is_handler: false, pin_hash: hashPin('7777'), working_hours: { ...HOURS, 1: { open: '10:00', close: '18:00' }, 2: { open: '10:00', close: '18:00' } }, date_started: isoDay(D(-320)), note: 'Doodles and Asian fusion cuts' });
-  add('employees', { id: 'emp_omar', location_id: 'loc_encino', user_id: null, name: 'Omar Haddad', display_name: 'Omar', email: 'omar@demo.petrock.test', phone: null, department: 'Groom', job_title: 'Bather / groomer', status: 'active', color: '#7FDBDA', is_groomer: true, is_handler: true, pin_hash: null, working_hours: { ...HOURS, 1: { open: '08:00', close: '12:00' }, 3: { open: '08:00', close: '12:00' }, 5: null }, date_started: isoDay(D(-95)), note: 'Mornings only' });
+  add('employees', { id: 'emp_tamsin', location_id: 'loc_encino', user_id: null, name: 'Tamsin Reyes', display_name: 'Tamsin', email: 'tamsin@demo.petrock.test', phone: null, department: 'Groom', job_title: 'Groomer', status: 'active', color: groomerHues.light[1], is_groomer: true, is_handler: false, pin_hash: hashPin('7777'), working_hours: { ...HOURS, 1: { open: '10:00', close: '18:00' }, 2: { open: '10:00', close: '18:00' } }, date_started: isoDay(D(-320)), note: 'Doodles and Asian fusion cuts' });
+  add('employees', { id: 'emp_omar', location_id: 'loc_encino', user_id: null, name: 'Omar Haddad', display_name: 'Omar', email: 'omar@demo.petrock.test', phone: null, department: 'Groom', job_title: 'Bather / groomer', status: 'active', color: groomerHues.light[2], is_groomer: true, is_handler: true, pin_hash: null, working_hours: { ...HOURS, 1: { open: '08:00', close: '12:00' }, 3: { open: '08:00', close: '12:00' }, 5: null }, date_started: isoDay(D(-95)), note: 'Mornings only' });
   add('employees', { id: 'emp_nadia', location_id: 'loc_westwood', user_id: null, name: 'Nadia Petrova', display_name: 'Nadia', email: 'nadia@demo.petrock.test', phone: null, department: 'Groom', job_title: 'Groomer', status: 'active', color: '#E79DD1', is_groomer: true, is_handler: false, pin_hash: null, working_hours: HOURS, date_started: isoDay(D(-500)), note: null });
   ctx.ids.groomers = [...(ctx.ids.groomers ?? []), 'emp_tamsin', 'emp_omar', 'emp_nadia'];
 

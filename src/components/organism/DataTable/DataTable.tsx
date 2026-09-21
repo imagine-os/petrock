@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
+import { Badge } from '../../atom/Badge/Badge';
 import { Icon } from '../../atom/Icon/Icon';
 import { Input } from '../../atom/Input/Input';
 import { Select } from '../../atom/Select/Select';
@@ -17,7 +18,8 @@ export interface DataTableColumn<T> {
   align?: 'left' | 'right' | 'center';
   mono?: boolean;
   /** Figma cell colour per column role (598:23546..23562): muted #7C7E93 (id / room / breed), heading #11104A (customer), date #181818, primary #552583 (times / counts / phones / money). */
-  tone?: 'muted' | 'heading' | 'date' | 'primary';
+  /** Cell tone. `num` = tabular numerals in body colour (times, counts, money): never purple, so it does not read as a link. */
+  tone?: 'muted' | 'heading' | 'date' | 'primary' | 'num';
   /** Column group header (e.g. "Dates", "Money"). Adjacent columns with the same group share one header cell. */
   group?: string;
   /** Hide on the phone card layout. */
@@ -163,7 +165,7 @@ export function DataTable<T extends object>({ columns, rows, rowKey, onRowClick,
               const isCollapsed = collapsedGroups.has(g.key);
               return [
                 <tr key={`g-${g.key}`} className="datatable-grouprow"><td colSpan={cols}>
-                  <button type="button" className="datatable-groupbtn" onClick={() => toggleGroup(g.key)} aria-expanded={!isCollapsed}>{groupBy!.label(g.key)} ({g.rows.length})<Icon name="chevron-down" size={16} strokeWidth={2.5} className={`datatable-groupcaret ${isCollapsed ? 'is-collapsed' : ''}`} /></button>
+                  <button type="button" className="datatable-groupbtn" onClick={() => toggleGroup(g.key)} aria-expanded={!isCollapsed}><span className="datatable-grouplabel">{groupBy!.label(g.key)}</span><Badge size="sm">{g.rows.length}</Badge><Icon name="chevron-down" size={16} strokeWidth={2.5} className={`datatable-groupcaret ${isCollapsed ? 'is-collapsed' : ''}`} /></button>
                 </td></tr>,
                 ...(!isCollapsed ? (g.rows.length ? g.rows.map(renderRow) : [<tr key={`e-${g.key}`} className="datatable-groupempty"><td colSpan={cols}>{groupBy!.emptyText?.(g.key) ?? 'No rows'}</td></tr>]) : []),
               ];

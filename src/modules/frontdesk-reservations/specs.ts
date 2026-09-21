@@ -3,6 +3,8 @@ import { STAFF_ROLES } from '../../auth/roles';
 
 const DESK = STAFF_ROLES.filter((r) => r !== 'groomer');
 const W = [360, 390, 768, 1280, 1920];
+/** Polished in the F-10 / F-13 / F-14 look-and-feel pass and re-checked to 4K. */
+const W4K = [360, 390, 768, 1280, 1920, 2560, 3840];
 
 export const todaySpec = defineSpec({
   code: 'F-01', name: 'Front desk today',
@@ -17,11 +19,21 @@ export const todaySpec = defineSpec({
 export const tableSpec = defineSpec({
   code: 'F-10', name: 'Hotel & Daycare reservations (table)',
   purpose: 'The reservations table of the design (18 columns) grouped by Arriving / Departing / Staying / Daycare / Checked out for the selected day, with filters, search, a date navigator and the switch to the Timeline and Board views (D-008). Rows open the booking detail.',
-  layout: ['TopLine (view switch, + Hotel Reservation)', 'ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out group rows; head + row checkboxes)', 'DaycareDrawer'],
+  layout: ['TopLine (view switch, + Hotel Reservation)', 'ReservationsTable (framed DataTable: title, day navigator, Filters popover, See All / By day; one purple head; Arriving / Departing / Staying / Daycare / Checked out section rows with a count Badge; head + row checkboxes)', 'DaycareDrawer'],
   data: ['bookings', 'booking_pets', 'daycare_bookings', 'customers', 'pets', 'rooms', 'room_types', 'vaccine_records', 'vaccine_types'], roles: DESK,
-  logic: ['18 design columns: ID, Status, Customer, Hotel room, Date in, Time in, Date out, Time out, Nbr days, Pet(s), Breed, Pet count, Mobile, Home, Total charge, Deposits, Balance, Booking notes.', 'Balance = total - deposits (R-D14).', 'Nbr days = nights for hotel, 1 for daycare.', 'Cancelled and no-show rows hidden unless the toggle is on.'],
+  logic: ['18 design columns: ID, Status, Customer, Hotel room, Date in, Time in, Date out, Time out, Nbr days, Pet(s), Breed, Pet count, Mobile, Home, Total charge, Deposits, Balance, Booking notes.', 'Balance = total - deposits (R-D14).', 'Nbr days = nights for hotel, 1 for daycare.', 'Cancelled and no-show rows hidden unless the toggle is on.', 'Times, counts, phones and money use the DataTable `num` tone (tabular numerals in body colour) instead of Figma\'s purple, so only real links read as links; the purple head stays (D-216).'],
   integrations: [], components: ['SegmentedControl', 'ReservationDayNav', 'FilterPopover', 'Select', 'Input', 'Toggle', 'DataTable', 'Checkbox', 'StatusBadge', 'PetVaccineStatus', 'Drawer', 'BookingInfoGrid', 'Button', 'IconButton', 'EmptyState'],
-  rules: ['R-I05', 'R-I02', 'R-I01', 'R-D14', 'R-H08', 'R-I08', 'R-K01'], states: ['by day', 'all', 'filtered', 'group collapsed', 'empty group', 'rows selected', 'daycare drawer'], figma: ['front desk.jpg', 'front desk-9.jpg', 'Frame 1171276264-10.png', 'front desk-10.jpg', 'front desk-11.jpg'], checkedAt: W,
+  actions: [
+    { id: 'reservations.switchView', label: 'Switch view', intent: 'show the reservations as a table, timeline or board', params: { view: 'enum:table,timeline,board' } },
+    { id: 'reservations.newBooking', label: 'New hotel reservation', intent: 'start a new hotel reservation', permission: 'bookings.write' },
+    { id: 'reservations.setDay', label: 'Change the day', intent: 'show the reservations of another day', params: { day: 'date' } },
+    { id: 'reservations.seeAll', label: 'See all upcoming', intent: 'switch between the selected day and all upcoming reservations' },
+    { id: 'reservations.filter', label: 'Filter the table', intent: 'filter reservations by search text, status, kind or room type', params: { q: 'string', status: 'string', kind: 'enum:hotel,daycare', roomType: 'id', showClosed: 'string' } },
+    { id: 'reservations.toggleGroup', label: 'Collapse a section', intent: 'collapse or expand the arriving, departing, staying, daycare or checked-out section', params: { group: 'enum:arriving,departing,staying,daycare,checked_out' } },
+    { id: 'reservations.openBooking', label: 'Open a reservation', intent: 'open one reservation', params: { id: 'id' } },
+    { id: 'reservations.editBooking', label: 'Edit a reservation', intent: 'edit one hotel reservation', permission: 'bookings.write', params: { id: 'id' } },
+  ],
+  rules: ['R-I05', 'R-I02', 'R-I01', 'R-D14', 'R-H08', 'R-I08', 'R-K01'], states: ['by day', 'all', 'filtered', 'group collapsed', 'empty group', 'rows selected', 'daycare drawer'], figma: ['front desk.jpg', 'front desk-9.jpg', 'Frame 1171276264-10.png', 'front desk-10.jpg', 'front desk-11.jpg'], checkedAt: W4K,
 });
 
 export const formSpec = defineSpec({
@@ -47,21 +59,44 @@ export const detailSpec = defineSpec({
 export const timelineSpec = defineSpec({
   code: 'F-13', name: 'Room timeline',
   purpose: 'Rooms as rows, days as columns, stays as blocks coloured by status: see occupancy at a glance, spot vaccine and balance flags, move a stay to another room or day by dragging, and act on a stay from its popover.',
-  layout: ['TopLine (view switch, New Booking)', 'TimelineBar (range pill centred; 1 / 2 weeks + Filter popover right: room type, status, unassigned, daycare, cancelled)', 'RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; alternating day columns, TODAY pill, flat status blocks)', 'BlockPopover (summary, Open, Set status, Assign room)', 'MoveModal', 'RoomModal', 'PinApprovalModal'],
+  layout: ['TopLine (view switch, New Booking)', 'TimelineBar (range pill centred; 1 / 2 weeks + Filter popover right: room type, status, unassigned, daycare, cancelled)', 'RoomTimeline (Unassigned, Penthouses, Suites, Daycare groups; lightly tinted alternating day columns, weekend marked in the header, dashed today line + Today pill, sticky day head and room column, room cell = code + type badge, 6 px status bars with a dark left edge)', 'BlockPopover (summary, Open, Set status, Assign room)', 'MoveModal', 'RoomModal', 'PinApprovalModal'],
   data: ['bookings', 'booking_pets', 'daycare_bookings', 'customers', 'pets', 'rooms', 'room_types', 'vaccine_records', 'vaccine_types', 'booking_events', 'approvals'], roles: DESK,
-  logic: ['Block = [check-in day, check-out day) starting at the check-in half-day; same-day stays take one cell.', 'Colour from booking status tokens (R-I09); flags: vaccine issue, balance due, notes, medication.', 'Drop onto (room, day): nights kept, target room must be the booked type, fit the heaviest dog (R-E09) and be free (R-X03); confirmed in a modal, logged as a booking event (R-X07).', 'Empty cell click starts a new booking for that room and day.'],
+  logic: ['Block = [check-in day, check-out day) starting at the check-in half-day; same-day stays take one cell.', 'Colour from booking status tokens (R-I09); flags: vaccine issue, balance due, notes, medication.', 'Drop onto (room, day): nights kept, target room must be the booked type, fit the heaviest dog (R-E09) and be free (R-X03); confirmed in a modal, logged as a booking event (R-X07).', 'Empty cell click starts a new booking for that room and day.', 'Bar label is "Pet · Customer", truncated; a bar narrower than 76 px shows a "…" chip instead and keeps the full label in its aria-label and popover.', 'The popover opens on click, Enter and hover; a keyboard-opened popover takes focus, so dragging is never the only way (D-195).'],
   integrations: [], components: ['SegmentedControl', 'ReservationDayNav', 'FilterPopover', 'Select', 'Toggle', 'RoomTimeline', 'StatusBadge', 'Badge', 'PetVaccineStatus', 'BookingStatusMenu', 'Button', 'Modal', 'RoomAssignmentPicker', 'PinApprovalModal', 'EmptyState'],
-  rules: ['R-I09', 'R-I01', 'R-I07', 'R-X07', 'R-X03', 'R-E09', 'R-I06', 'R-X05'], states: ['week', 'two weeks', 'today in view', 'popover open', 'dragging', 'move confirm', 'filtered', 'phone scroll'], figma: ['all reservation grooming-1.jpg', 'all reservation grooming-2.jpg', 'all reservation grooming-3.jpg', 'all reservation grooming.jpg'], checkedAt: W,
+  actions: [
+    { id: 'reservations.switchView', label: 'Switch view', intent: 'show the reservations as a table, timeline or board', params: { view: 'enum:table,timeline,board' } },
+    { id: 'reservations.setWeek', label: 'Change the week', intent: 'move the timeline to another week', params: { start: 'date' } },
+    { id: 'reservations.setSpan', label: 'One or two weeks', intent: 'show one week or two weeks of the timeline', params: { span: 'enum:7,14' } },
+    { id: 'reservations.filter', label: 'Filter the timeline', intent: 'filter the timeline by room type, status, daycare, unassigned or cancelled rows', params: { roomType: 'id', status: 'string', showDaycare: 'string', showUnassigned: 'string', showClosed: 'string' } },
+    { id: 'reservations.openStay', label: 'Open a stay', intent: 'open the popover or detail of one stay', params: { id: 'id' } },
+    { id: 'reservations.collapseGroup', label: 'Collapse a room group', intent: 'collapse or expand a room-type group', params: { group: 'id' } },
+    { id: 'reservations.moveStay', label: 'Move a stay', intent: 'move a stay to another room or start day', permission: 'bookings.write', params: { id: 'id', room: 'id', day: 'date' } },
+    { id: 'reservations.assignRoom', label: 'Assign a room', intent: 'assign or change the room of a stay', permission: 'bookings.write', params: { id: 'id' } },
+    { id: 'reservations.setStatus', label: 'Set the booking status', intent: 'move a stay through the booking lifecycle', permission: 'bookings.status', params: { id: 'id', status: 'string' } },
+    { id: 'reservations.newBookingForCell', label: 'Book an empty cell', intent: 'start a booking for that room on that day', permission: 'bookings.write', params: { room: 'id', day: 'date' } },
+  ],
+  rules: ['R-I09', 'R-I01', 'R-I07', 'R-X07', 'R-X03', 'R-E09', 'R-I06', 'R-X05'], states: ['week', 'two weeks', 'today in view', 'popover open', 'narrow bar (… chip)', 'dragging', 'move confirm', 'filtered', 'group collapsed', 'phone scroll'], figma: ['all reservation grooming-1.jpg', 'all reservation grooming-2.jpg', 'all reservation grooming-3.jpg', 'all reservation grooming.jpg'], checkedAt: W4K,
 });
 
 export const boardSpec = defineSpec({
   code: 'F-14', name: 'Grooming & Spa board',
   purpose: 'Kanban of the day\'s (or week\'s) Grooming & Spa appointments by status - requested, confirmed, in progress, done, cancelled / no show. Drag cards to move them through the day; cancelling or no-show needs a manager PIN. Cards open a drawer with the appointment.',
-  layout: ['PageHeader (view switch, day navigator, Day / Week)', 'StatTiles (appointments, in progress, done, booked revenue)', 'FilterBar (groomer, package)', 'AppointmentBoard', 'AppointmentDrawer (pet, customer, package, add-ons, groomer, price, vaccines, notes, status select)', 'CancelModal (cancelled vs no show)', 'PinApprovalModal'],
+  layout: ['PageHeader (view switch, day navigator, Day / Week)', 'StatTiles (appointments, in progress, done, booked revenue, groomers - one row from ~1100 px)', 'FilterBar (groomer, package)', 'AppointmentBoard (status dot + label + count + collapse per column; ScheduleCards; horizontal scroll-snap with an edge fade)', 'AppointmentDrawer (pet, customer, package, add-ons, groomer, price, vaccines, notes, status select)', 'CancelModal (cancelled vs no show)', 'PinApprovalModal'],
   data: ['appointments', 'customers', 'pets', 'employees', 'packages', 'addons', 'bookings', 'vaccine_records', 'vaccine_types', 'approvals', 'audit_log'], roles: DESK,
-  logic: ['Columns = APPOINTMENT_STATUS with cancelled + no_show merged into one locked column.', 'Move to cancelled / no_show -> PinApprovalModal (R-X06); other moves update appointments.status directly and log audit_log.', 'Card accent = groomer colour (R-L02); price and minutes come from the appointment quote (packages + add-ons).'],
-  integrations: [], components: ['PageHeader', 'SegmentedControl', 'ReservationDayNav', 'StatTile', 'Select', 'AppointmentBoard', 'Badge', 'Avatar', 'Drawer', 'BookingInfoGrid', 'PetVaccineStatus', 'Button', 'Modal', 'RadioGroup', 'PinApprovalModal', 'EmptyState'],
-  rules: ['R-X06', 'R-I06', 'R-G01', 'R-G10', 'R-E10', 'R-L02', 'R-I01'], states: ['day', 'week', 'filtered by groomer', 'drawer open', 'cancel modal', 'PIN approval', 'empty'], figma: ['Grooming.png', 'all reservation grooming-3.jpg'], checkedAt: W,
+  logic: ['Columns = APPOINTMENT_STATUS with cancelled + no_show merged into one locked column.', 'Move to cancelled / no_show -> PinApprovalModal (R-X06); other moves update appointments.status directly and log audit_log.', 'Cards are ScheduleCards: lifecycle stripe, time + groomer chip (groomer colour, R-L02), pet + breed, customer, package · size and minutes chips, vaccine / balance-due alert badges.', 'Every move is available from the card menu as well as by dragging (D-195); price and minutes come from the appointment quote (packages + add-ons).'],
+  integrations: [], components: ['PageHeader', 'SegmentedControl', 'ReservationDayNav', 'StatTile', 'Select', 'AppointmentBoard', 'ScheduleCard', 'Badge', 'Avatar', 'Drawer', 'BookingInfoGrid', 'PetVaccineStatus', 'Button', 'Modal', 'RadioGroup', 'PinApprovalModal', 'EmptyState'],
+  actions: [
+    { id: 'reservations.switchView', label: 'Switch view', intent: 'show the reservations as a table, timeline or board', params: { view: 'enum:table,timeline,board' } },
+    { id: 'grooming.setDay', label: 'Change the day', intent: 'show another day or week on the board', params: { day: 'date' } },
+    { id: 'grooming.setSpan', label: 'Day or week', intent: 'show one day or the whole week', params: { span: 'enum:day,week' } },
+    { id: 'grooming.filterGroomer', label: 'Filter by groomer', intent: 'show only one groomer\'s appointments', params: { groomer: 'id' } },
+    { id: 'grooming.filterPackage', label: 'Filter by package', intent: 'show only one grooming package', params: { package: 'id' } },
+    { id: 'grooming.openAppointment', label: 'Open an appointment', intent: 'open one appointment', params: { id: 'id' } },
+    { id: 'grooming.moveStatus', label: 'Move an appointment', intent: 'move an appointment to another status column', permission: 'appointments.write', params: { id: 'id', status: 'enum:requested,confirmed,in_progress,done,closed' } },
+    { id: 'grooming.collapseColumn', label: 'Collapse a column', intent: 'collapse or expand a board column', params: { column: 'string' } },
+    { id: 'grooming.openDayView', label: 'Open the day view', intent: 'open the grooming day view' },
+  ],
+  rules: ['R-X06', 'R-I06', 'R-G01', 'R-G10', 'R-E10', 'R-L02', 'R-I01'], states: ['day', 'week', 'filtered by groomer', 'card menu open', 'column collapsed', 'drawer open', 'cancel modal', 'PIN approval', 'empty'], figma: ['Grooming.png', 'all reservation grooming-3.jpg'], checkedAt: W4K,
 });
 
 export const availabilitySpec = defineSpec({

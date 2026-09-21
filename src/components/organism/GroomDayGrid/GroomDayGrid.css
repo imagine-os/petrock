@@ -1,33 +1,40 @@
-.gdaygrid { --gdg-hour: 64px; --gdg-time-w: 84px; --gdg-col-w: 180px; border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); overflow: hidden; min-width: 0; }
+/* F-30 day grid. White headers with a thin coloured top border; the only saturated colour is the groomer disc and the
+   lifecycle stripe on the cards. Working hours are an 8 % tint, off hours a low-contrast hatch. */
+.gdaygrid { --gdg-hour: 64px; --gdg-time-w: 88px; --gdg-col-w: 200px; border: 1px solid var(--color-border); border-radius: var(--r-card); background: var(--color-surface); overflow: hidden; min-width: 0; }
 .gdaygrid-scroll { overflow: auto; max-height: calc(100vh - 260px); min-height: 320px; position: relative; }
 .gdaygrid-head, .gdaygrid-body { display: grid; grid-template-columns: var(--gdg-time-w) repeat(var(--gdg-cols), minmax(var(--gdg-col-w), 1fr)); min-width: max-content; }
 .gdaygrid-head { position: sticky; top: 0; z-index: 4; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
-.gdaygrid-corner { position: sticky; left: 0; z-index: 5; background: var(--color-surface-2); font-weight: var(--fw-semibold); display: grid; place-items: center; font-size: var(--fs-sm); border-right: 1px solid var(--color-border); }
-.gdaygrid-colhead { position: relative; min-height: 52px; padding: var(--sp-2) 36px var(--sp-2) var(--sp-3); display: flex; flex-direction: column; justify-content: center; gap: 1px; color: #1d1d2b; border-right: 1px solid var(--color-border); font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
-.gdaygrid-colname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.gdaygrid-off { font-size: var(--fs-2xs); font-weight: var(--fw-regular); opacity: .8; }
+.gdaygrid-corner { position: sticky; left: 0; z-index: 5; background: var(--color-surface); color: var(--color-text-muted); font-weight: var(--fw-semibold); display: grid; place-items: center; font-size: var(--fs-xs); border-right: 1px solid var(--color-border); }
+
+.gdaygrid-colhead { position: relative; min-height: 56px; padding: var(--sp-2) 40px var(--sp-2) var(--sp-3); display: flex; align-items: center; gap: var(--sp-2); background: var(--color-surface); color: var(--color-heading); border-right: 1px solid var(--color-border); border-top: 3px solid var(--gdg-tint); }
+.gdaygrid-disc { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: .02em; color: var(--color-heading); background: color-mix(in srgb, var(--gdg-tint) 28%, var(--color-surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gdg-tint) 55%, transparent); }
+.gdaygrid-colmeta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.gdaygrid-colname { font-weight: var(--fw-semibold); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gdaygrid-off { font-size: var(--fs-2xs); font-weight: var(--fw-regular); color: var(--color-text-muted); }
 .gdaygrid-menuwrap { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
-.gdaygrid-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; min-width: 180px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--sp-1); display: flex; flex-direction: column; }
-.gdaygrid-menu > button { border: 0; background: none; text-align: left; font: inherit; font-size: var(--fs-sm); color: var(--color-text); padding: var(--sp-2) var(--sp-3); border-radius: var(--r-sm); cursor: pointer; }
+.gdaygrid-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; min-width: 190px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--sp-1); display: flex; flex-direction: column; }
+.gdaygrid-menu > button { border: 0; background: none; text-align: left; font: inherit; font-size: var(--fs-sm); color: var(--color-text); padding: var(--sp-2) var(--sp-3); min-height: 40px; border-radius: var(--r-sm); cursor: pointer; }
 .gdaygrid-menu > button:hover:not(:disabled) { background: var(--color-surface-2); } .gdaygrid-menu > button:disabled { color: var(--color-text-faint); cursor: default; }
+.gdaygrid-menu > button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
 .gdaygrid-swatches { display: flex; flex-wrap: wrap; gap: 6px; padding: var(--sp-2) var(--sp-3); align-items: center; border-top: 1px solid var(--color-border-subtle); border-bottom: 1px solid var(--color-border-subtle); }
-.gdaygrid-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.gdaygrid-swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
 .gdaygrid-swatch.is-on { border-color: var(--color-heading); box-shadow: 0 0 0 2px var(--color-surface) inset; }
-.gdaygrid-picker { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); cursor: pointer; } .gdaygrid-picker input { width: 22px; height: 22px; border: 0; padding: 0; background: none; }
+.gdaygrid-picker { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); cursor: pointer; } .gdaygrid-picker input { width: 24px; height: 24px; border: 0; padding: 0; background: none; }
 .gdaygrid-reset { border: 0; background: none; font: inherit; font-size: var(--fs-xs); color: var(--color-primary); cursor: pointer; }
+
 .gdaygrid-body { position: relative; }
 .gdaygrid-times { position: sticky; left: 0; z-index: 3; background: var(--color-surface); border-right: 1px solid var(--color-border); }
-.gdaygrid-time { height: var(--gdg-hour); display: flex; align-items: flex-start; justify-content: flex-end; padding: 4px var(--sp-2) 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); border-bottom: 1px solid var(--color-border-subtle); white-space: nowrap; }
-.gdaygrid-time.is-over { color: var(--color-danger); font-weight: var(--fw-semibold); }
+.gdaygrid-time { height: var(--gdg-hour); display: flex; align-items: flex-start; justify-content: flex-end; gap: 4px; padding: 4px var(--sp-2) 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+.gdaygrid-cap { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: var(--r-sm); background: var(--color-warn-bg); color: var(--color-warn); flex: none; }
 .gdaygrid-col { position: relative; border-right: 1px solid var(--color-border-subtle); min-width: 0; }
-.gdaygrid-cell { height: var(--gdg-hour); border-bottom: 1px solid var(--color-border-subtle); background: var(--color-surface-2); }
-.gdaygrid-cell.is-working { background: color-mix(in srgb, var(--gdg-tint) 45%, var(--color-surface)); }
-.gdaygrid-cell.is-off { background: repeating-linear-gradient(135deg, var(--color-surface-2) 0 8px, var(--color-surface) 8px 16px); }
-.gdaygrid-cell.is-over { box-shadow: inset 0 0 0 1px var(--color-danger); }
+/* whole hours darker, half hours faint */
+.gdaygrid-cell { height: var(--gdg-hour); border-bottom: 1px solid var(--color-border); background: var(--color-surface); background-image: linear-gradient(to bottom, transparent calc(50% - 1px), var(--color-border-subtle) calc(50% - 1px), var(--color-border-subtle) 50%, transparent 50%); }
+.gdaygrid-cell.is-working { background-color: color-mix(in srgb, var(--gdg-tint) 8%, var(--color-surface)); }
+.gdaygrid-cell.is-off { background-color: var(--color-surface); background-image: repeating-linear-gradient(135deg, var(--color-surface-2) 0 6px, var(--color-surface) 6px 12px); }
 .gdaygrid-item { position: absolute; z-index: 2; display: flex; }
 .gdaygrid-item > * { flex: 1; min-height: 0; overflow: hidden; }
-.gdaygrid-now { position: absolute; left: var(--gdg-time-w); right: 0; height: 0; border-top: 2px solid var(--color-danger); z-index: 3; pointer-events: none; }
-.gdaygrid-now span { position: absolute; left: -5px; top: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--color-danger); }
-.gdaygrid-legend { display: flex; flex-wrap: wrap; gap: var(--sp-3); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
-:root[data-theme='dark'] .gdaygrid-colhead { color: #14141c; }
-@media (max-width: 767px) { .gdaygrid { --gdg-time-w: 64px; --gdg-col-w: 160px; --gdg-hour: 56px; } .gdaygrid-scroll { max-height: none; } }
+.gdaygrid-now { position: absolute; left: var(--gdg-time-w); right: 0; height: 0; border-top: 1px dashed var(--color-danger); z-index: 3; pointer-events: none; }
+.gdaygrid-nowchip { position: absolute; left: 6px; top: -10px; font-size: 10px; font-weight: var(--fw-bold); line-height: 1; color: var(--color-text-on-primary); background: var(--color-danger); border-radius: var(--r-pill); padding: 4px 7px; }
+.gdaygrid-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--sp-2) var(--sp-3); font-size: var(--fs-xs); color: var(--color-text-muted); align-items: center; }
+@media (max-width: 767px) { .gdaygrid { --gdg-time-w: 68px; --gdg-col-w: 168px; --gdg-hour: 60px; } .gdaygrid-scroll { max-height: none; } .gdaygrid-legend { justify-content: flex-start; } }
+@media (min-width: 2560px) { .gdaygrid { --gdg-time-w: 120px; --gdg-col-w: 280px; --gdg-hour: 92px; } .gdaygrid-colname { font-size: var(--fs-md); } .gdaygrid-off, .gdaygrid-time, .gdaygrid-legend { font-size: var(--fs-sm); } .gdaygrid-disc { width: 40px; height: 40px; font-size: var(--fs-sm); } }

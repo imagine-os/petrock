@@ -1,7 +1,7 @@
 {
   "name": "petrock",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "Petrock - all-in-one software for Petrock Hotel (dog hotel & spa, Encino and Westwood)",
   "scripts": {

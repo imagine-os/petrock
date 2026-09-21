@@ -6,6 +6,7 @@ import { Button } from '../../../components/atom/Button/Button';
 import { Select } from '../../../components/atom/Select/Select';
 import { Chip } from '../../../components/atom/Chip/Chip';
 import { Badge } from '../../../components/atom/Badge/Badge';
+import { useT } from '../../../i18n';
 import { GroomDayGrid, GroomDayGridLegend, type GroomDayGridColumn, type GroomDayGridItem } from '../../../components/organism/GroomDayGrid/GroomDayGrid';
 import { useToast } from '../../../components/molecule/Toast/Toast';
 import { useData, useTable } from '../../../data/DataContext';
@@ -13,15 +14,16 @@ import { useSession } from '../../../auth/SessionProvider';
 import { useLocation } from '../../../tenant/LocationProvider';
 import type { AppointmentRow } from '../../../data/schema/core';
 import type { GroomerColumnPrefRow } from '../../../data/schema/frontdesk-grooming-people';
-import { useAppointments } from '../hooks';
+import { cardChips, cardCustomer, useAppointments } from '../hooks';
 import { GroomingViewToggle, useDayParam } from './GroomingViewToggle';
-import { APPOINTMENT_STATUSES, APPOINTMENT_STATUS_LABEL, combineDayTime, fmtRange, hoursFor, minutesOf, writeAudit } from '../lib';
+import { APPOINTMENT_STATUSES, APPOINTMENT_STATUS_LABEL, combineDayTime, fmtRange, fmtTime, hoursFor, minutesOf, todayIso, writeAudit } from '../lib';
 import '../module.css';
 
 /** F-30 Grooming day view. */
 export function GroomingDayPage() {
   const nav = useNavigate();
   const data = useData();
+  const t = useT();
   const { toast } = useToast();
   const { user, can } = useSession();
   const { location, locationId } = useLocation();
@@ -37,7 +39,11 @@ export function GroomingDayPage() {
   }).sort((a, b) => a.order - b.order).filter((c) => !groomerFilter || c.id === groomerFilter), [groomers, prefs, day, groomerFilter]);
   const hidden = columns.filter((c) => c.hidden);
 
-  const items = useMemo<GroomDayGridItem[]>(() => views.filter((v) => !statusFilter || v.ap.status === statusFilter).map((v) => ({ id: v.ap.id, columnId: v.ap.groomer_id, startsAt: v.ap.starts_at, durationMin: v.ap.duration_min, label: v.label, subtitle: [fmtRange(v.ap), ...v.addonNames].join(' · '), status: v.ap.status, flags: v.flags })), [views, statusFilter]);
+  const items = useMemo<GroomDayGridItem[]>(() => views.filter((v) => !statusFilter || v.ap.status === statusFilter).map((v) => ({
+    id: v.ap.id, columnId: v.ap.groomer_id, startsAt: v.ap.starts_at, durationMin: v.ap.duration_min,
+    label: v.label, pet: v.pet?.name, breed: v.pet?.breed, customer: cardCustomer(v), chips: cardChips(v, t),
+    subtitle: v.addonNames.join(' · ') || undefined, timeLabel: v.ap.duration_min >= 45 ? fmtRange(v.ap) : fmtTime(v.ap.starts_at), status: v.ap.status, flags: v.flags,
+  })), [views, statusFilter, t]);
 
   const dow = new Date(`${day}T12:00:00`).getDay();
   const locHours = (location.hours as Record<string, { open: string; close: string } | null> | undefined)?.[String(dow)];
@@ -74,15 +80,17 @@ export function GroomingDayPage() {
         </GroomingDateNav>
         <GroomingViewToggle day={day} />
       </div>
+      <GroomDayGridLegend>
+        {hidden.length > 0 && <span className="row wrap" style={{ gap: 6 }}>{t('frontdesk-grooming-people.hiddenColumns')} {hidden.map((c) => <Chip key={c.id} size="sm" icon="eye" onClick={() => upsertPref(c.id, { hidden: false })}>{c.name}</Chip>)}</span>}
+        <Badge size="sm" tone="info" dot>{APPOINTMENT_STATUS_LABEL.requested}</Badge><Badge size="sm" tone="success" dot>{APPOINTMENT_STATUS_LABEL.confirmed}</Badge><Badge size="sm" tone="warn" dot>{APPOINTMENT_STATUS_LABEL.in_progress}</Badge><Badge size="sm" tone="completed" dot>{APPOINTMENT_STATUS_LABEL.done}</Badge>
+      </GroomDayGridLegend>
       <GroomDayGrid columns={columns} items={items} startHour={startHour} endHour={endHour} capacity={groomingCapacity ?? undefined} onItemClick={(id) => nav(`/desk/grooming/${id}`)}
         onMoveColumn={moveColumn} onColorColumn={(id, color) => upsertPref(id, { color })} onHideColumn={(id, h) => upsertPref(id, { hidden: h })}
         onSlotClick={can('appointments.write') ? (colId, hm) => nav(`/desk/grooming/new?day=${day}&time=${hm}&groomer=${colId}`) : undefined} onItemMove={can('appointments.write') ? moveItem : undefined}
+        showNow={day === todayIso()}
+        labels={{ time: t('frontdesk-grooming-people.time'), unassigned: t('frontdesk-grooming-people.unassigned'), off: t('frontdesk-grooming-people.offToday'), moveLeft: t('frontdesk-grooming-people.moveLeft'), moveRight: t('frontdesk-grooming-people.moveRight'), colour: t('frontdesk-grooming-people.changeColour'), reset: t('frontdesk-grooming-people.reset'), picker: t('frontdesk-grooming-people.picker'), hide: t('frontdesk-grooming-people.hideColumn'), options: t('frontdesk-grooming-people.columnOptions'), overCapacity: t('frontdesk-grooming-people.overCapacity'), now: t('frontdesk-grooming-people.now'), manyAlerts: t('frontdesk-grooming-people.alertsCount') }}
         emptyText={groomers.length ? 'All groomer columns are hidden' : `No groomers at ${location.short_name}`} />
-      <GroomDayGridLegend>
-        <span><Badge size="sm" tone="success" dot>Confirmed</Badge></span><span><Badge size="sm" tone="info" dot>Requested</Badge></span><span><Badge size="sm" tone="warn" dot>In progress</Badge></span><span><Badge size="sm" tone="danger" dot>Vaccine / alert</Badge></span>
-        <span className="faint">Tinted cells = groomer working hours · red hour = over capacity · click a slot to book · drag a card to move it</span>
-        {hidden.length > 0 && <span className="row wrap" style={{ gap: 6 }}>Hidden: {hidden.map((c) => <Chip key={c.id} size="sm" icon="eye" onClick={() => upsertPref(c.id, { hidden: false })}>{c.name}</Chip>)}</span>}
-      </GroomDayGridLegend>
+      <p className="xs muted" style={{ margin: 0 }}>{t('frontdesk-grooming-people.gridLegend')}</p>
     </div>
   );
 }
