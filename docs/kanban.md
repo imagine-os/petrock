@@ -85,3 +85,5 @@
 - Company-OS digest (`docs/reference/company-os.md`)
 
 - App directory and subscriptions (A-28a): implemented; model/UI/build verification and release receipt in docs/pages/A-28a.md. Production persistence remains explicitly disconnected.
+
+- A-28a public service catalog/account/receipt enrichment: implemented; verification and deployment receipt pending CI. No cross-tenant billing seeds or new backend permissions.
