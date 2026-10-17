@@ -83,3 +83,5 @@
 - Figma inventory (page new(justin + Mark): 253 frames, 25 sections)
 - hoy digest (`docs/reference/hoy-patterns.md`)
 - Company-OS digest (`docs/reference/company-os.md`)
+
+- App directory and subscriptions (A-28a): implemented; model/UI/build verification and release receipt in docs/pages/A-28a.md. Production persistence remains explicitly disconnected.

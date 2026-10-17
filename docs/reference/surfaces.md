@@ -83,3 +83,6 @@ The `feedback` table extended with `kind`, `element_path`, `component`, `viewpor
 - 2026-09-20 (prompt 0016): `spec.actions` landed as a type with HUB-01's 7 actions (D-221); new `npm run thumbs` script (D-218); `settleImages` noted on `npm run screenshots` (D-223); section 2.1 split into landed vs planned.
 - 2026-09-20 (prompt 0017): new public route `/site/gallery` (P-13); spec actions declared on P-01 (8), P-02 (4), P-03 (2), P-12 (4) and P-13 (5); new `npm run site:images` script row (D-225); no `DataProvider` or API change.
 - 2026-09-21 (prompt 0018): spec actions declared on F-10 (8), F-13 (10), F-14 (9), F-30 (11), F-31 (6) and F-32 (6); `GroomAppointmentCard` and `GroomStatusBoard` retired in favour of `ScheduleCard` / `AppointmentBoard` (D-231); no route, `DataProvider`, script or API change.
+
+## App subscriptions — 2026-10-17
+`/#/admin/subscriptions` (A-28a), owner/super_admin. Actions: subscriptions.app, subscription, charge, search. CLI: `npm run test:subscriptions`. Browser-local model only; no new API, CompanyOS entity, OAuth or bank/email surface.
