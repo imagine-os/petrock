@@ -9,3 +9,6 @@ docs/qa/shots/
 docs/qa/responsive-report.qa.json
 scripts/__pycache__/
 docs/design/fidelity/_shots/
+
+# Post-deploy screenshots are uploaded as Actions artifacts.
+qa/subscription-release/

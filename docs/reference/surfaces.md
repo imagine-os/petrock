@@ -86,3 +86,5 @@ The `feedback` table extended with `kind`, `element_path`, `component`, `viewpor
 
 ## App subscriptions — 2026-10-17
 `/#/admin/subscriptions` (A-28a), owner/super_admin. Actions: subscriptions.app, subscription, charge, search. CLI: `npm run test:subscriptions`. Browser-local model only; no new API, CompanyOS entity, OAuth or bank/email surface.
+
+Post-deploy CLI: `node scripts/test-subscriptions-live.mjs petrock <sha>`; read-only browser smoke and Actions screenshot artifact.
