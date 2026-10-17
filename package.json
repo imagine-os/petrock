@@ -18,7 +18,8 @@
     "test:pricing": "node --experimental-strip-types scripts/test-pricing.mjs",
     "qa:responsive": "node scripts/qa-responsive.mjs",
     "qa:bundle": "node scripts/qa-bundle.mjs",
-    "qa": "npm run qa:bundle && npm run qa:responsive"
+    "qa": "npm run qa:bundle && npm run qa:responsive",
+    "test:subscriptions": "node --experimental-strip-types scripts/test-subscriptions.mjs"
   },
   "dependencies": {
     "@fontsource/be-vietnam-pro": "^5.3.0",
